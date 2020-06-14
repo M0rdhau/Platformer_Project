@@ -93,6 +93,11 @@ public class PlayerController : MonoBehaviour
             isRunning = false;
         }
 
+        if (Input.GetAxis("Jump") > 0)
+        {
+            Jump();
+        }
+
 
         if (Input.GetAxis("Vertical") != 0)
         {
@@ -137,15 +142,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleVerticalMovement(float axisThrow)
     {
-        if (!isClimbing && isTouchingGround())
-        {
-            //jump. doesn't really require its own function
-            if (axisThrow > 0)
-            {
-                Jump();
-
-            }
-        }
+        
 
     }
 

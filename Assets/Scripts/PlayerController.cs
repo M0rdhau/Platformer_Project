@@ -5,25 +5,30 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("Movement")]
+
     [SerializeField] float walkSpeedMax = 3f;
     [SerializeField] float runSpeedMax = 6f;
     [SerializeField] float acceleration = 0.2f;
     [SerializeField] float jumpVelocity = 6f;
-
-    float fallTime;
+    [SerializeField] float climbSpeed = 3f;
     //vertical velocity necessary to roll
     [SerializeField] float rollTime = 0.8f;
     Vector2 accelerationVector;
+    float fallTime;
     bool isRunning = false;
     bool isClimbing = false;
     bool isCrouching = false;
     bool isJumping = false;
     bool isFalling = false;
 
-    //parameters for monitoring
-    [SerializeField] float walkSpeed = 0f;
-    [SerializeField] float verticalSpeed = 0f;
 
+    [Header("Combat")]
+
+    [SerializeField] Transform attackPoint;
+    [SerializeField] float attackRadius = 2f;
+    [SerializeField] float attackDamage = 5f;
+    LayerMask enemyLayers;
 
     SpriteRenderer _renderer;
     Animator _animator;
@@ -38,39 +43,66 @@ public class PlayerController : MonoBehaviour
         _collider = GetComponent<Collider2D>();
         _renderer = GetComponentInChildren<SpriteRenderer>();
         _rigidBody = GetComponent<Rigidbody2D>();
+        enemyLayers = LayerMask.GetMask("Enemies");
     }
 
     // Update is called once per frame
     void Update()
     {
         HandleAcceleration();
-        HandleInput();
+        HandleMovementInput();
+        HandleAttackInput();
         CheckForFalling();
-        walkSpeed = _rigidBody.velocity.x;
-        verticalSpeed = _rigidBody.velocity.y;
+    }
+
+    private void HandleAttackInput()
+    {
+
+        if (Input.GetAxis("Fire3") > 0)
+        {
+            Kick();
+        }
+
+    }
+
+    private void Kick()
+    {
+        _animator.SetTrigger("kick");
+        Collider2D[] enemiesHit = Physics2D.OverlapCircleAll(attackPoint.position, attackRadius);
+        foreach (Collider2D enemy in enemiesHit)
+        {
+            enemy.GetComponent<Health>().DamageHealth(attackDamage);
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.layer == 8 && (isFalling || isJumping))
+        var collisionLayer = collision.gameObject.layer;
+        if ( (collisionLayer == 8 || collisionLayer == 9 )  && (isFalling || isJumping))
         {
             isFalling = false;
             isJumping = false;
             _animator.SetBool("isFalling", false);
-            if (Time.time - fallTime < rollTime)
+            if (collisionLayer == 8)
             {
-                _animator.SetTrigger("landed_Noroll");
-            }
-            else
-            {
-                _animator.SetTrigger("landed");
+                if (Time.time - fallTime < rollTime)
+                {
+                    _animator.SetTrigger("landed_Noroll");
+                }
+                else
+                {
+                    _animator.SetTrigger("landed");
+                }
             }
         }
     }
 
+    #region Movement
 
-    void HandleInput()
+    void HandleMovementInput()
     {
+        HandleClimb();
+
         if (Input.GetAxis("Horizontal") != 0)
         {
             HandleHorizontalMovement(Input.GetAxis("Horizontal"));
@@ -97,39 +129,50 @@ public class PlayerController : MonoBehaviour
         {
             Jump();
         }
-
-
-        if (Input.GetAxis("Vertical") != 0)
-        {
-            HandleVerticalMovement(Input.GetAxis("Vertical"));
-        }
-
-
-
     }
 
-    void HandleAcceleration()
+    private void HandleClimb()
     {
-        Vector2 vel = _rigidBody.velocity;
-
-        if (!isRunning)
+        float axisThrow = Input.GetAxis("Vertical");
+        if (isTouchingLadders())
         {
-            vel += accelerationVector;
-            vel.x = Mathf.Clamp(vel.x, -walkSpeedMax, walkSpeedMax);
+            if (!isTouchingGround())
+            {
+                _rigidBody.gravityScale = 0;
+                isClimbing = true;
+                _animator.SetBool("isClimbing", isClimbing);
+            }
+            
+            if (axisThrow != 0)
+            {
+                _animator.speed = 1;
+                var climbVec = _rigidBody.velocity;
+                climbVec.y = climbSpeed*axisThrow;
+                _rigidBody.velocity = climbVec;
+
+            }
+            else if (isClimbing)
+            {
+                _animator.speed = 0;
+                var climbVec = _rigidBody.velocity;
+                climbVec.y = 0;
+                _rigidBody.velocity = climbVec;
+            }
         }
         else
         {
-            vel += accelerationVector * 2;
-            vel.x = Mathf.Clamp(vel.x, -runSpeedMax, runSpeedMax);
+            _rigidBody.gravityScale = 1;
+            _animator.speed = 1;
+            isClimbing = false;
+            _animator.SetBool("isClimbing", isClimbing);
+            _animator.SetTrigger("landed_Noroll");
         }
 
-        _rigidBody.velocity = vel;
     }
-
 
     private void CheckForFalling()
     {
-        if (_rigidBody.velocity.y < -1*Mathf.Epsilon && !isTouchingGround() && !isFalling)
+        if (_rigidBody.velocity.y < -1*Mathf.Epsilon && !isTouchingGround() && !isFalling && !isClimbing)
         {
             isJumping = false;
             isFalling = true;
@@ -138,17 +181,9 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-
-
-    private void HandleVerticalMovement(float axisThrow)
-    {
-        
-
-    }
-
     private void Jump()
     {
-        if (isTouchingGround())
+        if (isTouchingGround() || isTouchingLadders())
         {
             var jumpVec = _rigidBody.velocity;
             jumpVec.y = jumpVelocity;
@@ -181,10 +216,33 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    void HandleAcceleration()
+    {
+        Vector2 vel = _rigidBody.velocity;
+
+        if (!isRunning)
+        {
+            vel += accelerationVector;
+            vel.x = Mathf.Clamp(vel.x, -walkSpeedMax, walkSpeedMax);
+        }
+        else
+        {
+            vel += accelerationVector * 2;
+            vel.x = Mathf.Clamp(vel.x, -runSpeedMax, runSpeedMax);
+        }
+
+        _rigidBody.velocity = vel;
+    }
+
+    private bool isTouchingLadders()
+    {
+        return _collider.IsTouchingLayers(LayerMask.GetMask("Ladders"));
+    }
+
     private bool isTouchingGround()
     {
         return _collider.IsTouchingLayers(LayerMask.GetMask("Ground"));
     }
 
-
+    #endregion
 }

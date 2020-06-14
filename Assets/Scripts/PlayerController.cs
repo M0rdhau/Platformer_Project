@@ -148,11 +148,14 @@ public class PlayerController : MonoBehaviour
 
     private void Jump()
     {
-        var jumpVec = _rigidBody.velocity;
-        jumpVec.y = jumpVelocity;
-        _rigidBody.velocity = jumpVec;
-        isJumping = true;
-        _animator.SetTrigger("jump");
+        if (isTouchingGround())
+        {
+            var jumpVec = _rigidBody.velocity;
+            jumpVec.y = jumpVelocity;
+            _rigidBody.velocity = jumpVec;
+            isJumping = true;
+            _animator.SetTrigger("jump");
+        }
     }
 
     private void HandleHorizontalMovement(float axisThrow)

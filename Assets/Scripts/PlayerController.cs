@@ -26,8 +26,10 @@ public class PlayerController : MonoBehaviour
     [Header("Combat")]
 
     [SerializeField] Transform attackPoint;
-    [SerializeField] float attackRadius = 2f;
-    [SerializeField] float attackDamage = 5f;
+    [SerializeField] float attackRange = 0.8f;
+    [SerializeField] int attackDamage = 5;
+    [SerializeField] float attackRate = 2f;
+    float nextAttackTime = 0f;
     LayerMask enemyLayers;
 
     SpriteRenderer _renderer;
@@ -57,22 +59,32 @@ public class PlayerController : MonoBehaviour
 
     private void HandleAttackInput()
     {
-
-        if (Input.GetAxis("Fire3") > 0)
+        if (Time.time >= nextAttackTime)
         {
-            Kick();
+            if (Input.GetAxis("Fire3") > 0)
+            {
+                Kick();
+                nextAttackTime = Time.time + 1f / attackRate;
+            }
         }
-
     }
 
     private void Kick()
     {
         _animator.SetTrigger("kick");
-        Collider2D[] enemiesHit = Physics2D.OverlapCircleAll(attackPoint.position, attackRadius);
+        Collider2D[] enemiesHit = Physics2D.OverlapCircleAll(attackPoint.position, attackRange);
         foreach (Collider2D enemy in enemiesHit)
         {
-            enemy.GetComponent<Health>().DamageHealth(attackDamage);
+            if (enemy.GetComponent<Health>())
+            {
+                enemy.GetComponent<Health>().DamageHealth(attackDamage);
+            }
         }
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.DrawWireSphere(attackPoint.position, attackRange);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

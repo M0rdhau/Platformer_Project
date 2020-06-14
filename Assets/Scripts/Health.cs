@@ -5,19 +5,32 @@ using UnityEngine;
 public class Health : MonoBehaviour
 {
     [SerializeField] int totalHealth = 20;
+    Animator anim;
+
+    private void Start()
+    {
+        anim = GetComponent<Animator>();
+    }
 
     public void DamageHealth(int dmg)
     {
         totalHealth -= dmg;
-        GetComponent<Animator>().SetTrigger("takeDamage");
+        anim.SetTrigger("takeDamage");
         if (totalHealth <= 0)
         {
-            Die();
+            HandleDeath();
         }
     }
 
-    private void Die()
+    private void HandleDeath()
     {
-        Debug.Log("die");
+        anim.SetBool("isDead", true);
+        this.enabled = false;
     }
+
+    public void Die()
+    {
+        Destroy(gameObject);
+    }
+
 }

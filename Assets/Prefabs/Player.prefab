@@ -204,7 +204,7 @@ MonoBehaviour:
   walkSpeedMax: 3
   runSpeedMax: 6
   acceleration: 0.2
-  jumpVelocity: 6
+  jumpVelocity: 8
   climbSpeed: 3
   rollTime: 0.8
 --- !u!114 &1299987955

@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float walkSpeedMax = 3f;
     [SerializeField] float runSpeedMax = 6f;
     [SerializeField] float acceleration = 0.2f;
-    [SerializeField] float jumpVelocity = 6f;
+    [SerializeField] float jumpVelocity = 8f;
     [SerializeField] float climbSpeed = 3f;
     //vertical velocity necessary to roll
     [SerializeField] float rollTime = 0.8f;

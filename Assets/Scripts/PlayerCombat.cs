@@ -35,7 +35,7 @@ public class PlayerCombat : MonoBehaviour
     {
         if (Time.time >= nextAttackTime)
         {
-            if (Input.GetAxis("Fire3") > 0)
+            if (Input.GetAxis("Fire1") > 0)
             {
                 Attack("kick");
                 nextAttackTime = Time.time + 1f / attackRate;

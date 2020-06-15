@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+
     [Header("Movement")]
 
     [SerializeField] float walkSpeedMax = 3f;
@@ -21,7 +22,7 @@ public class PlayerController : MonoBehaviour
     bool isCrouching = false;
     bool isJumping = false;
     bool isFalling = false;
-
+    bool jumpAxisInUse = false;
 
     [Header("Combat")]
 
@@ -34,7 +35,9 @@ public class PlayerController : MonoBehaviour
 
     SpriteRenderer _renderer;
     Animator _animator;
-    Collider2D _collider;
+    Collider2D bodyCollider;
+    Collider2D feetCollider;
+    Collider2D handsCollider;
     Rigidbody2D _rigidBody;
 
 
@@ -42,7 +45,9 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         _animator = GetComponent<Animator>();
-        _collider = GetComponent<Collider2D>();
+        bodyCollider = GetComponent<Collider2D>();
+        feetCollider = transform.GetChild(2).GetComponent<Collider2D>();
+        handsCollider = transform.GetChild(3).GetComponent<Collider2D>();
         _renderer = GetComponentInChildren<SpriteRenderer>();
         _rigidBody = GetComponent<Rigidbody2D>();
         enemyLayers = LayerMask.GetMask("Enemies");
@@ -63,15 +68,37 @@ public class PlayerController : MonoBehaviour
         {
             if (Input.GetAxis("Fire3") > 0)
             {
-                Kick();
+                Attack("kick");
+                nextAttackTime = Time.time + 1f / attackRate;
+            }
+            if (Input.GetAxis("Fire2") > 0)
+            {
+                Attack("punch");
                 nextAttackTime = Time.time + 1f / attackRate;
             }
         }
     }
 
-    private void Kick()
+    private void CheckAttackPoint()
     {
-        _animator.SetTrigger("kick");
+        var diff = transform.position.x - attackPoint.position.x;
+        if ((_renderer.flipX && diff < 0) || (!_renderer.flipX && diff > 0))
+        {
+            FlipAttackPoint(diff);
+        }
+    }
+
+    void FlipAttackPoint(float diff)
+    {
+        Vector2 pos = attackPoint.position;
+        pos.x += 2*diff;
+        attackPoint.position = pos;
+    }
+
+    private void Attack(string attName)
+    {
+        CheckAttackPoint();
+        _animator.SetTrigger(attName);
         Collider2D[] enemiesHit = Physics2D.OverlapCircleAll(attackPoint.position, attackRange);
         foreach (Collider2D enemy in enemiesHit)
         {
@@ -137,9 +164,17 @@ public class PlayerController : MonoBehaviour
             isRunning = false;
         }
 
-        if (Input.GetAxis("Jump") > 0)
+        if (Input.GetAxis("Jump") != 0)
         {
-            Jump();
+            if (!jumpAxisInUse)
+            {
+                Jump();
+                jumpAxisInUse = true;
+            }
+        }
+        if (Input.GetAxis("Jump") == 0)
+        {
+            jumpAxisInUse = false;
         }
     }
 
@@ -148,7 +183,7 @@ public class PlayerController : MonoBehaviour
         float axisThrow = Input.GetAxis("Vertical");
         if (isTouchingLadders())
         {
-            if (!isTouchingGround())
+            if (!isTouchingGround() && isTouchingLadders())
             {
                 _rigidBody.gravityScale = 0;
                 isClimbing = true;
@@ -248,12 +283,12 @@ public class PlayerController : MonoBehaviour
 
     private bool isTouchingLadders()
     {
-        return _collider.IsTouchingLayers(LayerMask.GetMask("Ladders"));
+        return handsCollider.IsTouchingLayers(LayerMask.GetMask("Ladders"));
     }
 
     private bool isTouchingGround()
     {
-        return _collider.IsTouchingLayers(LayerMask.GetMask("Ground"));
+        return feetCollider.IsTouchingLayers(LayerMask.GetMask("Ground"));
     }
 
     #endregion

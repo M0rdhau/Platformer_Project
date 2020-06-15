@@ -6,6 +6,7 @@ public class Health : MonoBehaviour
 {
     [SerializeField] int totalHealth = 20;
     Animator anim;
+    bool isDead = false;
 
     private void Start()
     {
@@ -14,17 +15,21 @@ public class Health : MonoBehaviour
 
     public void DamageHealth(int dmg)
     {
-        totalHealth -= dmg;
-        anim.SetTrigger("takeDamage");
-        if (totalHealth <= 0)
+        if (!isDead)
         {
-            HandleDeath();
+            totalHealth -= dmg;
+            anim.SetTrigger("takeDamage");
+            if (totalHealth <= 0)
+            {
+                HandleDeath();
+            }
         }
     }
 
     private void HandleDeath()
     {
         anim.SetBool("isDead", true);
+        isDead = true;
         this.enabled = false;
     }
 

@@ -17,21 +17,16 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float rollTime = 0.8f;
     Vector2 accelerationVector;
     float fallTime;
+    bool isCrouching = false;
     bool isRunning = false;
     bool isClimbing = false;
-    bool isCrouching = false;
     bool isJumping = false;
     bool isFalling = false;
     bool jumpAxisInUse = false;
 
-    [Header("Combat")]
-
-    [SerializeField] Transform attackPoint;
-    [SerializeField] float attackRange = 0.8f;
-    [SerializeField] int attackDamage = 5;
-    [SerializeField] float attackRate = 2f;
-    float nextAttackTime = 0f;
-    LayerMask enemyLayers;
+    //TODO: get these values at runtime from colliders
+    float playerColliderHeight = 0.75f;
+    float playerColliderWidth = 0.72f;
 
     SpriteRenderer _renderer;
     Animator _animator;
@@ -39,7 +34,6 @@ public class PlayerController : MonoBehaviour
     Collider2D feetCollider;
     Collider2D handsCollider;
     Rigidbody2D _rigidBody;
-
 
     // Start is called before the first frame update
     void Start()
@@ -50,7 +44,6 @@ public class PlayerController : MonoBehaviour
         handsCollider = transform.GetChild(3).GetComponent<Collider2D>();
         _renderer = GetComponentInChildren<SpriteRenderer>();
         _rigidBody = GetComponent<Rigidbody2D>();
-        enemyLayers = LayerMask.GetMask("Enemies");
     }
 
     // Update is called once per frame
@@ -58,66 +51,16 @@ public class PlayerController : MonoBehaviour
     {
         HandleAcceleration();
         HandleMovementInput();
-        HandleAttackInput();
         CheckForFalling();
     }
 
-    private void HandleAttackInput()
-    {
-        if (Time.time >= nextAttackTime)
-        {
-            if (Input.GetAxis("Fire3") > 0)
-            {
-                Attack("kick");
-                nextAttackTime = Time.time + 1f / attackRate;
-            }
-            if (Input.GetAxis("Fire2") > 0)
-            {
-                Attack("punch");
-                nextAttackTime = Time.time + 1f / attackRate;
-            }
-        }
-    }
 
-    private void CheckAttackPoint()
-    {
-        var diff = transform.position.x - attackPoint.position.x;
-        if ((_renderer.flipX && diff < 0) || (!_renderer.flipX && diff > 0))
-        {
-            FlipAttackPoint(diff);
-        }
-    }
-
-    void FlipAttackPoint(float diff)
-    {
-        Vector2 pos = attackPoint.position;
-        pos.x += 2*diff;
-        attackPoint.position = pos;
-    }
-
-    private void Attack(string attName)
-    {
-        CheckAttackPoint();
-        _animator.SetTrigger(attName);
-        Collider2D[] enemiesHit = Physics2D.OverlapCircleAll(attackPoint.position, attackRange);
-        foreach (Collider2D enemy in enemiesHit)
-        {
-            if (enemy.GetComponent<Health>())
-            {
-                enemy.GetComponent<Health>().DamageHealth(attackDamage);
-            }
-        }
-    }
-
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.DrawWireSphere(attackPoint.position, attackRange);
-    }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
         var collisionLayer = collision.gameObject.layer;
-        if ( (collisionLayer == 8 || collisionLayer == 9 )  && (isFalling || isJumping))
+
+        if ((collisionLayer == 8 || collisionLayer == 9) && (isFalling || isJumping))
         {
             isFalling = false;
             isJumping = false;
@@ -136,10 +79,54 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void HandleLedgeClimb()
+    {
+        ResetAnim();
+        _animator.SetBool("isLedging", true);
+        _rigidBody.gravityScale = 0;
+        _animator.speed = 0;
+    }
+
+
+    public void ResetAnim()
+    {
+        isClimbing = false;
+        isJumping = false;
+        isFalling = false;
+        _animator.SetBool("isClimbing", isClimbing);
+        _animator.SetBool("isFalling", isFalling);
+    }
+
+    public void MoveToLedge()
+    {
+        var ledgePos = transform.position;
+        ledgePos.y += playerColliderHeight;
+        if (_renderer.flipX)
+        {
+            ledgePos.x -= playerColliderWidth;
+        }
+        else
+        {
+            ledgePos.x += playerColliderWidth;
+        }
+        transform.position = ledgePos;
+        _animator.SetBool("isLedging", false);
+        _rigidBody.gravityScale = 0;
+        _animator.speed = 0;
+    }
+
     #region Movement
 
     void HandleMovementInput()
     {
+        if (_animator.GetBool("isLedging") && _animator.speed == 0)
+        {
+            if (Input.anyKey)
+            {
+                MoveToLedge();
+            }
+        }
+
         HandleClimb();
 
         if (Input.GetAxis("Horizontal") != 0)
@@ -189,12 +176,12 @@ public class PlayerController : MonoBehaviour
                 isClimbing = true;
                 _animator.SetBool("isClimbing", isClimbing);
             }
-            
+
             if (axisThrow != 0)
             {
                 _animator.speed = 1;
                 var climbVec = _rigidBody.velocity;
-                climbVec.y = climbSpeed*axisThrow;
+                climbVec.y = climbSpeed * axisThrow;
                 _rigidBody.velocity = climbVec;
 
             }
@@ -219,7 +206,7 @@ public class PlayerController : MonoBehaviour
 
     private void CheckForFalling()
     {
-        if (_rigidBody.velocity.y < -1*Mathf.Epsilon && !isTouchingGround() && !isFalling && !isClimbing)
+        if (_rigidBody.velocity.y < -1 * Mathf.Epsilon && !isTouchingGround() && !isFalling && !isClimbing)
         {
             isJumping = false;
             isFalling = true;
@@ -286,9 +273,14 @@ public class PlayerController : MonoBehaviour
         return handsCollider.IsTouchingLayers(LayerMask.GetMask("Ladders"));
     }
 
+    private bool isTouchingLedges()
+    {
+        return handsCollider.IsTouchingLayers(LayerMask.GetMask("Ledges"));
+    }
+
     private bool isTouchingGround()
     {
-        return feetCollider.IsTouchingLayers(LayerMask.GetMask("Ground"));
+        return feetCollider.IsTouchingLayers(LayerMask.GetMask("Ground", "Ledges"));
     }
 
     #endregion

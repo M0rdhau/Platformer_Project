@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 581824171}
-  - component: {fileID: 5156100847464787226}
+  - component: {fileID: 581824172}
   m_Layer: 0
   m_Name: HandsCollider
   m_TagString: Untagged
@@ -25,14 +25,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 581824170}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.353, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1570389092419465436}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &5156100847464787226
-BoxCollider2D:
+--- !u!70 &581824172
+CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -44,19 +44,9 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0.4}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 0.6, y: 0.2}
-  m_EdgeRadius: 0
+  m_Offset: {x: 0, y: 0}
+  m_Size: {x: 0.7, y: 0.3}
+  m_Direction: 1
 --- !u!1 &1861971531
 GameObject:
   m_ObjectHideFlags: 0
@@ -66,7 +56,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1861971532}
-  - component: {fileID: 2673144738195997638}
+  - component: {fileID: 1861971533}
   m_Layer: 0
   m_Name: FeetCollider
   m_TagString: Untagged
@@ -88,8 +78,8 @@ Transform:
   m_Father: {fileID: 1570389092419465436}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &2673144738195997638
-BoxCollider2D:
+--- !u!70 &1861971533
+CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -101,19 +91,9 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.84}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 0.45, y: 0.15}
-  m_EdgeRadius: 0
+  m_Offset: {x: 0.000000009745076, y: -0.6682525}
+  m_Size: {x: 0.4, y: 0.44349486}
+  m_Direction: 0
 --- !u!1 &1570389092419465435
 GameObject:
   m_ObjectHideFlags: 0
@@ -127,6 +107,7 @@ GameObject:
   - component: {fileID: 1570389092419465437}
   - component: {fileID: 1570389092419465438}
   - component: {fileID: 1570389092419465408}
+  - component: {fileID: 1299987955}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -168,7 +149,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
-  m_Material: {fileID: 6200000, guid: 5a7cec0e8a40eaa48a5f17b467b10a22, type: 2}
+  m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
@@ -201,12 +182,12 @@ CapsuleCollider2D:
   m_GameObject: {fileID: 1570389092419465435}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 5a7cec0e8a40eaa48a5f17b467b10a22, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.008311272, y: -0.24}
-  m_Size: {x: 0.7, y: 1.05}
+  m_Offset: {x: 0, y: -0.14000002}
+  m_Size: {x: 0.7, y: 0.7}
   m_Direction: 0
 --- !u!114 &1570389092419465408
 MonoBehaviour:
@@ -226,10 +207,22 @@ MonoBehaviour:
   jumpVelocity: 6
   climbSpeed: 3
   rollTime: 0.8
-  attackPoint: {fileID: 1570389093632285171}
+--- !u!114 &1299987955
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1570389092419465435}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7aff8b74f5b59e54681fc843e2e574ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   attackRange: 0.8
   attackDamage: 5
   attackRate: 2
+  attackPoint: {fileID: 1570389093632285171}
 --- !u!1 &1570389093129137335
 GameObject:
   m_ObjectHideFlags: 0
@@ -255,7 +248,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1570389093129137335}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.007, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1570389092419465436}

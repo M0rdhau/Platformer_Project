@@ -17,9 +17,9 @@ TagManager:
   - Ladders
   - Enemies
   - Ledges
-  - 
-  - 
-  - 
+  - Player
+  - Background
+  - PlayerLegs
   - 
   - 
   - 

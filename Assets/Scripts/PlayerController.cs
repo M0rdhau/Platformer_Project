@@ -30,7 +30,6 @@ public class PlayerController : MonoBehaviour
 
     SpriteRenderer _renderer;
     Animator _animator;
-    Collider2D bodyCollider;
     Collider2D feetCollider;
     Collider2D handsCollider;
     Rigidbody2D _rigidBody;
@@ -39,7 +38,6 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         _animator = GetComponent<Animator>();
-        bodyCollider = GetComponent<Collider2D>();
         feetCollider = transform.GetChild(2).GetComponent<Collider2D>();
         handsCollider = transform.GetChild(3).GetComponent<Collider2D>();
         _renderer = GetComponentInChildren<SpriteRenderer>();
@@ -60,7 +58,7 @@ public class PlayerController : MonoBehaviour
     {
         var collisionLayer = collision.gameObject.layer;
 
-        if ((collisionLayer == 8 || collisionLayer == 9) && (isFalling || isJumping))
+        if ((collisionLayer == 8 || collisionLayer == 9 || collisionLayer == 11) && (isFalling || isJumping))
         {
             isFalling = false;
             isJumping = false;

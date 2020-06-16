@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 581824171}
   - component: {fileID: 581824172}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: HandsCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40,7 +40,7 @@ CapsuleCollider2D:
   m_GameObject: {fileID: 581824170}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 5a7cec0e8a40eaa48a5f17b467b10a22, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -57,7 +57,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1861971532}
   - component: {fileID: 1861971533}
-  m_Layer: 0
+  m_Layer: 14
   m_Name: FeetCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -91,8 +91,8 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.000000009745076, y: -0.6682525}
-  m_Size: {x: 0.4, y: 0.44349486}
+  m_Offset: {x: 0, y: -0.32301003}
+  m_Size: {x: 0.30210686, y: 1.1339799}
   m_Direction: 0
 --- !u!1 &1570389092419465435
 GameObject:
@@ -105,10 +105,9 @@ GameObject:
   - component: {fileID: 1570389092419465436}
   - component: {fileID: 1570389092419465439}
   - component: {fileID: 1570389092419465437}
-  - component: {fileID: 1570389092419465438}
   - component: {fileID: 1570389092419465408}
   - component: {fileID: 1299987955}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -173,22 +172,6 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!70 &1570389092419465438
-CapsuleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1570389092419465435}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 6200000, guid: 5a7cec0e8a40eaa48a5f17b467b10a22, type: 2}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.14000002}
-  m_Size: {x: 0.7, y: 0.7}
-  m_Direction: 0
 --- !u!114 &1570389092419465408
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -204,7 +187,7 @@ MonoBehaviour:
   walkSpeedMax: 3
   runSpeedMax: 6
   acceleration: 0.2
-  jumpVelocity: 8
+  jumpVelocity: 7
   climbSpeed: 3
   rollTime: 0.8
 --- !u!114 &1299987955
@@ -233,7 +216,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1570389093129137336}
   - component: {fileID: 1570389093129137337}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -313,7 +296,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1570389093632285171}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: AttackPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}

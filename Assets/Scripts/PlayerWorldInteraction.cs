@@ -7,14 +7,22 @@ public class PlayerWorldInteraction : MonoBehaviour
 
     Door door;
 
+    bool hasGoneThrough = false;
+
     private void Update()
     {
-        if (Input.GetAxisRaw("Vertical") > 0)
+        if (Input.GetAxis("Vertical") > 0)
         {
-            if (isTouchingDoors())
+            if (isTouchingDoors() && !hasGoneThrough)
             {
-                FindObjectOfType<SceneLoader>().DoorLoadScene(door.GetSceneName());
-            }   
+                FindObjectOfType<SceneLoader>().DoorLoadScene(door.GetSceneName(), door.GetDoorIndex());
+                hasGoneThrough = true;
+            }
+        }
+
+        if (Input.GetAxis("Vertical") == 0)
+        {
+            hasGoneThrough = false;
         }
     }
 

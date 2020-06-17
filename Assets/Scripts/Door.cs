@@ -4,11 +4,19 @@ using UnityEngine;
 
 public class Door : MonoBehaviour
 {
-    [SerializeField] string sceneName;
-
-    public string GetSceneName()
+    enum DestinationDoor
     {
-        return sceneName;
+        A, B, C, D, E, F
     }
+
+    [SerializeField] string sceneName;
+    [SerializeField] int portalIndex = 0;
+
+
+    public string GetSceneName() { return sceneName; }
+
+    public Transform GetSpawnPoint() { return transform.GetChild(0); }
+
+    public int GetDoorIndex(){ return portalIndex; }
     
 }

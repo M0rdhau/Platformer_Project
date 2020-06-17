@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -18,10 +19,52 @@ public class SceneLoader : MonoBehaviour
         //}
     }
 
-    public void DoorLoadScene(string sceneName)
+    public void LoadNext()
     {
-        SceneManager.LoadScene(sceneName);
+        int currentScene = SceneManager.GetActiveScene().buildIndex;
+        SceneManager.LoadScene(currentScene + 1);
     }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+
+    public void DoorLoadScene(string sceneName, int doorIndex)
+    {
+        StartCoroutine(Transition(sceneName, doorIndex));
+    }
+
+    private IEnumerator Transition(string sceneName, int doorIndex)
+    {
+        DontDestroyOnLoad(gameObject);
+        yield return SceneManager.LoadSceneAsync(sceneName);
+        Door doorToSpawnAt = FindDoor(doorIndex);
+        SetPlayerLocation(doorToSpawnAt);
+        Destroy(gameObject);
+    }
+
+    private void SetPlayerLocation(Door doorToSpawnAt)
+    {
+        var spawnPoint = doorToSpawnAt.GetSpawnPoint();
+        FindObjectOfType<PlayerController>().gameObject.transform.position = spawnPoint.position;
+    }
+
+    private Door FindDoor(int doorIndex)
+    {
+        var doors = FindObjectsOfType<Door>();
+        //inline extravaganza
+        foreach (Door door in doors)
+        {
+            if (door.GetDoorIndex() == doorIndex)
+            {
+                return door;
+            }
+        }
+        return null;
+    }
+
+    #region Old Functions - not needed right now
 
     public void TryAgain()
     {
@@ -49,14 +92,5 @@ public class SceneLoader : MonoBehaviour
         SceneManager.LoadScene(mainMenuIndex);
     }
 
-    public void LoadNext()
-    {
-        int currentScene = SceneManager.GetActiveScene().buildIndex;
-        SceneManager.LoadScene(currentScene + 1);
-    }
-
-    public void QuitGame()
-    {
-        Application.Quit();
-    }
+    #endregion
 }

@@ -638,6 +638,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneName: Sandbox
+  portalIndex: 0
 --- !u!1 &499721674
 GameObject:
   m_ObjectHideFlags: 0

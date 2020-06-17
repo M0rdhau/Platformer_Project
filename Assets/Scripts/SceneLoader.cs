@@ -6,7 +6,9 @@ using UnityEngine.SceneManagement;
 
 public class SceneLoader : MonoBehaviour
 {
-    [SerializeField] float secondsToLoad = 3f;
+    [SerializeField] float fadeOutTime = 3f;
+    [SerializeField] float waitTime = 2f;
+    [SerializeField] float fadeInTime = 1f;
     int mainMenuIndex = 1;
 
     // Start is called before the first frame update
@@ -32,15 +34,19 @@ public class SceneLoader : MonoBehaviour
 
     public void DoorLoadScene(string sceneName, int doorIndex)
     {
-        StartCoroutine(Transition(sceneName, doorIndex));
+        StartCoroutine(DoorLoadCoroutine(sceneName, doorIndex));
     }
 
-    private IEnumerator Transition(string sceneName, int doorIndex)
+
+    private IEnumerator DoorLoadCoroutine(string sceneName, int doorIndex)
     {
         DontDestroyOnLoad(gameObject);
+        yield return FindObjectOfType<Fader>().FadeOut(fadeOutTime);
         yield return SceneManager.LoadSceneAsync(sceneName);
         Door doorToSpawnAt = FindDoor(doorIndex);
         SetPlayerLocation(doorToSpawnAt);
+        yield return new WaitForSeconds(waitTime);
+        yield return FindObjectOfType<Fader>().FadeIn(fadeInTime);
         Destroy(gameObject);
     }
 
@@ -79,12 +85,6 @@ public class SceneLoader : MonoBehaviour
     public void ReLoad()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    }
-
-    IEnumerator MainMenuCoroutine(int sceneInd)
-    {
-        yield return new WaitForSeconds(secondsToLoad);
-        LoadMainMenu();
     }
 
     public void LoadMainMenu()

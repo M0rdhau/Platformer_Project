@@ -15,8 +15,8 @@ public class PlayerWorldInteraction : MonoBehaviour
         {
             if (isTouchingDoors() && !hasGoneThrough)
             {
-                FindObjectOfType<SceneLoader>().DoorLoadScene(door.GetSceneName(), door.GetDoorIndex());
                 hasGoneThrough = true;
+                FindObjectOfType<SceneLoader>().DoorLoadScene(door.GetSceneName(), door.GetDoorIndex());
             }
         }
 

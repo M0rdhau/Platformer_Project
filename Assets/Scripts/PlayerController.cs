@@ -39,7 +39,7 @@ public class PlayerController : MonoBehaviour
     {
         _animator = GetComponent<Animator>();
         feetCollider = transform.GetChild(2).GetComponent<Collider2D>();
-        handsCollider = transform.GetChild(3).GetComponent<Collider2D>();
+        handsCollider = GetComponent<Collider2D>();
         _renderer = GetComponentInChildren<SpriteRenderer>();
         _rigidBody = GetComponent<Rigidbody2D>();
     }

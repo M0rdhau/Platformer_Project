@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7311105641142757916}
   - component: {fileID: 7311105641142757917}
+  - component: {fileID: 4662988861326333837}
   m_Layer: 10
   m_Name: Body
   m_TagString: Untagged
@@ -81,6 +82,22 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!70 &4662988861326333837
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7311105641142757919}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: -0.16972852}
+  m_Size: {x: 0.93618965, y: 1.285543}
+  m_Direction: 0
 --- !u!1 &7311105641244443669
 GameObject:
   m_ObjectHideFlags: 0
@@ -93,9 +110,10 @@ GameObject:
   - component: {fileID: 7311105641244443667}
   - component: {fileID: 7311105641244443664}
   - component: {fileID: 7311105641244443665}
-  - component: {fileID: 7311105641244443678}
   - component: {fileID: 3170311550886773130}
   - component: {fileID: 8174198237777656748}
+  - component: {fileID: 7500172048794121694}
+  - component: {fileID: 1280412872759431592}
   m_Layer: 10
   m_Name: Skeleton
   m_TagString: Untagged
@@ -150,9 +168,9 @@ CapsuleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 0.9113159, y: 1.5655603}
-  m_Direction: 0
+  m_Offset: {x: 0, y: -0.7079766}
+  m_Size: {x: 0.6707358, y: 0.24848345}
+  m_Direction: 1
 --- !u!50 &7311105641244443665
 Rigidbody2D:
   serializedVersion: 4
@@ -174,19 +192,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!114 &7311105641244443678
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7311105641244443669}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 851c12a4afe212041bb439f4f5391ca2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  totalHealth: 20
 --- !u!114 &3170311550886773130
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -214,3 +219,29 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MoveSpeed: 1
   movementVec: {x: 0, y: 0}
+--- !u!114 &7500172048794121694
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7311105641244443669}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d783db97597adbe4cb1df950821b0f9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  totalHealth: 20
+--- !u!114 &1280412872759431592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7311105641244443669}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 05e950421269f1a44a4fe5bef18e6c7b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damage: 1

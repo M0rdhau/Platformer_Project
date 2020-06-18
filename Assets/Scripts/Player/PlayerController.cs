@@ -15,14 +15,21 @@ public class PlayerController : MonoBehaviour, ISaveable
     [SerializeField] float climbSpeed = 3f;
     //vertical velocity necessary to roll
     [SerializeField] float rollTime = 0.8f;
+    [SerializeField] float climbDelayTime = 0.2f;
+
+    [SerializeField] float knockbackX = 1f;
+    [SerializeField] float knockbackY = 0.5f;
+
     Vector2 accelerationVector;
     float fallTime;
+    float jumpTime;
     bool isCrouching = false;
     bool isRunning = false;
     bool isClimbing = false;
     bool isJumping = false;
     bool isFalling = false;
-    bool jumpAxisInUse = false;
+
+    bool areControlsEnabled = true;
 
     //TODO: get these values at runtime from colliders
     float playerColliderHeight = 0.75f;
@@ -48,11 +55,32 @@ public class PlayerController : MonoBehaviour, ISaveable
     void Update()
     {
         HandleAcceleration();
-        HandleMovementInput();
+        if (areControlsEnabled) { HandleMovementInput(); }
         CheckForFalling();
     }
 
+    public void KnockBack()
+    {
+        _animator.SetBool("knockedBack", true);
+        areControlsEnabled = false;
+        accelerationVector = new Vector2(0, 0);
+        if (_renderer.flipX)
+        {
+            Debug.Log("Knocking Player right");
+            _rigidBody.velocity = new Vector2(knockbackX, knockbackY);
+        }
+        else
+        {
+            Debug.Log("Knocking Player left");
+            _rigidBody.velocity = new Vector2(-knockbackX, knockbackY);
+        }
+    }
 
+    public void EndKnockBack()
+    {
+        _animator.SetBool("knockedBack", false);
+        areControlsEnabled = true;
+    }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -138,9 +166,12 @@ public class PlayerController : MonoBehaviour, ISaveable
 
         HandleClimb();
 
-        if (Input.GetAxis("Horizontal") != 0)
+        if (Input.GetKey(KeyCode.D))
         {
-            HandleHorizontalMovement(Input.GetAxis("Horizontal"));
+            HandleHorizontalMovement(1f);
+        }else if (Input.GetKey(KeyCode.A))
+        {
+            HandleHorizontalMovement(-1f);
         }
         else
         {
@@ -160,23 +191,19 @@ public class PlayerController : MonoBehaviour, ISaveable
             isRunning = false;
         }
 
-        if (Input.GetAxis("Jump") != 0)
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (!jumpAxisInUse)
-            {
-                Jump();
-                jumpAxisInUse = true;
-            }
-        }
-        if (Input.GetAxis("Jump") == 0)
-        {
-            jumpAxisInUse = false;
+            Jump();
         }
     }
 
     private void HandleClimb()
     {
         float axisThrow = Input.GetAxis("Vertical");
+        if (axisThrow != 0)
+        {
+            jumpTime = 0;
+        }
         if (isTouchingLadders())
         {
             if (!isTouchingGround() && isTouchingLadders())
@@ -233,6 +260,7 @@ public class PlayerController : MonoBehaviour, ISaveable
             _rigidBody.velocity = jumpVec;
             isJumping = true;
             _animator.SetTrigger("jump");
+            jumpTime = Time.time;
         }
     }
 
@@ -279,6 +307,7 @@ public class PlayerController : MonoBehaviour, ISaveable
 
     private bool isTouchingLadders()
     {
+        if (Time.time - jumpTime <= climbDelayTime) return false;
         return handsCollider.IsTouchingLayers(LayerMask.GetMask("Ladders"));
     }
 

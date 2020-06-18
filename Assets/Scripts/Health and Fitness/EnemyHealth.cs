@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Health : MonoBehaviour, ISaveable
+public class EnemyHealth : MonoBehaviour, ISaveable, Health
 {
     [SerializeField] float totalHealth = 20f;
     Animator anim;
     bool isDead = false;
-    
-       
-private void Start()
+
+
+    private void Start()
     {
         anim = GetComponent<Animator>();
     }
@@ -61,5 +61,15 @@ private void Start()
     public bool IsDead()
     {
         return isDead;
+    }
+
+    void Health.Die()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void KnockBackHit(float dmg)
+    {
+        throw new System.NotImplementedException();
     }
 }

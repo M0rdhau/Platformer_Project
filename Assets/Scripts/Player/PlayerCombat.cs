@@ -35,12 +35,12 @@ public class PlayerCombat : MonoBehaviour
     {
         if (Time.time >= nextAttackTime)
         {
-            if (Input.GetAxis("Fire1") > 0)
+            if (Input.GetKeyDown(KeyCode.LeftAlt))
             {
                 Attack("kick");
                 nextAttackTime = Time.time + 1f / attackRate;
             }
-            if (Input.GetAxis("Fire2") > 0)
+            if (Input.GetKeyDown(KeyCode.LeftControl))
             {
                 Attack("punch");
                 nextAttackTime = Time.time + 1f / attackRate;
@@ -71,7 +71,7 @@ public class PlayerCombat : MonoBehaviour
         Collider2D[] enemiesHit = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, LayerMask.GetMask("Enemies"));
         foreach (Collider2D enemy in enemiesHit)
         {
-            if (enemy.GetComponent<Health>() && !enemy.GetComponent<Health>().IsDead())
+            if (enemy.GetComponent<Health>() != null && !enemy.GetComponent<Health>().IsDead())
             {
                 enemy.GetComponent<Health>().DamageHealth(attackDamage);
             }

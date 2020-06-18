@@ -63,7 +63,7 @@ GameObject:
   - component: {fileID: 64404211842880311}
   - component: {fileID: 5340405664925487822}
   - component: {fileID: 2308017410019324714}
-  - component: {fileID: 1537473336516339229}
+  - component: {fileID: 2366605925883504455}
   m_Layer: 12
   m_Name: Player
   m_TagString: Untagged
@@ -146,6 +146,9 @@ MonoBehaviour:
   jumpVelocity: 7
   climbSpeed: 3
   rollTime: 0.8
+  climbDelayTime: 0.2
+  knockbackX: 3
+  knockbackY: 2
 --- !u!114 &1299987955
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -203,7 +206,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uniqueId: Player
---- !u!114 &1537473336516339229
+--- !u!114 &2366605925883504455
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -212,7 +215,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1570389092419465435}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 851c12a4afe212041bb439f4f5391ca2, type: 3}
+  m_Script: {fileID: 11500000, guid: 7e314d7feda8a66438e36c3aa37b04b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   totalHealth: 20

@@ -7,7 +7,7 @@ public class PlayerCombat : MonoBehaviour
     [Header("Combat")]
 
     [SerializeField] float attackRange = 0.8f;
-    [SerializeField] int attackDamage = 5;
+    [SerializeField] float attackDamage = 5f;
     [SerializeField] float attackRate = 2f;
     [SerializeField] Transform attackPoint;
     float nextAttackTime = 0f;
@@ -68,10 +68,10 @@ public class PlayerCombat : MonoBehaviour
     {
         CheckAttackPoint();
         _animator.SetTrigger(attName);
-        Collider2D[] enemiesHit = Physics2D.OverlapCircleAll(attackPoint.position, attackRange);
+        Collider2D[] enemiesHit = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, LayerMask.GetMask("Enemies"));
         foreach (Collider2D enemy in enemiesHit)
         {
-            if (enemy.GetComponent<Health>())
+            if (enemy.GetComponent<Health>() && !enemy.GetComponent<Health>().IsDead())
             {
                 enemy.GetComponent<Health>().DamageHealth(attackDamage);
             }

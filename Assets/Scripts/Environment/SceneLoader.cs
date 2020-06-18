@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class SceneLoader : MonoBehaviour
 {
-    [SerializeField] float fadeOutTime = 3f;
+    [SerializeField] float fadeOutTime = 1f;
     [SerializeField] float waitTime = 2f;
     [SerializeField] float fadeInTime = 1f;
     int mainMenuIndex = 1;
@@ -40,11 +40,16 @@ public class SceneLoader : MonoBehaviour
 
     private IEnumerator DoorLoadCoroutine(string sceneName, int doorIndex)
     {
+        SavingWrapper wrapper = FindObjectOfType<SavingWrapper>();
         DontDestroyOnLoad(gameObject);
+        wrapper.Save();
+        //changin timescale so that everything stays the same on the screen
         yield return FindObjectOfType<Fader>().FadeOut(fadeOutTime);
         yield return SceneManager.LoadSceneAsync(sceneName);
         Door doorToSpawnAt = FindDoor(doorIndex);
+        wrapper.Load();
         SetPlayerLocation(doorToSpawnAt);
+        wrapper.Save();
         yield return new WaitForSeconds(waitTime);
         yield return FindObjectOfType<Fader>().FadeIn(fadeInTime);
         Destroy(gameObject);
@@ -53,7 +58,8 @@ public class SceneLoader : MonoBehaviour
     private void SetPlayerLocation(Door doorToSpawnAt)
     {
         var spawnPoint = doorToSpawnAt.GetSpawnPoint();
-        FindObjectOfType<PlayerController>().gameObject.transform.position = spawnPoint.position;
+        var player = FindObjectOfType<PlayerController>().gameObject;
+        player.transform.position = spawnPoint.position;
     }
 
     private Door FindDoor(int doorIndex)

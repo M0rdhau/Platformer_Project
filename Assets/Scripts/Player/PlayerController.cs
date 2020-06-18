@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, ISaveable
 {
 
     [Header("Movement")]
@@ -111,6 +111,17 @@ public class PlayerController : MonoBehaviour
         _animator.SetBool("isLedging", false);
         _rigidBody.gravityScale = 0;
         _animator.speed = 0;
+    }
+
+    public object CaptureState()
+    {
+        return new SerializableVector(transform.position);
+    }
+
+    public void RestoreState(object state)
+    {
+        SerializableVector vec = state as SerializableVector;
+        transform.position = vec.GetVector();
     }
 
     #region Movement
@@ -280,6 +291,5 @@ public class PlayerController : MonoBehaviour
     {
         return feetCollider.IsTouchingLayers(LayerMask.GetMask("Ground", "Ledges"));
     }
-
     #endregion
 }

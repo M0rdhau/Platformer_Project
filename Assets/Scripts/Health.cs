@@ -2,18 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Health : MonoBehaviour
+public class Health : MonoBehaviour, ISaveable
 {
-    [SerializeField] int totalHealth = 20;
+    [SerializeField] float totalHealth = 20f;
     Animator anim;
     bool isDead = false;
-
-    private void Start()
+    
+       
+private void Start()
     {
         anim = GetComponent<Animator>();
     }
 
-    public void DamageHealth(int dmg)
+    public void DamageHealth(float dmg)
     {
         if (!isDead)
         {
@@ -33,9 +34,32 @@ public class Health : MonoBehaviour
         this.enabled = false;
     }
 
-    public void Die()
+    void Die()
     {
-        Destroy(gameObject);
+        GetComponentInChildren<SpriteRenderer>().gameObject.SetActive(false);
+        GetComponent<Rigidbody2D>().gravityScale = 0;
+        GetComponent<Collider2D>().enabled = false;
     }
 
+
+
+    public object CaptureState()
+    {
+        return totalHealth;
+    }
+
+    public void RestoreState(object state)
+    {
+        totalHealth = (float)state;
+        if (totalHealth <= 0)
+        {
+            isDead = true;
+            Die();
+        }
+    }
+
+    public bool IsDead()
+    {
+        return isDead;
+    }
 }

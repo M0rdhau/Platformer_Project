@@ -9,9 +9,14 @@ public class Fader : MonoBehaviour
     
 
 
-    private void Start()
+    private void Awake()
     {
         canv = GetComponent<CanvasGroup>();
+    }
+
+    public void FadeOutImmediately()
+    {
+        canv.alpha = 1;
     }
 
 

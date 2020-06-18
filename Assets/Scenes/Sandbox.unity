@@ -5268,6 +5268,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1060844966707688694, guid: 3e88eeafc137b68438f50f1ea0340c42,
+        type: 3}
+      propertyPath: uniqueId
+      value: 14ab6032-642d-4c6e-9f87-b20bc0b67d4f
+      objectReference: {fileID: 0}
     - target: {fileID: 4284187632554357734, guid: 3e88eeafc137b68438f50f1ea0340c42,
         type: 3}
       propertyPath: m_Name
@@ -5331,32 +5336,32 @@ PrefabInstance:
     - target: {fileID: 4284187632747908693, guid: 3e88eeafc137b68438f50f1ea0340c42,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 27.53
+      value: 26.95
       objectReference: {fileID: 0}
     - target: {fileID: 4284187632747908693, guid: 3e88eeafc137b68438f50f1ea0340c42,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.6999998
+      value: -1.9899998
       objectReference: {fileID: 0}
     - target: {fileID: 4284187633384133132, guid: 3e88eeafc137b68438f50f1ea0340c42,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 27.53
+      value: 26.95
       objectReference: {fileID: 0}
     - target: {fileID: 4284187633384133132, guid: 3e88eeafc137b68438f50f1ea0340c42,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.6999998
+      value: -1.9899998
       objectReference: {fileID: 0}
     - target: {fileID: 4284187634157123328, guid: 3e88eeafc137b68438f50f1ea0340c42,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 27.53
+      value: 26.95
       objectReference: {fileID: 0}
     - target: {fileID: 4284187634157123328, guid: 3e88eeafc137b68438f50f1ea0340c42,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -3.7
+      value: -1.99
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3e88eeafc137b68438f50f1ea0340c42, type: 3}
@@ -5657,6 +5662,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3170311550886773130, guid: 0198dee0e5677ef4bb163489fa29b75b,
+        type: 3}
+      propertyPath: uniqueId
+      value: e77a8824-0a80-42eb-8e1e-d92f4d99d66f
+      objectReference: {fileID: 0}
     - target: {fileID: 7311105641244443664, guid: 0198dee0e5677ef4bb163489fa29b75b,
         type: 3}
       propertyPath: m_IsTrigger

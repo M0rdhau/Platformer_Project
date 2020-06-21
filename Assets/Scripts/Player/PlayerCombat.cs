@@ -75,10 +75,29 @@ public class PlayerCombat : MonoBehaviour
         CheckAttackPoint();
         if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Jump") || _animator.GetCurrentAnimatorStateInfo(0).IsName("Falling"))
         {
-            attName = "kick";
+            _animator.SetBool("kickAerial", true);
         }
-        _animator.SetTrigger(attName);
+        else
+        {
+            _animator.SetTrigger(attName);
+        }
         Collider2D[] enemiesHit = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, LayerMask.GetMask("Enemies"));
+        if (enemiesHit.Length > 0)
+        {
+            if (_animator.GetBool("kickAerial"))
+            {
+                _animator.SetBool("kickAerial", false);
+                _animator.SetTrigger("enemyHitAerial");
+                if (GetComponent<SpriteRenderer>().flipX)
+                {
+                    GetComponent<Rigidbody2D>().velocity = Vector2.right;
+                }
+                else
+                {
+                    GetComponent<Rigidbody2D>().velocity = Vector2.left;
+                }
+            }
+        }
         foreach (Collider2D enemy in enemiesHit)
         {
             if (enemy.GetComponent<Health>() != null && !enemy.GetComponent<Health>().IsDead())

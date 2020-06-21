@@ -6313,6 +6313,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3053243110094600396, guid: 3e88eeafc137b68438f50f1ea0340c42,
+        type: 3}
+      propertyPath: m_ColliderMask.m_Bits
+      value: 24321
+      objectReference: {fileID: 0}
     - target: {fileID: 4284187632554357734, guid: 3e88eeafc137b68438f50f1ea0340c42,
         type: 3}
       propertyPath: m_Name

@@ -83,14 +83,14 @@ public class PlayerController : MonoBehaviour, ISaveable
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        var collisionLayer = collision.gameObject.layer;
-
-        if ((collisionLayer == 8 || collisionLayer == 9 || collisionLayer == 11) && (isFalling || isJumping))
+        if ((isTouchingGround() || isTouchingLadders()) && (isFalling || isJumping))
         {
+            
             isFalling = false;
             isJumping = false;
             _animator.SetBool("isFalling", false);
-            if (collisionLayer == 8)
+            _animator.SetBool("kickAerial", false);
+            if (isTouchingGround() )
             {
                 if (Time.time - fallTime < rollTime)
                 {
@@ -160,7 +160,7 @@ public class PlayerController : MonoBehaviour, ISaveable
             HandleHorizontalMovement(-1f);
             hasStopped = false;
         }
-        else if(!isFalling && !isJumping && !hasStopped)
+        else if(!hasStopped)
         {
             Vector2 vel = _rigidBody.velocity;
             vel.x = 0;
@@ -200,6 +200,8 @@ public class PlayerController : MonoBehaviour, ISaveable
         {
             isFalling = false;
             isJumping = false;
+            _animator.SetBool("isFalling", false);
+            _animator.SetBool("kickAerial", false);
             if (!isTouchingGround() && isTouchingLadders())
             {
                 _rigidBody.gravityScale = 0;
@@ -229,7 +231,6 @@ public class PlayerController : MonoBehaviour, ISaveable
             _animator.speed = 1;
             isClimbing = false;
             _animator.SetBool("isClimbing", isClimbing);
-            _animator.SetTrigger("landed_Noroll");
         }
 
     }

@@ -6,6 +6,7 @@ TagManager:
   tags:
   - EnemyLedgeLeft
   - EnemyLedgeRight
+  - platformReversePoint
   layers:
   - Default
   - TransparentFX

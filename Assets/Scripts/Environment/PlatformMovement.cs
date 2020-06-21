@@ -66,7 +66,7 @@ public class PlatformMovement : MonoBehaviour
                 SetMovementVector();
                 break;
             case ReversePositions.Y:
-                movementVec.x = -movementVec.y;
+                movementVec.y = -movementVec.y;
                 SetMovementVector();
                 break;
             case ReversePositions.Both:

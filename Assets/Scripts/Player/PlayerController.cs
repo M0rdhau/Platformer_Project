@@ -46,8 +46,8 @@ public class PlayerController : MonoBehaviour, ISaveable
     void Start()
     {
         _animator = GetComponent<Animator>();
-        feetCollider = transform.GetChild(2).GetComponent<Collider2D>();
-        handsCollider = GetComponent<Collider2D>();
+        feetCollider = GetComponent<CapsuleCollider2D>();
+        handsCollider = GetComponent<BoxCollider2D>();
         _renderer = GetComponentInChildren<SpriteRenderer>();
         _rigidBody = GetComponent<Rigidbody2D>();
     }

@@ -28,6 +28,7 @@ public class PlayerController : MonoBehaviour, ISaveable
     bool isClimbing = false;
     bool isJumping = false;
     bool isFalling = false;
+    bool hasStopped = true;
 
     bool areControlsEnabled = true;
 
@@ -167,17 +168,21 @@ public class PlayerController : MonoBehaviour, ISaveable
         if (Input.GetKey(KeyCode.D))
         {
             HandleHorizontalMovement(1f);
+            hasStopped = false;
         }else if (Input.GetKey(KeyCode.A))
         {
             HandleHorizontalMovement(-1f);
+            hasStopped = false;
         }
-        else 
+        else if(!isFalling && !isJumping && !hasStopped)
         {
             Vector2 vel = _rigidBody.velocity;
             vel.x = 0;
             _rigidBody.velocity = vel;
+            accelerationVector = new Vector2(0, 0);
             _animator.SetBool("isRunning", false);
             _animator.SetBool("isWalking", false);
+            hasStopped = true;
         }
 
         if (Input.GetKey(KeyCode.LeftShift))

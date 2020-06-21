@@ -7,7 +7,9 @@ public class EnemyMovement : MonoBehaviour, ISaveable
 {
     [SerializeField] float MoveSpeed = 2f;
     [SerializeField] Vector2 movementVec;
-    [SerializeField] float damagedTimeFrame = 0.5f;
+    [SerializeField] float damagedTimeFrame = 1f;
+    [SerializeField] float knockbackX = 3f;
+    [SerializeField] float knockbackY = 1f;
     float timeLastDamaged = 0;
     Rigidbody2D body;
     SpriteRenderer render;
@@ -38,6 +40,21 @@ public class EnemyMovement : MonoBehaviour, ISaveable
             yield return new WaitForSeconds(damagedTimeFrame);
             UnDamaged();
         }
+    }
+
+    public IEnumerator KnockBack()
+    {
+        movementVec.x = 0;
+        if (render.flipX)
+        {
+            body.velocity = new Vector2(knockbackX, knockbackY);
+        }
+        else
+        {
+            body.velocity = new Vector2(-knockbackX, knockbackY);
+        }
+        yield return new WaitForSeconds(damagedTimeFrame);
+        UnDamaged();
     }
 
     private void UnDamaged()

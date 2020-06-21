@@ -7,9 +7,9 @@ public class PlayerCombat : MonoBehaviour
     [Header("Combat")]
 
     [SerializeField] float attackRange = 1.5f;
+    [SerializeField] float aerialRange = 0.55f;
     [SerializeField] float attackDamage = 5f;
     [SerializeField] float attackRate = 2f;
-    [SerializeField] float kickOffset = 0.8f;
     [SerializeField] Transform attackPoint;
     float nextAttackTime = 0f;
     LayerMask enemyLayers;
@@ -38,12 +38,7 @@ public class PlayerCombat : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.LeftAlt))
             {
-                var kickPos = attackPoint.position;
-                kickPos.y -= kickOffset;
-                attackPoint.position = kickPos;
                 Attack("kick");
-                kickPos.y += kickOffset;
-                attackPoint.position = kickPos;
                 nextAttackTime = Time.time + 1f / attackRate;
             }
             if (Input.GetKeyDown(KeyCode.LeftControl))
@@ -73,22 +68,39 @@ public class PlayerCombat : MonoBehaviour
     private void Attack(string attName)
     {
         CheckAttackPoint();
+        float range;
+        Collider2D[] enemiesHit;
         if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Jump") || _animator.GetCurrentAnimatorStateInfo(0).IsName("Falling"))
         {
             _animator.SetBool("kickAerial", true);
+            range = aerialRange;
         }
         else
         {
             _animator.SetTrigger(attName);
+            range = attackRange;
         }
-        Collider2D[] enemiesHit = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, LayerMask.GetMask("Enemies"));
+        enemiesHit = Physics2D.OverlapCircleAll(attackPoint.position, range, LayerMask.GetMask("Enemies"));
+        foreach (Collider2D enemy in enemiesHit)
+        {
+            if (enemy.GetComponent<Health>() != null && !enemy.GetComponent<Health>().IsDead())
+            {
+                if (_animator.GetBool("kickAerial"))
+                {
+                    enemy.GetComponent<Health>().KnockBackHit(attackDamage);
+                } else
+                {
+                    enemy.GetComponent<Health>().DamageHealth(attackDamage);
+                }
+            }
+        }
         if (enemiesHit.Length > 0)
         {
             if (_animator.GetBool("kickAerial"))
             {
                 _animator.SetBool("kickAerial", false);
                 _animator.SetTrigger("enemyHitAerial");
-                if (GetComponent<SpriteRenderer>().flipX)
+                if (GetComponentInChildren<SpriteRenderer>().flipX)
                 {
                     GetComponent<Rigidbody2D>().velocity = Vector2.right;
                 }
@@ -96,13 +108,6 @@ public class PlayerCombat : MonoBehaviour
                 {
                     GetComponent<Rigidbody2D>().velocity = Vector2.left;
                 }
-            }
-        }
-        foreach (Collider2D enemy in enemiesHit)
-        {
-            if (enemy.GetComponent<Health>() != null && !enemy.GetComponent<Health>().IsDead())
-            {
-                enemy.GetComponent<Health>().DamageHealth(attackDamage);
             }
         }
     }

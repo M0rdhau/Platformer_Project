@@ -42,6 +42,11 @@ public class EnemyHealth : MonoBehaviour, ISaveable, Health
         GetComponent<Collider2D>().enabled = false;
     }
 
+    public void KnockBackHit(float dmg)
+    {
+        DamageHealth(dmg);
+        StartCoroutine(GetComponent<EnemyMovement>().KnockBack());
+    }
 
 
     public object CaptureState()
@@ -69,8 +74,5 @@ public class EnemyHealth : MonoBehaviour, ISaveable, Health
         throw new System.NotImplementedException();
     }
 
-    public void KnockBackHit(float dmg)
-    {
-        throw new System.NotImplementedException();
-    }
+    
 }

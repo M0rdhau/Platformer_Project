@@ -91,6 +91,7 @@ GameObject:
   - component: {fileID: 4552266348372725858}
   - component: {fileID: 4552266347215113706}
   - component: {fileID: 4552266347215113621}
+  - component: {fileID: 351303954226347792}
   m_Layer: 12
   m_Name: Player
   m_TagString: Untagged
@@ -176,6 +177,7 @@ MonoBehaviour:
   climbDelayTime: 0.2
   knockbackX: 3
   knockbackY: 2
+  accelerationVector: {x: 0, y: 0}
 --- !u!114 &3091653596518514883
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -188,9 +190,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7aff8b74f5b59e54681fc843e2e574ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackRange: 0.8
+  attackRange: 1.5
   attackDamage: 5
   attackRate: 2
+  kickOffset: 0.8
   attackPoint: {fileID: 4552266348166522051}
 --- !u!114 &6988227869284085758
 MonoBehaviour:
@@ -254,9 +257,9 @@ BoxCollider2D:
   m_Density: 1
   m_Material: {fileID: 6200000, guid: 5a7cec0e8a40eaa48a5f17b467b10a22, type: 2}
   m_IsTrigger: 0
-  m_UsedByEffector: 0
+  m_UsedByEffector: 1
   m_UsedByComposite: 0
-  m_Offset: {x: -0.014529228, y: 0}
+  m_Offset: {x: -0.020931244, y: 0.013708115}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -267,7 +270,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.7772083, y: 1}
+  m_Size: {x: 0.7516022, y: 0.9725838}
   m_EdgeRadius: 0
 --- !u!70 &4552266347215113621
 CapsuleCollider2D:
@@ -285,6 +288,25 @@ CapsuleCollider2D:
   m_Offset: {x: -0.02905941, y: -0.2421645}
   m_Size: {x: 0.5581188, y: 1.484329}
   m_Direction: 0
+--- !u!251 &351303954226347792
+PlatformEffector2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4552266347215113707}
+  m_Enabled: 1
+  m_UseColliderMask: 1
+  m_ColliderMask:
+    serializedVersion: 2
+    m_Bits: 57143
+  m_RotationalOffset: 0
+  m_UseOneWay: 1
+  m_UseOneWayGrouping: 0
+  m_SurfaceArc: 180
+  m_UseSideFriction: 0
+  m_UseSideBounce: 0
+  m_SideArc: 1
 --- !u!1 &4552266347663036807
 GameObject:
   m_ObjectHideFlags: 0

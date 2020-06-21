@@ -104,23 +104,9 @@ public class PlayerController : MonoBehaviour, ISaveable
         }
     }
 
-    public void HandleLedgeClimb()
-    {
-        ResetAnim();
-        _animator.SetBool("isLedging", true);
-        _rigidBody.gravityScale = 0;
-        _animator.speed = 0;
-    }
 
 
-    public void ResetAnim()
-    {
-        isClimbing = false;
-        isJumping = false;
-        isFalling = false;
-        _animator.SetBool("isClimbing", isClimbing);
-        _animator.SetBool("isFalling", isFalling);
-    }
+
 
     public void MoveToLedge()
     {
@@ -212,6 +198,8 @@ public class PlayerController : MonoBehaviour, ISaveable
         }
         if (isTouchingLadders())
         {
+            isFalling = false;
+            isJumping = false;
             if (!isTouchingGround() && isTouchingLadders())
             {
                 _rigidBody.gravityScale = 0;

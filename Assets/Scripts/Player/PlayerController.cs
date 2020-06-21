@@ -20,7 +20,7 @@ public class PlayerController : MonoBehaviour, ISaveable
     [SerializeField] float knockbackX = 1f;
     [SerializeField] float knockbackY = 0.5f;
 
-    Vector2 accelerationVector;
+    [SerializeField] Vector2 accelerationVector;
     float fallTime;
     float jumpTime;
     bool isCrouching = false;
@@ -185,13 +185,16 @@ public class PlayerController : MonoBehaviour, ISaveable
             hasStopped = true;
         }
 
-        if (Input.GetKey(KeyCode.LeftShift))
+        if (!hasStopped)
         {
-            isRunning = true;
-        }
-        else
-        {
-            isRunning = false;
+            if (Input.GetKey(KeyCode.LeftShift))
+            {
+                isRunning = true;
+            }
+            else
+            {
+                isRunning = false;
+            }
         }
 
         if (Input.GetKeyDown(KeyCode.Space))

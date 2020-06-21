@@ -18,6 +18,7 @@ public class EnemyHealth : MonoBehaviour, ISaveable, Health
     {
         if (!isDead)
         {
+            StartCoroutine(GetComponent<EnemyMovement>().Damaged());
             totalHealth -= dmg;
             anim.SetTrigger("takeDamage");
             if (totalHealth <= 0)

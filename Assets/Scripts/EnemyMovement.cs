@@ -7,6 +7,8 @@ public class EnemyMovement : MonoBehaviour, ISaveable
 {
     [SerializeField] float MoveSpeed = 2f;
     [SerializeField] Vector2 movementVec;
+    [SerializeField] float damagedTimeFrame = 0.5f;
+    float timeLastDamaged = 0;
     Rigidbody2D body;
     SpriteRenderer render;
     Health health;
@@ -25,6 +27,28 @@ public class EnemyMovement : MonoBehaviour, ISaveable
         if (health.IsDead())
         {
             movementVec = new Vector2(0, 0);
+        }
+    }
+
+    public IEnumerator Damaged()
+    {
+        if (Time.time - timeLastDamaged > damagedTimeFrame)
+        {
+            movementVec.x = 0;
+            yield return new WaitForSeconds(damagedTimeFrame);
+            UnDamaged();
+        }
+    }
+
+    private void UnDamaged()
+    {
+        if (render.flipX)
+        {
+            movementVec = MoveSpeed * Vector2.right;
+        }
+        else
+        {
+            movementVec = MoveSpeed * Vector2.left;
         }
     }
 

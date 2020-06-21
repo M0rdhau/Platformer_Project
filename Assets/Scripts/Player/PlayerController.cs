@@ -66,12 +66,10 @@ public class PlayerController : MonoBehaviour, ISaveable
         accelerationVector = new Vector2(0, 0);
         if (_renderer.flipX)
         {
-            Debug.Log("Knocking Player right");
             _rigidBody.velocity = new Vector2(knockbackX, knockbackY);
         }
         else
         {
-            Debug.Log("Knocking Player left");
             _rigidBody.velocity = new Vector2(-knockbackX, knockbackY);
         }
     }
@@ -173,7 +171,7 @@ public class PlayerController : MonoBehaviour, ISaveable
         {
             HandleHorizontalMovement(-1f);
         }
-        else
+        else 
         {
             Vector2 vel = _rigidBody.velocity;
             vel.x = 0;

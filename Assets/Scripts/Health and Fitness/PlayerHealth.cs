@@ -5,6 +5,8 @@ using UnityEngine;
 public class PlayerHealth : MonoBehaviour, ISaveable, Health
 {
     [SerializeField] float totalHealth = 20f;
+    [SerializeField] float invulnerableTime = 0.2f;
+    float timeSinceHit = 0;
     Animator anim;
     bool isDead = false;
 
@@ -16,13 +18,18 @@ public class PlayerHealth : MonoBehaviour, ISaveable, Health
 
     public void DamageHealth(float dmg)
     {
-        if (!isDead)
+        if (Time.time - timeSinceHit > invulnerableTime)
         {
-            totalHealth -= dmg;
-            //anim.SetTrigger("takeDamage");
-            if (totalHealth <= 0)
+            GetComponent<Animator>().SetTrigger("Invulnerable");
+            timeSinceHit = Time.time;
+            if (!isDead)
             {
-                HandleDeath();
+                totalHealth -= dmg;
+                //anim.SetTrigger("takeDamage");
+                if (totalHealth <= 0)
+                {
+                    HandleDeath();
+                }
             }
         }
     }

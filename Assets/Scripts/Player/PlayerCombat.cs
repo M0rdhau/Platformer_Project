@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,7 +12,9 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] float attackDamage = 5f;
     [SerializeField] float attackRate = 2f;
     [SerializeField] Transform attackPoint;
+    [SerializeField] Transform airAttackPoint;
     float nextAttackTime = 0f;
+    float actualRange;
     LayerMask enemyLayers;
     Animator _animator;
     SpriteRenderer _renderer;
@@ -61,42 +64,58 @@ public class PlayerCombat : MonoBehaviour
     void FlipAttackPoint(float diff)
     {
         Vector2 pos = attackPoint.position;
+        Vector2 airPos = airAttackPoint.position;
         pos.x += 2 * diff;
+        airPos.x += 2 * diff;
         attackPoint.position = pos;
+        airAttackPoint.position = airPos;
     }
 
     private void Attack(string attName)
     {
         CheckAttackPoint();
-        float range;
-        Collider2D[] enemiesHit;
-        if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Jump") || _animator.GetCurrentAnimatorStateInfo(0).IsName("Falling"))
+        PlayAnim(attName);
+        StartCoroutine(HitAndDamage());
+    }
+
+    private IEnumerator HitAndDamage()
+    {
+        Transform attackTransform;
+        if (_animator.GetCurrentAnimatorStateInfo(0).IsName("AirKick"))
         {
-            _animator.SetBool("kickAerial", true);
-            range = aerialRange;
+            attackTransform = airAttackPoint;
         }
         else
         {
-            _animator.SetTrigger(attName);
-            range = attackRange;
+            attackTransform = attackPoint;
         }
-        enemiesHit = Physics2D.OverlapCircleAll(attackPoint.position, range, LayerMask.GetMask("Enemies"));
+        Collider2D[] enemies;
+        do
+        {
+            enemies = Physics2D.OverlapCircleAll(attackTransform.position, actualRange, LayerMask.GetMask("Enemies"));
+            yield return null;
+        } while (enemies.Length == 0 && _animator.GetCurrentAnimatorStateInfo(0).IsName("AirKick"));
+        DamageEnemies(enemies);
+    }
+
+
+    private void DamageEnemies(Collider2D[] enemiesHit)
+    {
         foreach (Collider2D enemy in enemiesHit)
         {
+            bool knockedRight = IsEnemyRight(enemy);
+            if (enemy.tag == "EnemyProjectile")
+            {
+                enemy.GetComponent<Fireball>().Explode();
+                return;
+            }
+
             if (enemy.GetComponent<Health>() != null && !enemy.GetComponent<Health>().IsDead())
             {
-                if (_animator.GetBool("kickAerial"))
-                {
-                    enemy.GetComponent<Health>().KnockBackHit(attackDamage);
-                } else
-                {
-                    enemy.GetComponent<Health>().DamageHealth(attackDamage);
-                }
+                enemy.GetComponent<Health>().KnockBackHit(attackDamage, knockedRight);
             }
         }
-        if (enemiesHit.Length > 0)
-        {
-            if (_animator.GetBool("kickAerial"))
+        if (_animator.GetBool("kickAerial"))
             {
                 _animator.SetBool("kickAerial", false);
                 _animator.SetTrigger("enemyHitAerial");
@@ -108,13 +127,45 @@ public class PlayerCombat : MonoBehaviour
                 {
                     GetComponent<Rigidbody2D>().velocity = Vector2.left;
                 }
-            }
         }
     }
+
+    private bool IsEnemyRight(Collider2D enemy)
+    {
+        bool knockedRight;
+        if (enemy.transform.position.x > transform.position.x)
+        {
+            knockedRight = true;
+        }
+        else
+        {
+            knockedRight = false;
+        }
+
+        return knockedRight;
+    }
+
+    private void PlayAnim(string attName)
+    {
+        if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Jump") || _animator.GetCurrentAnimatorStateInfo(0).IsName("Falling"))
+        {
+            _animator.SetBool("kickAerial", true);
+            actualRange = aerialRange;
+        }
+        else
+        {
+            _animator.SetTrigger(attName);
+            actualRange = attackRange;
+        }
+    }
+
+    
 
     private void OnDrawGizmosSelected()
     {
         Gizmos.DrawWireSphere(attackPoint.position, attackRange);
+        Gizmos.DrawWireSphere(airAttackPoint.position, aerialRange);
+
     }
 
 }

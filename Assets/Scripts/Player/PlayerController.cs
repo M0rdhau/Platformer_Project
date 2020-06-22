@@ -30,6 +30,8 @@ public class PlayerController : MonoBehaviour, ISaveable
     bool isFalling = false;
     bool hasStopped = true;
 
+    bool canJumpOrFall = false;
+
     bool areControlsEnabled = true;
 
     //TODO: get these values at runtime from colliders
@@ -60,12 +62,12 @@ public class PlayerController : MonoBehaviour, ISaveable
         CheckForFalling();
     }
 
-    public void KnockBack()
+    public void KnockBack(bool knockedRight)
     {
         _animator.SetBool("knockedBack", true);
         areControlsEnabled = false;
         accelerationVector = new Vector2(0, 0);
-        if (_renderer.flipX)
+        if (knockedRight)
         {
             _rigidBody.velocity = new Vector2(knockbackX, knockbackY);
         }
@@ -83,14 +85,29 @@ public class PlayerController : MonoBehaviour, ISaveable
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        Land();
+    }
+
+    private void OnCollisionStay2D(Collision2D collision)
+    {
+        Land();
+    }
+
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        canJumpOrFall = true;
+    }
+
+    private void Land()
+    {
         if ((isTouchingGround() || isTouchingLadders()) && (isFalling || isJumping))
         {
-            
+            canJumpOrFall = false;
             isFalling = false;
             isJumping = false;
             _animator.SetBool("isFalling", false);
             _animator.SetBool("kickAerial", false);
-            if (isTouchingGround() )
+            if (isTouchingGround())
             {
                 if (Time.time - fallTime < rollTime)
                 {
@@ -103,10 +120,6 @@ public class PlayerController : MonoBehaviour, ISaveable
             }
         }
     }
-
-
-
-
 
     public void MoveToLedge()
     {
@@ -237,7 +250,7 @@ public class PlayerController : MonoBehaviour, ISaveable
 
     private void CheckForFalling()
     {
-        if (_rigidBody.velocity.y < -1 * Mathf.Epsilon && !isTouchingGround() && !isFalling && !isClimbing)
+        if (_rigidBody.velocity.y < -1 * Mathf.Epsilon && !isTouchingGround() && !isFalling && !isClimbing && canJumpOrFall)
         {
             isJumping = false;
             isFalling = true;

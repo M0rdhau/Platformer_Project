@@ -82,7 +82,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7311105641142757916}
   - component: {fileID: 7311105641142757917}
-  - component: {fileID: 4662988861326333837}
   m_Layer: 10
   m_Name: Body
   m_TagString: Untagged
@@ -154,22 +153,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!70 &4662988861326333837
-CapsuleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7311105641142757919}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.16972852}
-  m_Size: {x: 0.93618965, y: 1.285543}
-  m_Direction: 0
 --- !u!1 &7311105641244443669
 GameObject:
   m_ObjectHideFlags: 0
@@ -186,6 +169,7 @@ GameObject:
   - component: {fileID: 8174198237777656748}
   - component: {fileID: 7500172048794121694}
   - component: {fileID: 1280412872759431592}
+  - component: {fileID: 947931811}
   m_Layer: 10
   m_Name: Skeleton
   m_TagString: Untagged
@@ -277,7 +261,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5a14d87f940ae249be65f7c9993bdb5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uniqueId: 
+  uniqueId: b9fda0b3-4422-4c63-b3d9-727c85318d83
 --- !u!114 &8174198237777656748
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -293,6 +277,8 @@ MonoBehaviour:
   MoveSpeed: 1
   movementVec: {x: 0, y: 0}
   damagedTimeFrame: 0.5
+  knockbackX: 3
+  knockbackY: 1
 --- !u!114 &7500172048794121694
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -319,3 +305,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 1
+--- !u!61 &947931811
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7311105641244443669}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.021417141, y: -0.09637642}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.8072481, y: 1.1927528}
+  m_EdgeRadius: 0

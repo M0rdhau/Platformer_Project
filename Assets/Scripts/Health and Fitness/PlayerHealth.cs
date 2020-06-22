@@ -70,9 +70,9 @@ public class PlayerHealth : MonoBehaviour, ISaveable, Health
         return isDead;
     }
 
-    public void KnockBackHit(float dmg)
+    public void KnockBackHit(float dmg, bool knockedRight)
     {
         DamageHealth(dmg);
-        GetComponent<PlayerController>().KnockBack();
+        GetComponent<PlayerController>().KnockBack(knockedRight);
     }
 }

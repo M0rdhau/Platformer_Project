@@ -34,24 +34,22 @@ public class EnemyMovement : MonoBehaviour, ISaveable
 
     public IEnumerator Damaged()
     {
-        if (Time.time - timeLastDamaged > damagedTimeFrame)
-        {
-            movementVec.x = 0;
-            yield return new WaitForSeconds(damagedTimeFrame);
-            UnDamaged();
-        }
+        movementVec.x = 0;
+        yield return new WaitForSeconds(damagedTimeFrame);
+        UnDamaged();
     }
 
-    public IEnumerator KnockBack()
+    public IEnumerator KnockBack(bool knockedRight)
     {
-        movementVec.x = 0;
-        if (render.flipX)
+        Debug.Log("Knocking enemy back");
+        
+        if (knockedRight)
         {
-            body.velocity = new Vector2(knockbackX, knockbackY);
+            movementVec = new Vector2(knockbackX, knockbackY);
         }
         else
         {
-            body.velocity = new Vector2(-knockbackX, knockbackY);
+            movementVec = new Vector2(-knockbackX, knockbackY);
         }
         yield return new WaitForSeconds(damagedTimeFrame);
         UnDamaged();

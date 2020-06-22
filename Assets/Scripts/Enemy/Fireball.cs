@@ -14,14 +14,36 @@ public class Fireball : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        GetComponent<Animator>().SetTrigger("explode");
-        GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
+        Explode();
         Collider2D[] enemiesHit = Physics2D.OverlapCircleAll(transform.position, explosionRadius, LayerMask.GetMask("Player"));
         //Should be only one player
         if (enemiesHit.Length > 0)
         {
-            enemiesHit[0].GetComponent<Health>().DamageHealth(damage);
+            bool knockedRight = IsEnemyRight(collision.transform);
+
+            enemiesHit[0].GetComponent<Health>().KnockBackHit(damage, true);
         }
+    }
+
+    private bool IsEnemyRight(Transform enemy)
+    {
+        bool knockedRight;
+        if (enemy.position.x > transform.position.x)
+        {
+            knockedRight = true;
+        }
+        else
+        {
+            knockedRight = false;
+        }
+
+        return knockedRight;
+    }
+
+    public void Explode()
+    {
+        GetComponent<Animator>().SetTrigger("explode");
+        GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
     }
 
     public void SetMoveVector(Vector2 vec)

@@ -19,12 +19,26 @@ public class EnemyHealth : MonoBehaviour, ISaveable, Health
         if (!isDead)
         {
             StartCoroutine(GetComponent<EnemyMovement>().Damaged());
-            totalHealth -= dmg;
-            anim.SetTrigger("takeDamage");
-            if (totalHealth <= 0)
-            {
-                HandleDeath();
-            }
+            DecreaseHealth(dmg);
+        }
+    }
+
+    public void KnockBackHit(float dmg, bool knockedRight)
+    {
+        if (!isDead)
+        {
+            StartCoroutine(GetComponent<EnemyMovement>().KnockBack(knockedRight));
+            DecreaseHealth(dmg);
+        }
+    }
+
+    private void DecreaseHealth(float dmg)
+    {
+        totalHealth -= dmg;
+        anim.SetTrigger("takeDamage");
+        if (totalHealth <= 0)
+        {
+            HandleDeath();
         }
     }
 
@@ -35,18 +49,14 @@ public class EnemyHealth : MonoBehaviour, ISaveable, Health
         this.enabled = false;
     }
 
-    void Die()
+    public void Die()
     {
         GetComponentInChildren<SpriteRenderer>().gameObject.SetActive(false);
         GetComponent<Rigidbody2D>().gravityScale = 0;
-        GetComponent<Collider2D>().enabled = false;
+        GetComponent<CapsuleCollider2D>().enabled = false;
+        GetComponent<BoxCollider2D>().enabled = false;
     }
 
-    public void KnockBackHit(float dmg)
-    {
-        DamageHealth(dmg);
-        StartCoroutine(GetComponent<EnemyMovement>().KnockBack());
-    }
 
 
     public object CaptureState()
@@ -68,11 +78,4 @@ public class EnemyHealth : MonoBehaviour, ISaveable, Health
     {
         return isDead;
     }
-
-    void Health.Die()
-    {
-        throw new System.NotImplementedException();
-    }
-
-    
 }

@@ -115,7 +115,6 @@ public class PlayerCombat : MonoBehaviour
 
             if (enemy.GetComponent<Health>() != null && !enemy.GetComponent<Health>().IsDead())
             {
-                Debug.Log(attackDamage * (1 + charge.GetCharge()));
                 enemy.GetComponent<Health>().KnockBackHit(attackDamage * (1 + charge.GetCharge()), knockedRight);
             }
         }

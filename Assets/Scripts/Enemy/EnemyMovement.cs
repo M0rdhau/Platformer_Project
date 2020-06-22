@@ -40,9 +40,7 @@ public class EnemyMovement : MonoBehaviour, ISaveable
     }
 
     public IEnumerator KnockBack(bool knockedRight)
-    {
-        Debug.Log("Knocking enemy back");
-        
+    {        
         if (knockedRight)
         {
             movementVec = new Vector2(knockbackX, knockbackY);

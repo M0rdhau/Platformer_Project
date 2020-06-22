@@ -250,6 +250,10 @@ public class PlayerController : MonoBehaviour, ISaveable
 
     private void CheckForFalling()
     {
+        if (!feetCollider.IsTouchingLayers(LayerMask.GetMask("Ground")) && handsCollider.IsTouchingLayers(LayerMask.GetMask("Ground")))
+        {
+            canJumpOrFall = true;
+        }
         if (_rigidBody.velocity.y < -1 * Mathf.Epsilon && !isTouchingGround() && !isFalling && !isClimbing && canJumpOrFall)
         {
             isJumping = false;

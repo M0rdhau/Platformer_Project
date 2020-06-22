@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class PlayerHealth : MonoBehaviour, ISaveable, Health
 {
     [SerializeField] float totalHealth = 20f;
     [SerializeField] float invulnerableTime = 0.2f;
+    PlayerUIHandler handler;
     float timeSinceHit = 0;
     Animator anim;
     bool isDead = false;
@@ -13,7 +15,9 @@ public class PlayerHealth : MonoBehaviour, ISaveable, Health
 
     private void Start()
     {
+        handler = GetComponent<PlayerUIHandler>();
         anim = GetComponent<Animator>();
+        handler.UpdateHealth(totalHealth);
     }
 
     public void DamageHealth(float dmg)
@@ -22,6 +26,7 @@ public class PlayerHealth : MonoBehaviour, ISaveable, Health
         {
             GetComponent<Animator>().SetTrigger("Invulnerable");
             timeSinceHit = Time.time;
+            handler.UpdateHealth(totalHealth);
             if (!isDead)
             {
                 totalHealth -= dmg;
@@ -33,6 +38,7 @@ public class PlayerHealth : MonoBehaviour, ISaveable, Health
             }
         }
     }
+
 
     private void HandleDeath()
     {

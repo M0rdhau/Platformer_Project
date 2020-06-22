@@ -18,12 +18,14 @@ public class PlayerCombat : MonoBehaviour
     LayerMask enemyLayers;
     Animator _animator;
     SpriteRenderer _renderer;
+    CombatCharge charge;
 
     // Start is called before the first frame update
     void Start()
     {
         _renderer = GetComponentInChildren<SpriteRenderer>();
         _animator = GetComponent<Animator>();
+        charge = GetComponent<CombatCharge>();
         enemyLayers = LayerMask.GetMask("Enemies");
 
     }
@@ -103,6 +105,7 @@ public class PlayerCombat : MonoBehaviour
     {
         foreach (Collider2D enemy in enemiesHit)
         {
+            charge.AddCharge(attackDamage*(1 + charge.GetCharge()));
             bool knockedRight = IsEnemyRight(enemy);
             if (enemy.tag == "EnemyProjectile")
             {
@@ -112,7 +115,8 @@ public class PlayerCombat : MonoBehaviour
 
             if (enemy.GetComponent<Health>() != null && !enemy.GetComponent<Health>().IsDead())
             {
-                enemy.GetComponent<Health>().KnockBackHit(attackDamage, knockedRight);
+                Debug.Log(attackDamage * (1 + charge.GetCharge()));
+                enemy.GetComponent<Health>().KnockBackHit(attackDamage * (1 + charge.GetCharge()), knockedRight);
             }
         }
         if (_animator.GetBool("kickAerial"))

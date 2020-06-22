@@ -40,6 +40,11 @@ public class Fireball : MonoBehaviour
         return knockedRight;
     }
 
+    public void ReverseDirection()
+    {
+        GetComponent<Rigidbody2D>().velocity = -GetComponent<Rigidbody2D>().velocity;
+    }
+
     public void Explode()
     {
         GetComponent<Animator>().SetTrigger("explode");

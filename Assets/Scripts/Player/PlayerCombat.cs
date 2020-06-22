@@ -109,7 +109,7 @@ public class PlayerCombat : MonoBehaviour
             bool knockedRight = IsEnemyRight(enemy);
             if (enemy.tag == "EnemyProjectile")
             {
-                enemy.GetComponent<Fireball>().Explode();
+                enemy.GetComponent<Fireball>().ReverseDirection();
                 return;
             }
 

@@ -6,6 +6,8 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour, ISaveable
 {
 
+    const float climbTranfsormOffset = -0.65f;
+
     [Header("Movement")]
 
     [SerializeField] float walkSpeedMax = 3f;
@@ -38,15 +40,21 @@ public class PlayerController : MonoBehaviour, ISaveable
     float playerColliderHeight = 0.75f;
     float playerColliderWidth = 0.72f;
 
+    int timesJumped = 0;
+
     SpriteRenderer _renderer;
     Animator _animator;
     Collider2D feetCollider;
     Collider2D handsCollider;
     Rigidbody2D _rigidBody;
+    Transform spriteTransform;
+    PlayerUpgrades upgrades;
 
     // Start is called before the first frame update
     void Start()
     {
+        upgrades = GetComponent<PlayerUpgrades>();
+        spriteTransform = transform.GetChild(1);
         _animator = GetComponent<Animator>();
         feetCollider = GetComponent<CapsuleCollider2D>();
         handsCollider = GetComponent<BoxCollider2D>();
@@ -100,11 +108,13 @@ public class PlayerController : MonoBehaviour, ISaveable
 
     private void Land()
     {
+        if (Time.time - jumpTime <= climbDelayTime) return;
         if ((isTouchingGround() || isTouchingLadders()) && (isFalling || isJumping))
         {
             canJumpOrFall = false;
             isFalling = false;
             isJumping = false;
+            timesJumped = 0;
             _animator.SetBool("isFalling", false);
             _animator.SetBool("kickAerial", false);
             if (isTouchingGround())
@@ -213,12 +223,14 @@ public class PlayerController : MonoBehaviour, ISaveable
         {
             isFalling = false;
             isJumping = false;
+            timesJumped = 0;
             _animator.SetBool("isFalling", false);
             _animator.SetBool("kickAerial", false);
             if (!isTouchingGround() && isTouchingLadders())
             {
                 _rigidBody.gravityScale = 0;
                 isClimbing = true;
+                spriteTransform.position = new Vector2(transform.position.x, transform.position.y + climbTranfsormOffset);
                 _animator.SetBool("isClimbing", isClimbing);
             }
 
@@ -243,6 +255,7 @@ public class PlayerController : MonoBehaviour, ISaveable
             _rigidBody.gravityScale = 1;
             _animator.speed = 1;
             isClimbing = false;
+            spriteTransform.position = transform.position;
             _animator.SetBool("isClimbing", isClimbing);
         }
 
@@ -265,14 +278,31 @@ public class PlayerController : MonoBehaviour, ISaveable
 
     private void Jump()
     {
-        if (isTouchingGround() || isTouchingLadders())
+        //player can jump only twice
+        if (isTouchingGround() || isTouchingLadders() || timesJumped <2)
         {
             var jumpVec = _rigidBody.velocity;
             jumpVec.y = jumpVelocity;
             _rigidBody.velocity = jumpVec;
             isJumping = true;
+            CheckIfDoubleJump();
+            isFalling = false;
+            _animator.SetBool("isFalling", false);
             _animator.SetTrigger("jump");
             jumpTime = Time.time;
+        }
+    }
+
+    private void CheckIfDoubleJump()
+    {
+        if (upgrades.HasUpgrade(Upgrade.UpgradeType.DoubleJump))
+        {
+            timesJumped++;
+        }
+        else
+        {
+            //maximum jumps
+            timesJumped = 2;
         }
     }
 

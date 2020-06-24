@@ -230,7 +230,7 @@ PlatformEffector2D:
   m_UseColliderMask: 1
   m_ColliderMask:
     serializedVersion: 2
-    m_Bits: 24321
+    m_Bits: 89857
   m_RotationalOffset: 0
   m_UseOneWay: 1
   m_UseOneWayGrouping: 0
@@ -254,6 +254,7 @@ MonoBehaviour:
   chargeDecreaseTime: 1
   maxGlow: 3.5
   maxDamage: 60
+  maxChargeTime: 5
 --- !u!114 &7583350486911378221
 MonoBehaviour:
   m_ObjectHideFlags: 0

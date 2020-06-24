@@ -17,6 +17,7 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] Transform attackPoint;
     [SerializeField] Transform airAttackPoint;
     [SerializeField] Transform punchTransform;
+    [SerializeField] GameObject punchProjectile;
     float nextAttackTime = 0f;
     float punchWaitTime = 2f;
     float actualRange;

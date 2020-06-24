@@ -60,6 +60,12 @@ public class CombatCharge : MonoBehaviour, ISaveable
         }
     }
 
+    public void ResetCharge()
+    {
+        currentCharge = 0f;
+        UpdateRenderer();
+    }
+
     private void UpdateRenderer()
     {
         float factor = currentCharge * maxGlow + 0.1f;
@@ -68,6 +74,8 @@ public class CombatCharge : MonoBehaviour, ISaveable
     }
 
     public float GetCharge() { return currentCharge; }
+
+    public float GetMaxDamage() { return maxDamage; }
 
     public object CaptureState()
     {

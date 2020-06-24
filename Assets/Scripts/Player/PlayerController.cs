@@ -33,6 +33,7 @@ public class PlayerController : MonoBehaviour, ISaveable
     bool hasStopped = true;
 
     bool canJumpOrFall = false;
+    bool needsToReset = false;
 
     bool areControlsEnabled = true;
 
@@ -228,14 +229,16 @@ public class PlayerController : MonoBehaviour, ISaveable
             _animator.SetBool("kickAerial", false);
             if (!isTouchingGround() && isTouchingLadders())
             {
+                needsToReset = true;
                 _rigidBody.gravityScale = 0;
                 isClimbing = true;
                 spriteTransform.position = new Vector2(transform.position.x, transform.position.y + climbTranfsormOffset);
                 _animator.SetBool("isClimbing", isClimbing);
             }
 
-            if (axisThrow != 0)
+            if (axisThrow != 0 && !_animator.GetCurrentAnimatorStateInfo(0).IsName("Punch"))
             {
+                needsToReset = true;
                 _animator.speed = 1;
                 var climbVec = _rigidBody.velocity;
                 climbVec.y = climbSpeed * axisThrow;
@@ -244,13 +247,14 @@ public class PlayerController : MonoBehaviour, ISaveable
             }
             else if (isClimbing)
             {
+                needsToReset = true;
                 _animator.speed = 0;
                 var climbVec = _rigidBody.velocity;
                 climbVec.y = 0;
                 _rigidBody.velocity = climbVec;
             }
         }
-        else
+        else if(needsToReset)
         {
             _rigidBody.gravityScale = 1;
             _animator.speed = 1;

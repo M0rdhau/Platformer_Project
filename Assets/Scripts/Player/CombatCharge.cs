@@ -22,7 +22,7 @@ public class CombatCharge : MonoBehaviour, ISaveable
     bool isDecreasing = false;
 
     float maxCharge = 1f;
-    float currentCharge = 0f;
+    [SerializeField] float currentCharge = 0f;
     Color color;
 
     private void Start()
@@ -49,6 +49,7 @@ public class CombatCharge : MonoBehaviour, ISaveable
         if (currentCharge == maxCharge)
         {
             yield return new WaitForSeconds(maxChargeTime);
+            currentCharge = Mathf.Clamp(currentCharge - Mathf.Epsilon, 0, 1f);
         }
         while (currentCharge > 0)
         {

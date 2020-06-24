@@ -22,6 +22,8 @@ GameObject:
   - component: {fileID: 351303954226347792}
   - component: {fileID: 7162793307030808183}
   - component: {fileID: 7583350486911378221}
+  - component: {fileID: 2413236916474545019}
+  - component: {fileID: 7409335502995543387}
   m_Layer: 12
   m_Name: Player
   m_TagString: Untagged
@@ -164,6 +166,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   totalHealth: 20
+  maxHealth: 20
   invulnerableTime: 0.2
 --- !u!114 &4552266348372725858
 MonoBehaviour:
@@ -190,7 +193,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 1
   m_UsedByComposite: 0
-  m_Offset: {x: -0.020931244, y: 0.013708115}
+  m_Offset: {x: -0.020931244, y: 0.3039639}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -201,7 +204,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.7516022, y: 0.9725838}
+  m_Size: {x: 0.7516022, y: 0.3920722}
   m_EdgeRadius: 0
 --- !u!70 &4552266347215113621
 CapsuleCollider2D:
@@ -269,6 +272,32 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthText: {fileID: 0}
   chargeText: {fileID: 0}
+--- !u!114 &2413236916474545019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4552266347215113707}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25c874082e006974eb98d4c2ff312364, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  upgrades: 
+--- !u!114 &7409335502995543387
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4552266347215113707}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce47854830f72124192929421a355000, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  meditationRestore: 1
 --- !u!1 &4552266347663036807
 GameObject:
   m_ObjectHideFlags: 0

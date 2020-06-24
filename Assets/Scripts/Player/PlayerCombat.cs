@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class PlayerCombat : MonoBehaviour
 {
+    
+
     [Header("Combat")]
 
     [SerializeField] float attackRange = 1.5f;

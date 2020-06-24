@@ -15,14 +15,13 @@ public class PlatformMovement : MonoBehaviour
 
     [SerializeField] Vector2 movementVec = new Vector2(3, 0);
     [SerializeField] ReversePositions direction = ReversePositions.X;
-    GameObject Platform;
     Rigidbody2D rBody;
     Rigidbody2D otherBody;
 
     // Start is called before the first frame update
     void Start()
     {
-        rBody = GetComponentInChildren<Rigidbody2D>();
+        rBody = GetComponent<Rigidbody2D>();
         SetMovementVector();
     }
 
@@ -39,21 +38,28 @@ public class PlatformMovement : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision)
     {
         otherBody = collision.gameObject.GetComponentInParent<Rigidbody2D>();
-        Vector2 colVelocity = otherBody.velocity;
-        otherBody.velocity = colVelocity + rBody.velocity;
+        SetOtherVelocity();
     }
 
     private void OnCollisionStay2D(Collision2D collision)
     {
-        Vector2 colVelocity = otherBody.velocity;
-        otherBody.velocity = colVelocity + rBody.velocity;
+        SetOtherVelocity();
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
         if (collision.gameObject.GetComponentInParent<Rigidbody2D>() == otherBody)
         {
-            otherBody = new Rigidbody2D();
+            otherBody = null;
+        }
+    }
+
+    private void SetOtherVelocity()
+    {
+        if (otherBody != null)
+        {
+            Vector2 colVelocity = otherBody.velocity;
+            otherBody.velocity = colVelocity + rBody.velocity;
         }
     }
 

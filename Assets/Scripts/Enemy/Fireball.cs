@@ -14,8 +14,18 @@ public class Fireball : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        Hit(collision);
+    }
+
+    private void Hit(Collision2D collision)
+    {
         Explode();
-        Collider2D[] enemiesHit = Physics2D.OverlapCircleAll(transform.position, explosionRadius, LayerMask.GetMask("Player"));
+        CollideWithHittable(collision);
+    }
+
+    private void CollideWithHittable(Collision2D collision)
+    {
+        Collider2D[] enemiesHit = Physics2D.OverlapCircleAll(transform.position, explosionRadius, LayerMask.GetMask("Player", "Enemies"));
         //Should be only one player
         if (enemiesHit.Length > 0)
         {

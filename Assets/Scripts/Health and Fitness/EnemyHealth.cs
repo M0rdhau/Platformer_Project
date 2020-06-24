@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyHealth : MonoBehaviour, ISaveable, Health
+public class EnemyHealth : MonoBehaviour, Health
 {
     [SerializeField] float totalHealth = 20f;
     Animator anim;
@@ -27,7 +27,7 @@ public class EnemyHealth : MonoBehaviour, ISaveable, Health
     {
         if (!isDead)
         {
-            StartCoroutine(GetComponent<EnemyMovement>().KnockBack(knockedRight));
+            if(GetComponent<EnemyMovement>()) StartCoroutine(GetComponent<EnemyMovement>().KnockBack(knockedRight));
             DecreaseHealth(dmg);
         }
     }
@@ -51,27 +51,7 @@ public class EnemyHealth : MonoBehaviour, ISaveable, Health
 
     public void Die()
     {
-        GetComponentInChildren<SpriteRenderer>().gameObject.SetActive(false);
-        GetComponent<Rigidbody2D>().gravityScale = 0;
-        GetComponent<CapsuleCollider2D>().enabled = false;
-        GetComponent<BoxCollider2D>().enabled = false;
-    }
-
-
-
-    public object CaptureState()
-    {
-        return totalHealth;
-    }
-
-    public void RestoreState(object state)
-    {
-        totalHealth = (float)state;
-        if (totalHealth <= 0)
-        {
-            isDead = true;
-            Die();
-        }
+        gameObject.SetActive(false);
     }
 
     public bool IsDead()

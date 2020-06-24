@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //for now, full charge will just double the damage
-public class CombatCharge : MonoBehaviour
+public class CombatCharge : MonoBehaviour, ISaveable
 {
     //what percent of max charge should you lose
     [SerializeField] float chargeDecreaseRate = 0.05f;
@@ -12,6 +12,8 @@ public class CombatCharge : MonoBehaviour
     [SerializeField] float maxGlow = 3.5f;
     //how much damage should the player do before fully charged
     [SerializeField] float maxDamage = 60f;
+    //how much time should the charge be kept at 100%
+    [SerializeField] float maxChargeTime = 5f;
 
     PlayerUIHandler handler;
     SpriteRenderer _renderer;
@@ -44,6 +46,10 @@ public class CombatCharge : MonoBehaviour
     private IEnumerator DecreaseCharge()
     {
         isDecreasing = true;
+        if (currentCharge == maxCharge)
+        {
+            yield return new WaitForSeconds(maxChargeTime);
+        }
         while (currentCharge > 0)
         {
             currentCharge = Mathf.Clamp(currentCharge - chargeDecreaseRate, 0, 1f);
@@ -61,4 +67,15 @@ public class CombatCharge : MonoBehaviour
     }
 
     public float GetCharge() { return currentCharge; }
+
+    public object CaptureState()
+    {
+        return currentCharge;
+    }
+
+    public void RestoreState(object state)
+    {
+        currentCharge = (float)state;
+        UpdateRenderer();
+    }
 }

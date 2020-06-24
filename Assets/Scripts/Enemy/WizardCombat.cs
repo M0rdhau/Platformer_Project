@@ -15,12 +15,14 @@ public class WizardCombat : MonoBehaviour
 
     Vector2 directionVector;
     Transform player;
+    Animator _animator;
 
     float timeSinceShot = 0f;
     float fireballOffsetX;
 
     private void Start()
     {
+        _animator = GetComponent<Animator>();
         fireballOffsetX = Mathf.Abs(fireballTransform.position.x - transform.position.x);
     }
 
@@ -34,16 +36,16 @@ public class WizardCombat : MonoBehaviour
         {
             player = enemiesHit[0].transform;
             timeSinceShot = Time.time + 1f / shootFrequency;
-            Shoot();
+            CheckDirection();
+            _animator.SetTrigger("CastFireball");
         }
     }
 
-    void Shoot()
+    public void Shoot()
     {
-        directionVector = player.position - transform.position;
+        directionVector = player.position - fireballTransform.position;
         directionVector = directionVector.normalized;
-        CheckDirection();
-        var fireball = Instantiate(fireballPrefab, transform.position, transform.rotation);
+        var fireball = Instantiate(fireballPrefab, fireballTransform.position, transform.rotation);
         fireball.GetComponent<Fireball>().SetMoveVector(directionVector * projSpeed);
         StartCoroutine(TrackFireball(fireball));
     }
@@ -63,15 +65,15 @@ public class WizardCombat : MonoBehaviour
         if ((player.transform.position.x > transform.position.x) && !_renderer.flipX)
         {
             _renderer.flipX = true;
-            var vec = transform.position;
-            vec.x += fireballOffsetX;
+            var vec = fireballTransform.position;
+            vec.x += fireballOffsetX*2;
             fireballTransform.position = vec;
         }
         else if ((player.transform.position.x < transform.position.x) && _renderer.flipX)
         {
             _renderer.flipX = false;
-            var vec = transform.position;
-            vec.x -= fireballOffsetX;
+            var vec = fireballTransform.position;
+            vec.x -= fireballOffsetX*2;
             fireballTransform.position = vec;
         }
     }

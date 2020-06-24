@@ -164,11 +164,11 @@ public class PlayerController : MonoBehaviour, ISaveable
 
         HandleClimb();
 
-        if (Input.GetKey(KeyCode.D))
+        if (Input.GetKey(KeyCode.RightArrow))
         {
             HandleHorizontalMovement(1f);
             hasStopped = false;
-        }else if (Input.GetKey(KeyCode.A))
+        }else if (Input.GetKey(KeyCode.LeftArrow))
         {
             HandleHorizontalMovement(-1f);
             hasStopped = false;
@@ -186,7 +186,7 @@ public class PlayerController : MonoBehaviour, ISaveable
 
         if (!hasStopped)
         {
-            if (Input.GetKey(KeyCode.LeftShift))
+            if (Input.GetKey(KeyCode.Q))
             {
                 isRunning = true;
             }

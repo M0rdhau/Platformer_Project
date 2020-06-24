@@ -41,12 +41,12 @@ public class PlayerCombat : MonoBehaviour
     {
         if (Time.time >= nextAttackTime)
         {
-            if (Input.GetKeyDown(KeyCode.LeftAlt))
+            if (Input.GetKeyDown(KeyCode.W))
             {
                 Attack("kick");
                 nextAttackTime = Time.time + 1f / attackRate;
             }
-            if (Input.GetKeyDown(KeyCode.LeftControl))
+            if (Input.GetKeyDown(KeyCode.E))
             {
                 Attack("punch");
                 nextAttackTime = Time.time + 1f / attackRate;
@@ -94,7 +94,7 @@ public class PlayerCombat : MonoBehaviour
         Collider2D[] enemies;
         do
         {
-            enemies = Physics2D.OverlapCircleAll(attackTransform.position, actualRange, LayerMask.GetMask("Enemies"));
+            enemies = Physics2D.OverlapCircleAll(attackTransform.position, actualRange, LayerMask.GetMask("Enemies", "Projectiles"));
             yield return null;
         } while (enemies.Length == 0 && _animator.GetCurrentAnimatorStateInfo(0).IsName("AirKick"));
         DamageEnemies(enemies);

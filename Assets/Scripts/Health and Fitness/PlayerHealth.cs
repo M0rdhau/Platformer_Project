@@ -7,7 +7,8 @@ public class PlayerHealth : MonoBehaviour, ISaveable, Health
 {
     [SerializeField] float totalHealth = 20f;
     [SerializeField] float maxHealth = 20f;
-    [SerializeField] float invulnerableTime = 0.2f;
+    [SerializeField] float invulnerableTime = 1f;
+    [SerializeField] GameObject light;
     PlayerUIHandler handler;
     float timeSinceHit = 0;
     Animator anim;
@@ -25,13 +26,12 @@ public class PlayerHealth : MonoBehaviour, ISaveable, Health
     {
         if (Time.time - timeSinceHit > invulnerableTime)
         {
-            GetComponent<Animator>().SetTrigger("Invulnerable");
-            timeSinceHit = Time.time;
-            totalHealth -= dmg;
-            handler.UpdateHealth(totalHealth);
             if (!isDead)
             {
-                //anim.SetTrigger("takeDamage");
+                StartCoroutine(ShedLight());
+                timeSinceHit = Time.time;
+                totalHealth -= dmg;
+                handler.UpdateHealth(totalHealth);            
                 if (totalHealth <= 0)
                 {
                     HandleDeath();
@@ -40,6 +40,12 @@ public class PlayerHealth : MonoBehaviour, ISaveable, Health
         }
     }
 
+    private IEnumerator ShedLight()
+    {
+        light.GetComponent<Light>().intensity = 20f;
+        yield return new WaitForSeconds(1f);
+        light.GetComponent<Light>().intensity = 0;
+    }
 
     private void HandleDeath()
     {
@@ -83,7 +89,10 @@ public class PlayerHealth : MonoBehaviour, ISaveable, Health
 
     public void KnockBackHit(float dmg, bool knockedRight)
     {
-        DamageHealth(dmg);
-        GetComponent<PlayerController>().KnockBack(knockedRight);
+        if (Time.time - timeSinceHit > invulnerableTime)
+        {
+            DamageHealth(dmg);
+            GetComponent<PlayerController>().KnockBack(knockedRight);
+        }
     }
 }

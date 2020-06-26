@@ -6,32 +6,53 @@ public class Fireball : MonoBehaviour
 {
     [SerializeField] float explosionRadius = 3f;
     [SerializeField] float damage = 3f;
+    [SerializeField] string[] layerMask;
+
 
     private void Start()
     {
-        GetComponent<Rigidbody2D>().gravityScale = 0;
+        if (GetComponent<Rigidbody2D>().velocity.x < 0)
+        {
+            GetComponent<SpriteRenderer>().flipX = true;
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Hit(collision);
+        Hit(collision.gameObject);
     }
 
-    private void Hit(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (GetComponent<Collider2D>().IsTouchingLayers(LayerMask.GetMask(layerMask)))
+        {
+            Hit(collision.gameObject);
+        }
+    }
+
+    private void Hit(GameObject collision)
     {
         Explode();
         CollideWithHittable(collision);
     }
 
-    private void CollideWithHittable(Collision2D collision)
+    public void SetDamage(float dmgSet)
     {
-        Collider2D[] enemiesHit = Physics2D.OverlapCircleAll(transform.position, explosionRadius, LayerMask.GetMask("Player", "Enemies"));
+        damage = dmgSet;
+    }
+
+
+    private void CollideWithHittable(GameObject collision)
+    {
+        Collider2D[] enemiesHit = Physics2D.OverlapCircleAll(transform.position, explosionRadius, LayerMask.GetMask(layerMask));
         //Should be only one player
         if (enemiesHit.Length > 0)
         {
-            bool knockedRight = IsEnemyRight(collision.transform);
-
-            enemiesHit[0].GetComponent<Health>().KnockBackHit(damage, true);
+            foreach (Collider2D enemy in enemiesHit)
+            {
+                bool knockedRight = IsEnemyRight(enemy.transform);
+                enemy.GetComponent<Health>().KnockBackHit(damage, knockedRight);
+            }   
         }
     }
 

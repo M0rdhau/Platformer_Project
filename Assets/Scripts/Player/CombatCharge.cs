@@ -29,47 +29,46 @@ public class CombatCharge : MonoBehaviour, ISaveable
     {
         _renderer = GetComponentInChildren<SpriteRenderer>();
         handler = GetComponent<PlayerUIHandler>();
-        handler.UpdateCharge(currentCharge);
         color = _renderer.material.GetColor("GlowColor");
-        UpdateRenderer();
+        UpdateCharge();
     }
 
-    public void AddCharge(float dmg)
+    public void AddCharge(float dmg, bool isChargingFist = false)
     {
         currentCharge = Mathf.Clamp(currentCharge + dmg / maxDamage, 0, maxCharge);
-        handler.UpdateCharge(currentCharge);
-        UpdateRenderer();
-        if (!isDecreasing) StartCoroutine(DecreaseCharge());
+        UpdateCharge();
+        if (!isDecreasing && !isChargingFist) StartCoroutine(DecreaseCharge());
     }
 
 
     private IEnumerator DecreaseCharge()
     {
         isDecreasing = true;
-        if (currentCharge == maxCharge)
-        {
-            yield return new WaitForSeconds(maxChargeTime);
-            currentCharge = Mathf.Clamp(currentCharge - Mathf.Epsilon, 0, 1f);
-        }
         while (currentCharge > 0)
         {
+            if (currentCharge == maxCharge)
+            {
+                yield return new WaitForSeconds(maxChargeTime);
+                currentCharge = Mathf.Clamp(currentCharge - Mathf.Epsilon, 0, 1f);
+            }
             currentCharge = Mathf.Clamp(currentCharge - chargeDecreaseRate, 0, 1f);
-            handler.UpdateCharge(currentCharge);
-            UpdateRenderer();
+            UpdateCharge();
+            if (currentCharge == 0) isDecreasing = false;
             yield return new WaitForSeconds(chargeDecreaseTime);
         }
     }
 
-    public void ResetCharge()
+    public void ResetCharge(float charge)
     {
-        currentCharge = 0f;
-        UpdateRenderer();
+        currentCharge = charge;
+        UpdateCharge();
     }
 
-    private void UpdateRenderer()
+    private void UpdateCharge()
     {
         float factor = currentCharge * maxGlow + 0.1f;
-        Color newColor = new Color(color.r*factor, color.g * factor, color.b * factor, color.a * factor);
+        Color newColor = new Color(color.r * factor, color.g * factor, color.b * factor, color.a * factor);
+        handler.UpdateCharge(currentCharge);
         _renderer.material.SetColor("GlowColor", newColor);
     }
 
@@ -85,6 +84,6 @@ public class CombatCharge : MonoBehaviour, ISaveable
     public void RestoreState(object state)
     {
         currentCharge = (float)state;
-        UpdateRenderer();
+        UpdateCharge();
     }
 }

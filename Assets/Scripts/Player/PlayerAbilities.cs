@@ -11,6 +11,7 @@ public class PlayerAbilities : MonoBehaviour
     Rigidbody2D _rbody;
     PlayerHealth health;
     CombatCharge charge;
+    PlayerUpgrades upgrades;
 
     bool isMeditating = false;
 
@@ -21,6 +22,7 @@ public class PlayerAbilities : MonoBehaviour
         _rbody = GetComponent<Rigidbody2D>();
         health = GetComponent<PlayerHealth>();
         charge = GetComponent<CombatCharge>();
+        upgrades = GetComponent<PlayerUpgrades>();
     }
 
     // Update is called once per frame
@@ -31,14 +33,17 @@ public class PlayerAbilities : MonoBehaviour
 
     private void HandleMeditation()
     {
-        if (Input.GetKey(KeyCode.DownArrow))
+        if (upgrades.HasUpgrade(Upgrade.UpgradeType.Meditation))
         {
-            if(!isMeditating && _animator.GetCurrentAnimatorStateInfo(0).IsName("Idle")) StartCoroutine(Meditation());
-        }
-        else if(isMeditating)
-        {
-            isMeditating = false;
-            _animator.SetBool("isMeditating", isMeditating);
+            if (Input.GetKey(KeyCode.DownArrow))
+            {
+                if (!isMeditating && _animator.GetCurrentAnimatorStateInfo(0).IsName("Idle")) StartCoroutine(Meditation());
+            }
+            else if (isMeditating)
+            {
+                isMeditating = false;
+                _animator.SetBool("isMeditating", isMeditating);
+            }
         }
     }
 
@@ -48,7 +53,7 @@ public class PlayerAbilities : MonoBehaviour
         _animator.SetBool("isMeditating", isMeditating);
         while (isMeditating)
         {
-            health.Heal(meditationRestore*charge.GetCharge());
+            health.Heal(meditationRestore*(1 + charge.GetCharge()));
             yield return new WaitForSeconds(1f);
         }
     }

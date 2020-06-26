@@ -259,6 +259,7 @@ public class PlayerController : MonoBehaviour, ISaveable
             _rigidBody.gravityScale = 1;
             _animator.speed = 1;
             isClimbing = false;
+            needsToReset = false;
             spriteTransform.position = transform.position;
             _animator.SetBool("isClimbing", isClimbing);
         }

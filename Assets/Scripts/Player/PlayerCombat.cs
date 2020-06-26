@@ -14,12 +14,15 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] float attackDamage = 5f;
     [SerializeField] float attackRate = 2f;
     [SerializeField] float chargeRate = 30f;
+    [SerializeField] float projSpeed = 6f;
+    [SerializeField] float projLifeTime = 6f;
     [SerializeField] Transform attackPoint;
     [SerializeField] Transform airAttackPoint;
     [SerializeField] Transform punchTransform;
     [SerializeField] GameObject punchProjectile;
     float nextAttackTime = 0f;
     float punchWaitTime = 2f;
+    float chargeBeforePunch = 0f;
     float actualRange;
 
     LayerMask enemyLayers;
@@ -27,12 +30,14 @@ public class PlayerCombat : MonoBehaviour
     SpriteRenderer _renderer;
     CombatCharge charge;
     IEnumerator punchCoroutine;
+    PlayerUpgrades upgrades;
 
     bool chargingFist = false;
 
     // Start is called before the first frame update
     void Start()
     {
+        upgrades = GetComponent<PlayerUpgrades>();
         _renderer = GetComponentInChildren<SpriteRenderer>();
         _animator = GetComponent<Animator>();
         charge = GetComponent<CombatCharge>();
@@ -60,21 +65,31 @@ public class PlayerCombat : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.E))
             {
-                nextAttackTime = Time.time + 1f / attackRate;
-                punchCoroutine = WaitForPunchTime();
-                StartFirePunch();
+                if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Idle") && upgrades.HasUpgrade(Upgrade.UpgradeType.FireFist))
+                {
+                    nextAttackTime = Time.time + 1f / attackRate;
+                    chargeBeforePunch = charge.GetCharge();
+                    punchCoroutine = WaitForPunchTime();
+                    StartFirePunch();
+                }
+                else
+                {
+                    Attack("punch");
+                }
+                
             }
         }
-        if (Input.GetKeyUp(KeyCode.E))
+        if (Input.GetKeyUp(KeyCode.E) && chargingFist)
         {
-            Debug.Log("Key is up");
+            Debug.Log("Stopping the punch charge");
             DisruptFirePunch();
         }
-        else if (Input.anyKey && !Input.GetKey(KeyCode.E) && chargingFist)
+
+        if (Input.anyKeyDown && !Input.GetKeyDown(KeyCode.E) && chargingFist)
         {
             //just stops the charging if any other key is pressed without dealing damage
-            StopCoroutine(punchCoroutine);
-            punchCoroutine = WaitForPunchTime();
+            Debug.Log("Stopping the punch charge");
+            DisruptFirePunch(false);
         }
     }
 
@@ -93,35 +108,55 @@ public class PlayerCombat : MonoBehaviour
         StartCoroutine(punchCoroutine);
     }
 
-    private void DisruptFirePunch()
+    private void DisruptFirePunch(bool shouldHit = true)
     {
         StopCoroutine(punchCoroutine);
         punchCoroutine = WaitForPunchTime();
-        FinalizePunch();
+        FinalizePunch(shouldHit);
     }
 
     IEnumerator WaitForPunchTime()
     {
-        Debug.Log(punchWaitTime);
-        while (Time.time - nextAttackTime < punchWaitTime)
+        while (Time.time - nextAttackTime < (1 - charge.GetCharge())*punchWaitTime)
         {
-            charge.AddCharge(charge.GetMaxDamage()/chargeRate);
-            yield return new WaitForSeconds(punchWaitTime/chargeRate);
+            charge.AddCharge(charge.GetMaxDamage()/chargeRate, true);
+            yield return new WaitForSeconds((1 - charge.GetCharge())*punchWaitTime/chargeRate);
         }
-        FinalizePunch();
+        FinalizePunch(true);
         ShootPojectile();
     }
 
     private void ShootPojectile()
     {
-        Debug.Log("Shooting the Projectile");
+        var fireFist = Instantiate(punchProjectile, attackPoint.position, transform.rotation);
+        Vector2 directionVector;
+        if (attackPoint.position.x > transform.position.x)
+        {
+            directionVector = Vector2.right;
+        }
+        else
+        {
+            directionVector = Vector2.left;
+        }
+        fireFist.GetComponent<Fireball>().SetMoveVector(directionVector * projSpeed);
+        fireFist.GetComponent<Fireball>().SetDamage(attackDamage * (1 + charge.GetCharge()));
+        StartCoroutine(TrackProjectile(fireFist));
     }
 
-    private void FinalizePunch()
+    IEnumerator TrackProjectile(GameObject fBall)
+    {
+        yield return new WaitForSeconds(projLifeTime);
+        if (fBall)
+        {
+            fBall.GetComponent<Animator>().SetTrigger("explode");
+        }
+    }
+
+    private void FinalizePunch(bool shouldHit)
     {
         punchTransform.gameObject.GetComponent<ParticleSystem>().Stop();
         _animator.speed = 1;
-        StartCoroutine(HitAndDamage());
+        if(shouldHit) StartCoroutine(HitAndDamage());
     }
 
     private void CheckAttackPoint()
@@ -182,9 +217,11 @@ public class PlayerCombat : MonoBehaviour
 
     private void DamageEnemies(Collider2D[] enemiesHit)
     {
+        float damage = attackDamage * (1 + charge.GetCharge());
+        ResetChargeFromAttack();
         foreach (Collider2D enemy in enemiesHit)
         {
-            charge.AddCharge(attackDamage/charge.GetMaxDamage() + charge.GetCharge());
+            charge.AddCharge(damage);
             bool knockedRight = IsEnemyRight(enemy);
             if (enemy.tag == "EnemyProjectile")
             {
@@ -194,30 +231,37 @@ public class PlayerCombat : MonoBehaviour
 
             if (enemy.GetComponent<Health>() != null && !enemy.GetComponent<Health>().IsDead())
             {
-                enemy.GetComponent<Health>().KnockBackHit(attackDamage * (1 + charge.GetCharge()), knockedRight);
+                enemy.GetComponent<Health>().KnockBackHit(damage, knockedRight);
             }
         }
         if (_animator.GetBool("kickAerial"))
-            {
-                _animator.SetBool("kickAerial", false);
-                _animator.SetTrigger("enemyHitAerial");
-                if (GetComponentInChildren<SpriteRenderer>().flipX)
-                {
-                    GetComponent<Rigidbody2D>().velocity = Vector2.right;
-                }
-                else
-                {
-                    GetComponent<Rigidbody2D>().velocity = Vector2.left;
-                }
+        {
+            HandleAirKickAnim();
         }
     }
 
-    public void ResetChargeFromAttack()
+    private void HandleAirKickAnim()
+    {
+        _animator.SetBool("kickAerial", false);
+        _animator.SetTrigger("enemyHitAerial");
+        var spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        var rigidBody = GetComponent<Rigidbody2D>();
+        if (spriteRenderer.flipX)
+        {
+            rigidBody.velocity = 2*Vector2.right;
+        }
+        else
+        {
+            rigidBody.velocity = 2*Vector2.left;
+        }
+    }
+
+    private void ResetChargeFromAttack()
     {
         if (chargingFist)
         {
             chargingFist = false;
-            charge.ResetCharge();
+            charge.ResetCharge(chargeBeforePunch);
         }
     }
 

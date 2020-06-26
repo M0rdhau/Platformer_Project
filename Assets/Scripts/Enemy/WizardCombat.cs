@@ -10,7 +10,7 @@ public class WizardCombat : MonoBehaviour
     [SerializeField] float attackRange = 5f;
     [SerializeField] float projSpeed = 4f;
     [SerializeField] Transform fireballTransform;
-    [SerializeField] float fBallLifeTime = 6f;
+    [SerializeField] float projLifeTime = 6f;
 
 
     Vector2 directionVector;
@@ -47,12 +47,12 @@ public class WizardCombat : MonoBehaviour
         directionVector = directionVector.normalized;
         var fireball = Instantiate(fireballPrefab, fireballTransform.position, transform.rotation);
         fireball.GetComponent<Fireball>().SetMoveVector(directionVector * projSpeed);
-        StartCoroutine(TrackFireball(fireball));
+        StartCoroutine(TrackProjectile(fireball));
     }
 
-    IEnumerator TrackFireball(GameObject fBall)
+    IEnumerator TrackProjectile(GameObject fBall)
     {
-        yield return new WaitForSeconds(fBallLifeTime);
+        yield return new WaitForSeconds(projLifeTime);
         if (fBall)
         {
             fBall.GetComponent<Animator>().SetTrigger("explode");

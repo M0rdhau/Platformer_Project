@@ -47,7 +47,7 @@ MonoBehaviour:
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.51
   m_Color: {r: 0.034718037, g: 0, b: 1, a: 1}
-  m_Intensity: 8
+  m_Intensity: 0
   m_LightVolumeOpacity: 1
   m_ApplyToSortingLayers: 637b00a431d5b1d6
   m_LightCookieSprite: {fileID: 21300000, guid: 42d1bed64f212ab4dbbe7799156c60ac,
@@ -73,6 +73,36 @@ MonoBehaviour:
   - {x: 0.5, y: -0.5, z: 0}
   - {x: 0.5, y: 0.5, z: 0}
   - {x: -0.5, y: 0.5, z: 0}
+--- !u!1 &3935854646957808839
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4757976660535650478}
+  m_Layer: 12
+  m_Name: CrouchKickPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4757976660535650478
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3935854646957808839}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.8, y: -0.3, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4552266347215113708}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3996176803871131886
 GameObject:
   m_ObjectHideFlags: 0
@@ -4851,6 +4881,7 @@ GameObject:
   - component: {fileID: 7583350486911378221}
   - component: {fileID: 2413236916474545019}
   - component: {fileID: 7409335502995543387}
+  - component: {fileID: 45305057485585647}
   m_Layer: 12
   m_Name: Player
   m_TagString: Untagged
@@ -4874,6 +4905,7 @@ Transform:
   - {fileID: 7265435341931281505}
   - {fileID: 2776830612635286013}
   - {fileID: 5493216096896264285}
+  - {fileID: 4757976660535650478}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4951,18 +4983,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7aff8b74f5b59e54681fc843e2e574ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attackRange: 0.9
+  attackRange: 0.47
   aerialRange: 0.54
   attackDamage: 5
   attackRate: 2
   chargeRate: 30
   projSpeed: 12
   projLifeTime: 6
+  kickAttackBoxParams: {x: 1.48, y: 1.87}
+  punchAttackBoxParams: {x: 1.13, y: 0.71}
+  crouchKickAttackBoxParams: {x: 0.92, y: 0.5}
   attackPoint: {fileID: 4552266348166522051}
-  airAttackPoint: {fileID: 7265435341931281505}
+  kickTransform: {fileID: 7265435341931281505}
   punchTransform: {fileID: 2776830612635286013}
+  crouchKickTransform: {fileID: 4757976660535650478}
   punchProjectile: {fileID: 4651565441958209643, guid: 9448197f24728634b9a7743d5d5dc27b,
     type: 3}
+  damageLayers:
+  - enemies
+  - projectiles
 --- !u!114 &6988227869284085758
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5002,8 +5041,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   totalHealth: 20
   maxHealth: 20
-  invulnerableTime: 0.2
-  light: {fileID: 122050591495267222}
+  invulnerableTime: 1
+  invulLight: {fileID: 122050591495267222}
 --- !u!114 &4552266348372725858
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5135,6 +5174,36 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   meditationRestore: 1
+--- !u!60 &45305057485585647
+PolygonCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4552266347215113707}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Points:
+    m_Paths:
+    - - {x: -0.44429398, y: 0.1041286}
+      - {x: -0.6961336, y: -0.18626165}
+      - {x: -0.653337, y: -0.95468724}
+      - {x: 0.4566822, y: -0.96925414}
+      - {x: 0.120737076, y: -0.20082843}
 --- !u!1 &4552266347663036807
 GameObject:
   m_ObjectHideFlags: 0
@@ -5240,7 +5309,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4552266348166522050}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.45, y: 0, z: 0}
+  m_LocalPosition: {x: 0.78, y: -0.15, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4552266347215113708}
@@ -5256,7 +5325,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7265435341931281505}
   m_Layer: 12
-  m_Name: AirAttackPoint
+  m_Name: KickPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5270,7 +5339,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8079638934201851885}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.52, y: -0.36, z: 0}
+  m_LocalPosition: {x: 0.52, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4552266347215113708}

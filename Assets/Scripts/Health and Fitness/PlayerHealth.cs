@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Experimental.Rendering.Universal;
 using System;
 
 public class PlayerHealth : MonoBehaviour, ISaveable, Health
@@ -8,11 +9,11 @@ public class PlayerHealth : MonoBehaviour, ISaveable, Health
     [SerializeField] float totalHealth = 20f;
     [SerializeField] float maxHealth = 20f;
     [SerializeField] float invulnerableTime = 1f;
-    [SerializeField] GameObject light;
+    [SerializeField] GameObject invulLight;
     PlayerUIHandler handler;
-    float timeSinceHit = 0;
     Animator anim;
     bool isDead = false;
+    bool isInvulnerable = false;
 
 
     private void Start()
@@ -22,14 +23,24 @@ public class PlayerHealth : MonoBehaviour, ISaveable, Health
         handler.UpdateHealth(totalHealth);
     }
 
+    public void KnockBackHit(float dmg, bool knockedRight)
+    {
+        if (!isInvulnerable)
+        {
+            DamageHealth(dmg);
+            GetComponent<PlayerController>().KnockBack(knockedRight);
+        }
+    }
+
     public void DamageHealth(float dmg)
     {
-        if (Time.time - timeSinceHit > invulnerableTime)
+        
+        if (!isInvulnerable)
         {
             if (!isDead)
             {
-                StartCoroutine(ShedLight());
-                timeSinceHit = Time.time;
+                GetComponent<PlayerCombat>().DisruptFirePunch(false);
+                StartCoroutine(BecomeInvulnerable());
                 totalHealth -= dmg;
                 handler.UpdateHealth(totalHealth);            
                 if (totalHealth <= 0)
@@ -40,11 +51,13 @@ public class PlayerHealth : MonoBehaviour, ISaveable, Health
         }
     }
 
-    private IEnumerator ShedLight()
+    private IEnumerator BecomeInvulnerable()
     {
-        light.GetComponent<Light>().intensity = 20f;
-        yield return new WaitForSeconds(1f);
-        light.GetComponent<Light>().intensity = 0;
+        invulLight.GetComponent<Light2D>().intensity = 20f;
+        isInvulnerable = true;
+        yield return new WaitForSeconds(invulnerableTime);
+        invulLight.GetComponent<Light2D>().intensity = 0;
+        isInvulnerable = false;
     }
 
     private void HandleDeath()
@@ -87,12 +100,5 @@ public class PlayerHealth : MonoBehaviour, ISaveable, Health
         return isDead;
     }
 
-    public void KnockBackHit(float dmg, bool knockedRight)
-    {
-        if (Time.time - timeSinceHit > invulnerableTime)
-        {
-            DamageHealth(dmg);
-            GetComponent<PlayerController>().KnockBack(knockedRight);
-        }
-    }
+    
 }

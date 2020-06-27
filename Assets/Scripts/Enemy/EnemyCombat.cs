@@ -8,6 +8,16 @@ public class EnemyCombat : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        DealDamage(collision);
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        DealDamage(collision);
+    }
+
+    private void DealDamage(Collider2D collision)
+    {
         if (collision.GetComponent<PlayerHealth>())
         {
             bool knockedRight = IsEnemyRight(collision);

@@ -35,7 +35,7 @@ public class PlayerAbilities : MonoBehaviour
     {
         if (upgrades.HasUpgrade(Upgrade.UpgradeType.Meditation))
         {
-            if (Input.GetKey(KeyCode.DownArrow))
+            if (Input.GetKey(KeyCode.T))
             {
                 if (!isMeditating && _animator.GetCurrentAnimatorStateInfo(0).IsName("Idle")) StartCoroutine(Meditation());
             }

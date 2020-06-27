@@ -47,6 +47,7 @@ public class PlayerController : MonoBehaviour, ISaveable
     Animator _animator;
     Collider2D feetCollider;
     Collider2D handsCollider;
+    Collider2D crouchCollider;
     Rigidbody2D _rigidBody;
     Transform spriteTransform;
     PlayerUpgrades upgrades;
@@ -59,6 +60,7 @@ public class PlayerController : MonoBehaviour, ISaveable
         _animator = GetComponent<Animator>();
         feetCollider = GetComponent<CapsuleCollider2D>();
         handsCollider = GetComponent<BoxCollider2D>();
+        crouchCollider = GetComponent<PolygonCollider2D>();
         _renderer = GetComponentInChildren<SpriteRenderer>();
         _rigidBody = GetComponent<Rigidbody2D>();
     }
@@ -175,11 +177,11 @@ public class PlayerController : MonoBehaviour, ISaveable
 
         HandleClimb();
 
-        if (Input.GetKey(KeyCode.RightArrow))
+        if (Input.GetKey(KeyCode.RightArrow) && !isCrouching)
         {
             HandleHorizontalMovement(1f);
             hasStopped = false;
-        }else if (Input.GetKey(KeyCode.LeftArrow))
+        }else if (Input.GetKey(KeyCode.LeftArrow) && !isCrouching)
         {
             HandleHorizontalMovement(-1f);
             hasStopped = false;
@@ -195,7 +197,7 @@ public class PlayerController : MonoBehaviour, ISaveable
             hasStopped = true;
         }
 
-        if (!hasStopped)
+        if (!hasStopped && !isCrouching)
         {
             if (Input.GetKey(KeyCode.Q))
             {
@@ -207,9 +209,55 @@ public class PlayerController : MonoBehaviour, ISaveable
             }
         }
 
+        //if (Input.GetKeyDown(KeyCode.Q) && isCrouching)
+        //{
+        //    Roll();
+        //}
+
+        if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            CrouchTransition(true);
+        }
+        if ((Input.anyKey && !Input.GetKey(KeyCode.DownArrow) && isCrouching) || Input.GetKeyUp(KeyCode.DownArrow) )
+        {
+            CrouchTransition(false);
+        }
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
             Jump();
+        }
+    }
+
+    private IEnumerator Roll()
+    {
+        _animator.SetTrigger("landed_Noroll");
+        while (_animator.GetCurrentAnimatorStateInfo(0).IsName("Roll"))
+        {
+            yield return new WaitForSeconds(Time.deltaTime);
+        }
+    }
+
+    private void CrouchTransition(bool crouching)
+    {
+        isCrouching = crouching;
+        _animator.SetBool("isCrouching", crouching);
+        ShrinkHitbox(crouching);
+    }
+
+    private void ShrinkHitbox(bool crouching)
+    {
+        if (crouching)
+        {
+            crouchCollider.enabled = true;
+            handsCollider.enabled = false;
+            feetCollider.enabled = false;
+        }
+        else
+        {
+            crouchCollider.enabled = false;
+            handsCollider.enabled = true;
+            feetCollider.enabled = true;
         }
     }
 
@@ -272,7 +320,7 @@ public class PlayerController : MonoBehaviour, ISaveable
         {
             canJumpOrFall = true;
         }
-        if (_rigidBody.velocity.y < -1 * Mathf.Epsilon && !isTouchingGround() && !isFalling && !isClimbing && canJumpOrFall)
+        if (_rigidBody.velocity.y < -1 * Mathf.Epsilon && !isTouchingGround() && !isFalling && !isClimbing && canJumpOrFall && !isCrouching)
         {
             isJumping = false;
             isFalling = true;

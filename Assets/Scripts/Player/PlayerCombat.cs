@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class PlayerCombat : MonoBehaviour
 {
-    
+
 
     [Header("Combat")]
 
@@ -16,21 +16,27 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] float chargeRate = 30f;
     [SerializeField] float projSpeed = 6f;
     [SerializeField] float projLifeTime = 6f;
+    [SerializeField] Vector2 kickAttackBoxParams = new Vector2(3f, 3f);
+    [SerializeField] Vector2 punchAttackBoxParams = new Vector2(3f, 3f);
+    [SerializeField] Vector2 crouchKickAttackBoxParams = new Vector2(3f, 3f);
     [SerializeField] Transform attackPoint;
-    [SerializeField] Transform airAttackPoint;
+    [SerializeField] Transform kickTransform;
     [SerializeField] Transform punchTransform;
+    [SerializeField] Transform crouchKickTransform;
     [SerializeField] GameObject punchProjectile;
+    [SerializeField] string[] damageLayers = { "Enemies", "Projectiles"};
     float nextAttackTime = 0f;
     float punchWaitTime = 2f;
     float chargeBeforePunch = 0f;
     float actualRange;
 
-    LayerMask enemyLayers;
     Animator _animator;
     SpriteRenderer _renderer;
     CombatCharge charge;
     IEnumerator punchCoroutine;
     PlayerUpgrades upgrades;
+    Transform actualAttackTransform;
+    Vector2 actualAttackParams;
 
     bool chargingFist = false;
 
@@ -41,7 +47,6 @@ public class PlayerCombat : MonoBehaviour
         _renderer = GetComponentInChildren<SpriteRenderer>();
         _animator = GetComponent<Animator>();
         charge = GetComponent<CombatCharge>();
-        enemyLayers = LayerMask.GetMask("Enemies");
         //punchCoroutine = WaitForPunchTime();
     }
 
@@ -56,7 +61,7 @@ public class PlayerCombat : MonoBehaviour
     {
         if (Time.time >= nextAttackTime)
         {
-             if (Input.GetKeyDown(KeyCode.W))
+            if (Input.GetKeyDown(KeyCode.W))
             {
                 Attack("kick");
                 nextAttackTime = Time.time + 1f / attackRate;
@@ -76,25 +81,26 @@ public class PlayerCombat : MonoBehaviour
                 {
                     Attack("punch");
                 }
-                
+
             }
         }
         if (Input.GetKeyUp(KeyCode.E) && chargingFist)
         {
-            Debug.Log("Stopping the punch charge");
             DisruptFirePunch();
         }
 
         if (Input.anyKeyDown && !Input.GetKeyDown(KeyCode.E) && chargingFist)
         {
             //just stops the charging if any other key is pressed without dealing damage
-            Debug.Log("Stopping the punch charge");
             DisruptFirePunch(false);
         }
     }
 
+
+    #region Fire Punch handling
     private void StartFirePunch()
     {
+        GetCorrectTransform("");
         chargingFist = true;
         CheckAttackPoint();
         DelayPunch();
@@ -108,19 +114,23 @@ public class PlayerCombat : MonoBehaviour
         StartCoroutine(punchCoroutine);
     }
 
-    private void DisruptFirePunch(bool shouldHit = true)
+    public void DisruptFirePunch(bool shouldHit = true)
     {
-        StopCoroutine(punchCoroutine);
-        punchCoroutine = WaitForPunchTime();
-        FinalizePunch(shouldHit);
+        if (chargingFist)
+        {
+            StopCoroutine(punchCoroutine);
+            punchCoroutine = WaitForPunchTime();
+            FinalizePunch(shouldHit);
+            chargingFist = false;
+        }
     }
 
     IEnumerator WaitForPunchTime()
     {
-        while (Time.time - nextAttackTime < (1 - charge.GetCharge())*punchWaitTime)
+        while (charge.GetCharge() < 1)
         {
-            charge.AddCharge(charge.GetMaxDamage()/chargeRate, true);
-            yield return new WaitForSeconds((1 - charge.GetCharge())*punchWaitTime/chargeRate);
+            charge.AddCharge(charge.GetMaxDamage() / chargeRate, true);
+            yield return new WaitForSeconds((1 - charge.GetCharge()) * (punchWaitTime / chargeRate));
         }
         FinalizePunch(true);
         ShootPojectile();
@@ -156,12 +166,32 @@ public class PlayerCombat : MonoBehaviour
     {
         punchTransform.gameObject.GetComponent<ParticleSystem>().Stop();
         _animator.speed = 1;
-        if(shouldHit) StartCoroutine(HitAndDamage());
+        if (shouldHit) { HitAndDamage(); }
+    }
+
+    private void ResetChargeFromAttack()
+    {
+        if (chargingFist)
+        {
+            chargingFist = false;
+            charge.ResetCharge(chargeBeforePunch);
+        }
+    }
+    #endregion
+
+
+
+    private void Attack(string attName)
+    {
+        GetCorrectTransform(attName);
+        CheckAttackPoint();
+        PlayAnim(attName);
+        HitAndDamage();
     }
 
     private void CheckAttackPoint()
     {
-        var diff = transform.position.x - attackPoint.position.x;
+        var diff = transform.position.x - actualAttackTransform.position.x;
         var fistDiff = transform.position.x - punchTransform.position.x;
         if ((_renderer.flipX && diff < 0) || (!_renderer.flipX && diff > 0))
         {
@@ -179,46 +209,45 @@ public class PlayerCombat : MonoBehaviour
 
     void FlipAttackPoint(float diff)
     {
-        Vector2 pos = attackPoint.position;
-        Vector2 airPos = airAttackPoint.position;
+        Vector2 pos = actualAttackTransform.position;
         pos.x += 2 * diff;
-        airPos.x += 2 * diff;
-        attackPoint.position = pos;
-        airAttackPoint.position = airPos;
+        actualAttackTransform.position = pos;
     }
 
-    private void Attack(string attName)
+    private void HitAndDamage()
     {
-        CheckAttackPoint();
-        PlayAnim(attName);
-        StartCoroutine(HitAndDamage());
+        ResetChargeFromAttack();
+        Collider2D[] enemies;
+        enemies = Physics2D.OverlapBoxAll(actualAttackTransform.position, actualAttackParams, 0f, LayerMask.GetMask("Enemies", "Projectiles"));
+        if (enemies.Length > 0) { DamageEnemies(enemies); }
     }
 
-    private IEnumerator HitAndDamage()
+    private void GetCorrectTransform(string attName)
     {
-        Transform attackTransform;
-        if (_animator.GetCurrentAnimatorStateInfo(0).IsName("AirKick"))
+        if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Jump") || _animator.GetCurrentAnimatorStateInfo(0).IsName("Falling"))
         {
-            attackTransform = airAttackPoint;
+            actualAttackTransform = kickTransform;
+            actualAttackParams = kickAttackBoxParams;
+        }
+        else if (attName == "kick")
+        {
+            actualAttackTransform = kickTransform;
+            actualAttackParams = kickAttackBoxParams;
+        } else if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Crouch"))
+        {
+            actualAttackTransform = crouchKickTransform;
+            actualAttackParams = crouchKickAttackBoxParams;
         }
         else
         {
-            attackTransform = attackPoint;
+            actualAttackTransform = attackPoint;
+            actualAttackParams = punchAttackBoxParams;
         }
-        Collider2D[] enemies;
-        do
-        {
-            enemies = Physics2D.OverlapCircleAll(attackTransform.position, actualRange, LayerMask.GetMask("Enemies", "Projectiles"));
-            yield return null;
-        } while (enemies.Length == 0 && _animator.GetCurrentAnimatorStateInfo(0).IsName("AirKick"));
-        DamageEnemies(enemies);
     }
-
 
     private void DamageEnemies(Collider2D[] enemiesHit)
     {
         float damage = attackDamage * (1 + charge.GetCharge());
-        ResetChargeFromAttack();
         foreach (Collider2D enemy in enemiesHit)
         {
             charge.AddCharge(damage);
@@ -234,36 +263,8 @@ public class PlayerCombat : MonoBehaviour
                 enemy.GetComponent<Health>().KnockBackHit(damage, knockedRight);
             }
         }
-        if (_animator.GetBool("kickAerial"))
-        {
-            HandleAirKickAnim();
-        }
     }
 
-    private void HandleAirKickAnim()
-    {
-        _animator.SetBool("kickAerial", false);
-        _animator.SetTrigger("enemyHitAerial");
-        var spriteRenderer = GetComponentInChildren<SpriteRenderer>();
-        var rigidBody = GetComponent<Rigidbody2D>();
-        if (spriteRenderer.flipX)
-        {
-            rigidBody.velocity = 2*Vector2.right;
-        }
-        else
-        {
-            rigidBody.velocity = 2*Vector2.left;
-        }
-    }
-
-    private void ResetChargeFromAttack()
-    {
-        if (chargingFist)
-        {
-            chargingFist = false;
-            charge.ResetCharge(chargeBeforePunch);
-        }
-    }
 
     private bool IsEnemyRight(Collider2D enemy)
     {
@@ -280,12 +281,20 @@ public class PlayerCombat : MonoBehaviour
         return knockedRight;
     }
 
+    public void ResetAerialKick()
+    {
+        _animator.SetBool("kickAerial", false);
+    }
+
     private void PlayAnim(string attName)
     {
         if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Jump") || _animator.GetCurrentAnimatorStateInfo(0).IsName("Falling"))
         {
             _animator.SetBool("kickAerial", true);
             actualRange = aerialRange;
+        } else if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Crouch"))
+        {
+            _animator.SetTrigger("kick");
         }
         else
         {
@@ -298,9 +307,10 @@ public class PlayerCombat : MonoBehaviour
 
     private void OnDrawGizmosSelected()
     {
-        Gizmos.DrawWireSphere(attackPoint.position, attackRange);
-        Gizmos.DrawWireSphere(airAttackPoint.position, aerialRange);
-
+        //Gizmos.DrawWireCube(actualAttackTransform.position, actualAttackParams);
+        Gizmos.DrawWireCube(attackPoint.position, punchAttackBoxParams);
+        Gizmos.DrawWireCube(kickTransform.position, kickAttackBoxParams);
+        Gizmos.DrawWireCube(crouchKickTransform.position, crouchKickAttackBoxParams);
     }
 
 }

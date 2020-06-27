@@ -32,6 +32,7 @@ public class Fireball : MonoBehaviour
 
     private void Hit(GameObject collision)
     {
+        GetComponent<ParticleSystem>().Stop();
         Explode();
         CollideWithHittable(collision);
     }

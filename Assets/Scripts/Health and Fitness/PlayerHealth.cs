@@ -27,7 +27,7 @@ public class PlayerHealth : MonoBehaviour, ISaveable, Health
 
     public void KnockBackHit(float dmg, bool knockedRight)
     {
-        if (!isInvulnerable)
+        if (!isInvulnerable && !controller.GetRolling())
         {
             DamageHealth(dmg);
             controller.KnockBack(knockedRight);
@@ -37,8 +37,9 @@ public class PlayerHealth : MonoBehaviour, ISaveable, Health
     public void DamageHealth(float dmg)
     {
         
-        if (!isInvulnerable || !controller.GetRolling())
+        if (!isInvulnerable && !controller.GetRolling())
         {
+            Debug.Log(controller.GetRolling());
             if (!isDead)
             {
                 GetComponent<PlayerCombat>().DisruptFirePunch(false);

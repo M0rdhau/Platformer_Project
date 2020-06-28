@@ -34,7 +34,8 @@ public class PlayerController : MonoBehaviour, ISaveable
     bool isRolling = false;
 
     bool canJumpOrFall = false;
-    bool needsToReset = false;
+    bool climbingNeedsReset = false;
+    bool rollingNeedsReset = false;
 
     bool areControlsEnabled = true;
 
@@ -71,7 +72,19 @@ public class PlayerController : MonoBehaviour, ISaveable
     {
         HandleAcceleration();
         if (areControlsEnabled) { HandleMovementInput(); }
+        checkIfRollEnded();
         CheckForFalling();
+    }
+
+    private void checkIfRollEnded()
+    {
+        if (!_animator.GetCurrentAnimatorStateInfo(0).IsName("Roll") && rollingNeedsReset)
+        {
+            Debug.Log("resetting Roll");
+            isRolling = false;
+            rollingNeedsReset = false;
+            if (!_animator.GetCurrentAnimatorStateInfo(0).IsName("Crouch")) { _animator.SetBool("isCrouching", isRolling); }
+        }
     }
 
     public void KnockBack(bool knockedRight)
@@ -168,6 +181,17 @@ public class PlayerController : MonoBehaviour, ISaveable
 
     void HandleMovementInput()
     {
+
+        if (Input.GetKeyDown(KeyCode.DownArrow))
+        {
+            CrouchTransition(true);
+        }
+        if ((Input.anyKey && !Input.GetKey(KeyCode.DownArrow) && isCrouching) || (Input.GetKeyUp(KeyCode.DownArrow) && !isRolling ))
+        {
+
+            CrouchTransition(false);
+        }
+
         if (_animator.GetBool("isLedging") && _animator.speed == 0)
         {
             if (Input.anyKey)
@@ -178,25 +202,7 @@ public class PlayerController : MonoBehaviour, ISaveable
 
         HandleClimb();
 
-        if (Input.GetKey(KeyCode.RightArrow))
-        {
-            HandleHorizontalMovement(1f);
-            hasStopped = false;
-        }else if (Input.GetKey(KeyCode.LeftArrow))
-        {
-            HandleHorizontalMovement(-1f);
-            hasStopped = false;
-        }
-        else if(!hasStopped && !isRolling)
-        {
-            Vector2 vel = _rigidBody.velocity;
-            vel.x = 0;
-            _rigidBody.velocity = vel;
-            accelerationVector = new Vector2(0, 0);
-            _animator.SetBool("isRunning", false);
-            _animator.SetBool("isWalking", false);
-            hasStopped = true;
-        }
+        
 
         if (!hasStopped && !isCrouching)
         {
@@ -210,18 +216,32 @@ public class PlayerController : MonoBehaviour, ISaveable
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            CrouchTransition(true);
-        }
-        if ((Input.anyKey && !Input.GetKey(KeyCode.DownArrow) && isCrouching) || Input.GetKeyUp(KeyCode.DownArrow) )
-        {
-            CrouchTransition(false);
-        }
+        
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
             Jump();
+        }
+
+        if (Input.GetKey(KeyCode.LeftArrow))
+        {
+            HandleHorizontalMovement(-1f);
+            hasStopped = false;
+        }
+        else if (Input.GetKey(KeyCode.RightArrow))
+        {
+            HandleHorizontalMovement(1f);
+            hasStopped = false;
+        }
+        else if (!hasStopped && !isRolling)
+        {
+            Vector2 vel = _rigidBody.velocity;
+            vel.x = 0;
+            _rigidBody.velocity = vel;
+            accelerationVector = new Vector2(0, 0);
+            _animator.SetBool("isRunning", false);
+            _animator.SetBool("isWalking", false);
+            hasStopped = true;
         }
     }
 
@@ -275,7 +295,7 @@ public class PlayerController : MonoBehaviour, ISaveable
             _animator.SetBool("kickAerial", false);
             if (!isTouchingGround() && isTouchingLadders())
             {
-                needsToReset = true;
+                climbingNeedsReset = true;
                 _rigidBody.gravityScale = 0;
                 isClimbing = true;
                 spriteTransform.position = new Vector2(transform.position.x, transform.position.y + climbTranfsormOffset);
@@ -284,7 +304,7 @@ public class PlayerController : MonoBehaviour, ISaveable
 
             if (axisThrow != 0 && !_animator.GetCurrentAnimatorStateInfo(0).IsName("Punch"))
             {
-                needsToReset = true;
+                climbingNeedsReset = true;
                 _animator.speed = 1;
                 var climbVec = _rigidBody.velocity;
                 climbVec.y = climbSpeed * axisThrow;
@@ -293,19 +313,19 @@ public class PlayerController : MonoBehaviour, ISaveable
             }
             else if (isClimbing)
             {
-                needsToReset = true;
+                climbingNeedsReset = true;
                 _animator.speed = 0;
                 var climbVec = _rigidBody.velocity;
                 climbVec.y = 0;
                 _rigidBody.velocity = climbVec;
             }
         }
-        else if(needsToReset)
+        else if(climbingNeedsReset)
         {
             _rigidBody.gravityScale = 1;
             _animator.speed = 1;
             isClimbing = false;
-            needsToReset = false;
+            climbingNeedsReset = false;
             spriteTransform.position = transform.position;
             _animator.SetBool("isClimbing", isClimbing);
         }
@@ -363,8 +383,6 @@ public class PlayerController : MonoBehaviour, ISaveable
     private void HandleHorizontalMovement(float axisThrow)
     {
         accelerationVector.x = axisThrow * acceleration;
-        SetCorrectAnimation();
-
         if (accelerationVector.x > 0)
         {
             _renderer.flipX = false;
@@ -373,6 +391,9 @@ public class PlayerController : MonoBehaviour, ISaveable
         {
             _renderer.flipX = true;
         }
+        SetCorrectAnimation();
+
+        
     }
 
     private void SetCorrectAnimation()
@@ -391,14 +412,21 @@ public class PlayerController : MonoBehaviour, ISaveable
             }
             else if (!isRolling)
             {
+                Debug.Log("We're rolling");
                 isRolling = true;
                 _animator.SetTrigger("landed_Noroll");
             }
         }
     }
 
+    public void RollInitiated()
+    {
+        rollingNeedsReset = true;
+    }
+
     public void StopRoll()
     {
+        _animator.ResetTrigger("landed_Noroll");
         isRolling = false;
     }
 

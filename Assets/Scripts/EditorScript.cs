@@ -4,6 +4,7 @@ using UnityEngine;
 public class EditorScript : EditorWindow
 {
     int damage = 1;
+    float charge = 0.1f;
 
     [MenuItem("Window/Player damager, etc.")]
     public static void ShowWindow()
@@ -19,6 +20,14 @@ public class EditorScript : EditorWindow
         if (GUILayout.Button("Damage"))
         {
             FindObjectOfType<PlayerHealth>().KnockBackHit(damage, Random.Range(0, 1) == 1);
+        }
+
+        GUILayout.Label("Add charge to player: " + charge);
+        charge = EditorGUILayout.FloatField("charge to add", charge);
+
+        if (GUILayout.Button("Charge up"))
+        {
+            FindObjectOfType<CombatCharge>().AddCharge(charge);
         }
     }
 }

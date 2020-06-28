@@ -39,7 +39,6 @@ public class PlayerHealth : MonoBehaviour, ISaveable, Health
         
         if (!isInvulnerable && !controller.GetRolling())
         {
-            Debug.Log(controller.GetRolling());
             if (!isDead)
             {
                 GetComponent<PlayerCombat>().DisruptFirePunch(false);

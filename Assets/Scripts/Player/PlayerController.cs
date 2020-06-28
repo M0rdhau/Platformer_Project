@@ -80,7 +80,6 @@ public class PlayerController : MonoBehaviour, ISaveable
     {
         if (!_animator.GetCurrentAnimatorStateInfo(0).IsName("Roll") && rollingNeedsReset)
         {
-            Debug.Log("resetting Roll");
             isRolling = false;
             rollingNeedsReset = false;
             if (!_animator.GetCurrentAnimatorStateInfo(0).IsName("Crouch")) { _animator.SetBool("isCrouching", isRolling); }
@@ -412,7 +411,6 @@ public class PlayerController : MonoBehaviour, ISaveable
             }
             else if (!isRolling)
             {
-                Debug.Log("We're rolling");
                 isRolling = true;
                 _animator.SetTrigger("landed_Noroll");
             }

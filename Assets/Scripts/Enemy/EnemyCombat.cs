@@ -21,7 +21,7 @@ public class EnemyCombat : MonoBehaviour
         if (collision.GetComponent<PlayerHealth>())
         {
             bool knockedRight = IsEnemyRight(collision);
-            collision.GetComponent<PlayerHealth>().KnockBackHit(damage, true);
+            collision.GetComponent<PlayerHealth>().DamageHealth(damage);
         }
     }
 

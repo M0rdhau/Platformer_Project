@@ -10,6 +10,7 @@ public class EnemyMovement : MonoBehaviour, ISaveable
     [SerializeField] float damagedTimeFrame = 1f;
     [SerializeField] float knockbackX = 3f;
     [SerializeField] float knockbackY = 1f;
+    public bool homingIn { get; set; }
     float timeLastDamaged = 0;
     Rigidbody2D body;
     SpriteRenderer render;
@@ -17,6 +18,7 @@ public class EnemyMovement : MonoBehaviour, ISaveable
 
     private void Start()
     {
+        homingIn = false;
         health = GetComponent<Health>();
         body = GetComponent<Rigidbody2D>();
         movementVec = MoveSpeed * Vector2.left;
@@ -66,6 +68,20 @@ public class EnemyMovement : MonoBehaviour, ISaveable
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (!homingIn)
+        {
+            ReverseDirection(collision);
+        }
+    }
+
+    public void SetMovementVector(Vector2 movVec)
+    {
+        movementVec = movVec;
+        body.velocity = movVec;
+    }
+
+    private void ReverseDirection(Collider2D collision)
     {
         if (collision.tag == "EnemyLedgeLeft")
         {

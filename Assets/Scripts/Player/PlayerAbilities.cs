@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class PlayerAbilities : MonoBehaviour
 {
+    [SerializeField] float meditationTickTime = 3f;
     [SerializeField] float meditationRestore = 1f;
 
     Animator _animator;
@@ -37,24 +38,29 @@ public class PlayerAbilities : MonoBehaviour
         {
             if (Input.GetKey(KeyCode.T))
             {
-                if (!isMeditating && _animator.GetCurrentAnimatorStateInfo(0).IsName("Idle")) StartCoroutine(Meditation());
+                if (!isMeditating && _animator.GetCurrentAnimatorStateInfo(0).IsName("Idle") && charge.GetCharge() > 0) StartCoroutine(Meditation());
             }
             else if (isMeditating)
             {
-                isMeditating = false;
-                _animator.SetBool("isMeditating", isMeditating);
+                SetMeditation(false);
             }
         }
     }
 
+    private void SetMeditation(bool med)
+    {
+        isMeditating = med;
+        _animator.SetBool("isMeditating", isMeditating);
+    }
+
     private IEnumerator Meditation()
     {
-        isMeditating = true;
-        _animator.SetBool("isMeditating", isMeditating);
-        while (isMeditating)
+        SetMeditation(true);
+        while (isMeditating && charge.GetCharge() > 0)
         {
             health.Heal(meditationRestore*(1 + charge.GetCharge()));
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(meditationTickTime);
         }
+        SetMeditation(false);
     }
 }

@@ -31,6 +31,7 @@ public class PlayerController : MonoBehaviour, ISaveable
     bool isJumping = false;
     bool isFalling = false;
     bool hasStopped = true;
+    bool isRolling = false;
 
     bool canJumpOrFall = false;
     bool needsToReset = false;
@@ -177,16 +178,16 @@ public class PlayerController : MonoBehaviour, ISaveable
 
         HandleClimb();
 
-        if (Input.GetKey(KeyCode.RightArrow) && !isCrouching)
+        if (Input.GetKey(KeyCode.RightArrow))
         {
             HandleHorizontalMovement(1f);
             hasStopped = false;
-        }else if (Input.GetKey(KeyCode.LeftArrow) && !isCrouching)
+        }else if (Input.GetKey(KeyCode.LeftArrow))
         {
             HandleHorizontalMovement(-1f);
             hasStopped = false;
         }
-        else if(!hasStopped)
+        else if(!hasStopped && !isRolling)
         {
             Vector2 vel = _rigidBody.velocity;
             vel.x = 0;
@@ -209,11 +210,6 @@ public class PlayerController : MonoBehaviour, ISaveable
             }
         }
 
-        //if (Input.GetKeyDown(KeyCode.Q) && isCrouching)
-        //{
-        //    Roll();
-        //}
-
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
             CrouchTransition(true);
@@ -229,20 +225,22 @@ public class PlayerController : MonoBehaviour, ISaveable
         }
     }
 
-    private IEnumerator Roll()
-    {
-        _animator.SetTrigger("landed_Noroll");
-        while (_animator.GetCurrentAnimatorStateInfo(0).IsName("Roll"))
-        {
-            yield return new WaitForSeconds(Time.deltaTime);
-        }
-    }
+    
 
     private void CrouchTransition(bool crouching)
     {
-        isCrouching = crouching;
-        _animator.SetBool("isCrouching", crouching);
-        ShrinkHitbox(crouching);
+        if (isTouchingGround())
+        {
+            isCrouching = crouching;
+            _animator.SetBool("isCrouching", crouching);
+            ShrinkHitbox(crouching);
+        }
+        else
+        {
+            isCrouching = false;
+            _animator.SetBool("isCrouching", false);
+            ShrinkHitbox(false);
+        }
     }
 
     private void ShrinkHitbox(bool crouching)
@@ -320,7 +318,7 @@ public class PlayerController : MonoBehaviour, ISaveable
         {
             canJumpOrFall = true;
         }
-        if (_rigidBody.velocity.y < -1 * Mathf.Epsilon && !isTouchingGround() && !isFalling && !isClimbing && canJumpOrFall && !isCrouching)
+        if (_rigidBody.velocity.y < -1 * Mathf.Epsilon && !isTouchingGround() && !isFalling && !isClimbing && canJumpOrFall)
         {
             isJumping = false;
             isFalling = true;
@@ -340,6 +338,8 @@ public class PlayerController : MonoBehaviour, ISaveable
             isJumping = true;
             CheckIfDoubleJump();
             isFalling = false;
+            StopRoll();
+
             _animator.SetBool("isFalling", false);
             _animator.SetTrigger("jump");
             jumpTime = Time.time;
@@ -359,18 +359,11 @@ public class PlayerController : MonoBehaviour, ISaveable
         }
     }
 
+
     private void HandleHorizontalMovement(float axisThrow)
     {
         accelerationVector.x = axisThrow * acceleration;
-        if (isTouchingGround())
-        {
-            _animator.SetBool("isRunning", false);
-            _animator.SetBool("isWalking", true);
-            if (isRunning)
-            {
-                _animator.SetBool("isRunning", true);
-            }
-        }
+        SetCorrectAnimation();
 
         if (accelerationVector.x > 0)
         {
@@ -380,6 +373,33 @@ public class PlayerController : MonoBehaviour, ISaveable
         {
             _renderer.flipX = true;
         }
+    }
+
+    private void SetCorrectAnimation()
+    {
+        if (isTouchingGround())
+        {
+            if (!isCrouching)
+            {
+                isRolling = false;
+                _animator.SetBool("isRunning", false);
+                _animator.SetBool("isWalking", true);
+                if (isRunning)
+                {
+                    _animator.SetBool("isRunning", true);
+                }
+            }
+            else if (!isRolling)
+            {
+                isRolling = true;
+                _animator.SetTrigger("landed_Noroll");
+            }
+        }
+    }
+
+    public void StopRoll()
+    {
+        isRolling = false;
     }
 
     void HandleAcceleration()
@@ -413,7 +433,9 @@ public class PlayerController : MonoBehaviour, ISaveable
 
     private bool isTouchingGround()
     {
-        return feetCollider.IsTouchingLayers(LayerMask.GetMask("Ground", "Ledges"));
+        return (feetCollider.IsTouchingLayers(LayerMask.GetMask("Ground", "Ledges")) || crouchCollider.IsTouchingLayers(LayerMask.GetMask("Ground", "Ledges")));
     }
+
+    public bool GetRolling() { return isRolling; }
     #endregion
 }

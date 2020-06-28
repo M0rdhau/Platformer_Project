@@ -11,6 +11,7 @@ public class PlayerHealth : MonoBehaviour, ISaveable, Health
     [SerializeField] float invulnerableTime = 1f;
     [SerializeField] GameObject invulLight;
     PlayerUIHandler handler;
+    PlayerController controller;
     Animator anim;
     bool isDead = false;
     bool isInvulnerable = false;
@@ -20,6 +21,7 @@ public class PlayerHealth : MonoBehaviour, ISaveable, Health
     {
         handler = GetComponent<PlayerUIHandler>();
         anim = GetComponent<Animator>();
+        controller = GetComponent<PlayerController>();
         handler.UpdateHealth(totalHealth);
     }
 
@@ -28,14 +30,14 @@ public class PlayerHealth : MonoBehaviour, ISaveable, Health
         if (!isInvulnerable)
         {
             DamageHealth(dmg);
-            GetComponent<PlayerController>().KnockBack(knockedRight);
+            controller.KnockBack(knockedRight);
         }
     }
 
     public void DamageHealth(float dmg)
     {
         
-        if (!isInvulnerable)
+        if (!isInvulnerable || !controller.GetRolling())
         {
             if (!isDead)
             {

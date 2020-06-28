@@ -18,6 +18,7 @@ public class GhostCombat : MonoBehaviour
     
 
     Vector2 directionVector;
+    EnemyHealth health;
     Transform player;
     Animator _animator;
     EnemyMovement movement;
@@ -27,6 +28,7 @@ public class GhostCombat : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        health = GetComponent<EnemyHealth>();
         _animator = GetComponent<Animator>();
         movement = GetComponent<EnemyMovement>();
         breathOffsetX = Mathf.Abs(BreathTransform.position.x - transform.position.x);
@@ -35,16 +37,18 @@ public class GhostCombat : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Collider2D[] enemiesFound = Physics2D.OverlapCircleAll(transform.position, attackRange, LayerMask.GetMask("Player"));
-        if (enemiesFound.Length > 0 && !isAttacking)
+        if (!health.IsDead())
         {
-            isAttacking = true;
-            movement.homingIn = true;
-            player = enemiesFound[0].transform;
-            CheckDirection();
-            StartCoroutine(ChasePlayer());
+            Collider2D[] enemiesFound = Physics2D.OverlapCircleAll(transform.position, attackRange, LayerMask.GetMask("Player"));
+            if (enemiesFound.Length > 0 && !isAttacking)
+            {
+                isAttacking = true;
+                movement.homingIn = true;
+                player = enemiesFound[0].transform;
+                CheckDirection();
+                StartCoroutine(ChasePlayer());
+            }
         }
-        //CheckIfPlayerInRange();
     }
 
     private void AttackPlayer(Collider2D[] enemies)

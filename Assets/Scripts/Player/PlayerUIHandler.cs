@@ -11,6 +11,12 @@ public class PlayerUIHandler : MonoBehaviour
     [SerializeField] TextMeshProUGUI healthText;
     [SerializeField] TextMeshProUGUI chargeText;
 
+    PlayerHealth pHealth;
+
+    private void Awake()
+    {
+        pHealth = FindObjectOfType<PlayerHealth>();
+    }
 
     public void UpdateHealth(float health)
     {

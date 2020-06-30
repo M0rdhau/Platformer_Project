@@ -234,17 +234,21 @@ public class PlayerController : MonoBehaviour, ISaveable
         }
         else if (!hasStopped && !isRolling)
         {
-            Vector2 vel = _rigidBody.velocity;
-            vel.x = 0;
-            _rigidBody.velocity = vel;
-            accelerationVector = new Vector2(0, 0);
-            _animator.SetBool("isRunning", false);
-            _animator.SetBool("isWalking", false);
-            hasStopped = true;
+            StopPlayer();
         }
     }
 
-    
+    private void StopPlayer()
+    {
+        accelerationVector = new Vector2(0, 0);
+        _animator.SetBool("isRunning", false);
+        _animator.SetBool("isWalking", false);
+        Vector2 vel = _rigidBody.velocity;
+        vel.x = 0;
+        _rigidBody.velocity = vel;
+        hasStopped = true;
+    }
+
 
     private void CrouchTransition(bool crouching)
     {

@@ -16,16 +16,18 @@ public class PlatformMovement : MonoBehaviour
     [SerializeField] Vector2 movementVec = new Vector2(3, 0);
     [SerializeField] ReversePositions direction = ReversePositions.X;
     Rigidbody2D rBody;
-    Rigidbody2D otherBody;
+    Transform otherBody;
 
     // Start is called before the first frame update
     void Start()
     {
         rBody = GetComponent<Rigidbody2D>();
-        SetMovementVector();
     }
 
-
+    private void FixedUpdate()
+    {
+        transform.position += (new Vector3(movementVec.x, movementVec.y, 0)) * Time.deltaTime;
+    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -37,29 +39,22 @@ public class PlatformMovement : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        otherBody = collision.gameObject.GetComponentInParent<Rigidbody2D>();
-        SetOtherVelocity();
-    }
-
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        SetOtherVelocity();
+        if (collision.gameObject.tag == "Player")
+        {
+            otherBody = collision.transform;
+            if (otherBody)
+            {
+                otherBody.parent = this.transform;
+            }
+        }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.GetComponentInParent<Rigidbody2D>() == otherBody)
+        if (collision.transform == otherBody)
         {
+            otherBody.parent = null;
             otherBody = null;
-        }
-    }
-
-    private void SetOtherVelocity()
-    {
-        if (otherBody != null)
-        {
-            Vector2 colVelocity = otherBody.velocity;
-            otherBody.velocity = colVelocity + rBody.velocity;
         }
     }
 
@@ -69,22 +64,14 @@ public class PlatformMovement : MonoBehaviour
         {
             case ReversePositions.X:
                 movementVec.x = -movementVec.x;
-                SetMovementVector();
                 break;
             case ReversePositions.Y:
                 movementVec.y = -movementVec.y;
-                SetMovementVector();
                 break;
             case ReversePositions.Both:
                 movementVec = -movementVec;
-                SetMovementVector();
                 break;
         }
-        
     }
 
-    private void SetMovementVector()
-    {
-        rBody.velocity = movementVec;
-    }
 }

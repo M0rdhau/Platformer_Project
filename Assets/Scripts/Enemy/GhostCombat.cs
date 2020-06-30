@@ -70,6 +70,7 @@ public class GhostCombat : MonoBehaviour
             directionVector = directionVector.normalized;
             movement.SetMovementVector(directionVector*moveToPlayerSpeed);
             enemiesHit = Physics2D.OverlapCircleAll(BreathTransform.position, breathRadius, LayerMask.GetMask("Player"));
+            CheckDirection();
             yield return new WaitForSeconds(Time.deltaTime);
         } while (enemiesHit.Length == 0);
         AttackPlayer(enemiesHit);
@@ -80,20 +81,22 @@ public class GhostCombat : MonoBehaviour
     private void CheckDirection()
     {
         var _renderer = GetComponentInChildren<SpriteRenderer>();
-        if ((player.transform.position.x > transform.position.x) && !_renderer.flipX)
+        if (player.transform.position.x > transform.position.x)
         {
+            Debug.Log("player is right of ghost");
             _renderer.flipX = true;
             var vec = BreathTransform.position;
-            vec.x += 2 * breathOffsetX;
+            vec.x = transform.position.x + breathOffsetX;
             BreathTransform.position = vec;
             breathRotation = Quaternion.Euler(0, 180, 0);
 
         }
-        else if ((player.transform.position.x < transform.position.x) && _renderer.flipX)
+        else if (player.transform.position.x < transform.position.x)
         {
+            Debug.Log("player is left of ghost");
             _renderer.flipX = false;
             var vec = BreathTransform.position;
-            vec.x -= 2 * breathOffsetX;
+            vec.x = transform.position.x - breathOffsetX;
             BreathTransform.position = vec;
             breathRotation = Quaternion.Euler(0, 0, 0);
         }

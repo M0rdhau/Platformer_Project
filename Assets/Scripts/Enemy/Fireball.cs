@@ -19,6 +19,7 @@ public class Fireball : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        Debug.Log(collision.gameObject);
         Hit(collision.gameObject);
     }
 

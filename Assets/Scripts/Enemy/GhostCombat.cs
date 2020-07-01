@@ -83,7 +83,6 @@ public class GhostCombat : MonoBehaviour
         var _renderer = GetComponentInChildren<SpriteRenderer>();
         if (player.transform.position.x > transform.position.x)
         {
-            Debug.Log("player is right of ghost");
             _renderer.flipX = true;
             var vec = BreathTransform.position;
             vec.x = transform.position.x + breathOffsetX;
@@ -93,7 +92,6 @@ public class GhostCombat : MonoBehaviour
         }
         else if (player.transform.position.x < transform.position.x)
         {
-            Debug.Log("player is left of ghost");
             _renderer.flipX = false;
             var vec = BreathTransform.position;
             vec.x = transform.position.x - breathOffsetX;

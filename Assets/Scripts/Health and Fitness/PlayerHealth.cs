@@ -102,5 +102,9 @@ public class PlayerHealth : MonoBehaviour, ISaveable, Health
         return isDead;
     }
 
+    public float GetMaxHealth()
+    {
+        return maxHealth;
+    }
     
 }

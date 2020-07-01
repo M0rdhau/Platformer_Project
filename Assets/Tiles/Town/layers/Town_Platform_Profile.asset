@@ -27,7 +27,7 @@ MonoBehaviour:
     m_End: 225
     m_Order: 2
     m_Sprites:
-    - {fileID: 0}
+    - {fileID: 21300000, guid: 54c7d78bbf22cff49a638f3eee4d0607, type: 3}
   - m_Start: 45
     m_End: 135
     m_Order: 1
@@ -43,10 +43,10 @@ MonoBehaviour:
     - {fileID: 3617328462823087569, guid: c031199aa58e7124cb0b5288b928975d, type: 3}
   - m_CornerType: 2
     m_Sprites:
-    - {fileID: 0}
+    - {fileID: 21300000, guid: d464c804d7634a740be012b55ea6fc39, type: 3}
   - m_CornerType: 3
     m_Sprites:
-    - {fileID: 0}
+    - {fileID: 21300000, guid: d464c804d7634a740be012b55ea6fc39, type: 3}
   - m_CornerType: 4
     m_Sprites:
     - {fileID: 0}

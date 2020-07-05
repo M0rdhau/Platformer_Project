@@ -5,27 +5,26 @@ using UnityEngine;
 
 public class EnemyMovement : MonoBehaviour, ISaveable
 {
-    [SerializeField] float MoveSpeed = 2f;
-    [SerializeField] Vector2 movementVec;
+    [SerializeField] protected float MoveSpeed = 2f;
+    [SerializeField] protected Vector2 movementVec;
     [SerializeField] float damagedTimeFrame = 1f;
     [SerializeField] float knockbackX = 3f;
     [SerializeField] float knockbackY = 1f;
     public bool homingIn { get; set; }
     float timeLastDamaged = 0;
-    Rigidbody2D body;
-    SpriteRenderer render;
-    Health health;
+    protected Rigidbody2D body;
+    protected SpriteRenderer render;
+    protected Health health;
 
     private void Start()
     {
         homingIn = false;
         health = GetComponent<Health>();
         body = GetComponent<Rigidbody2D>();
-        movementVec = MoveSpeed * Vector2.left;
         render = GetComponentInChildren<SpriteRenderer>();
     }
 
-    private void Update()
+    protected virtual void Update()
     {
         body.velocity = new Vector2(movementVec.x, body.velocity.y);
         if (health.IsDead())
@@ -36,13 +35,15 @@ public class EnemyMovement : MonoBehaviour, ISaveable
 
     public IEnumerator Damaged()
     {
-        movementVec.x = 0;
+        Vector2 rememberVec = movementVec;
+        SetMovementVector(Vector2.zero);
         yield return new WaitForSeconds(damagedTimeFrame);
-        UnDamaged();
+        movementVec = rememberVec;
     }
 
     public IEnumerator KnockBack(bool knockedRight)
-    {        
+    {
+        Vector2 rememberVec = movementVec;
         if (knockedRight)
         {
             movementVec = new Vector2(knockbackX, knockbackY);
@@ -52,18 +53,19 @@ public class EnemyMovement : MonoBehaviour, ISaveable
             movementVec = new Vector2(-knockbackX, knockbackY);
         }
         yield return new WaitForSeconds(damagedTimeFrame);
-        UnDamaged();
+        movementVec = rememberVec;
     }
 
-    private void UnDamaged()
+    
+    private void UnDamaged(Vector2 remVec)
     {
         if (render.flipX)
         {
-            movementVec = MoveSpeed * Vector2.right;
+            movementVec = remVec;
         }
         else
         {
-            movementVec = MoveSpeed * Vector2.left;
+            movementVec = remVec;
         }
     }
 
@@ -81,7 +83,7 @@ public class EnemyMovement : MonoBehaviour, ISaveable
         body.velocity = movVec;
     }
 
-    private void ReverseDirection(Collider2D collision)
+    public virtual void ReverseDirection(Collider2D collision)
     {
         if (collision.tag == "EnemyLedgeLeft")
         {

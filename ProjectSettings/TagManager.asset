@@ -9,6 +9,8 @@ TagManager:
   - platformReversePoint
   - EnemyProjectile
   - Platform
+  - BossReflectorVertical
+  - BossReflectorHorizontal
   layers:
   - Default
   - TransparentFX

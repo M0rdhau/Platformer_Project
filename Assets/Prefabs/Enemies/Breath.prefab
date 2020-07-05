@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3802006750721750229}
   - component: {fileID: 3802006750721750228}
   - component: {fileID: 3802006750721750231}
+  - component: {fileID: 6303679084945122072}
   m_Layer: 0
   m_Name: Breath
   m_TagString: Untagged
@@ -71,8 +72,7 @@ SpriteRenderer:
   m_SortingLayerID: -692988623
   m_SortingLayer: 2
   m_SortingOrder: 6
-  m_Sprite: {fileID: -4391339548740726016, guid: 54771e352cb77e441b4712fb419a4657,
-    type: 3}
+  m_Sprite: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -80,7 +80,7 @@ SpriteRenderer:
   m_Size: {x: 5, y: 3}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!95 &3802006750721750231
@@ -102,3 +102,16 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &6303679084945122072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3802006750721750226}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ea8342bf4010f64d8b296bc7cd3383d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dimensions: {x: 4, y: 2.5}

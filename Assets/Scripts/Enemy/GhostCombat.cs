@@ -6,24 +6,23 @@ using UnityEngine;
 public class GhostCombat : MonoBehaviour
 {
 
-    [SerializeField] float attackRange = 5f;
-    [SerializeField] float moveToPlayerSpeed = 3f;
-    [SerializeField] float distanceFromPlayer = 2f;
-    [SerializeField] Transform BreathTransform;
-    [SerializeField] GameObject breathPrefab;
-    [SerializeField] Quaternion breathRotation;
-    [SerializeField] float breathRadius = 1.4f;
-    [SerializeField] float timeBetweenAttacks = 2f;
-    [SerializeField] float breathDamage = 2f;
-    
+    [SerializeField] protected float attackRange = 5f;
+    [SerializeField] protected float moveToPlayerSpeed = 3f;
+    [SerializeField] protected Transform BreathTransform;
+    [SerializeField] protected GameObject breathPrefab;
+    [SerializeField] protected Quaternion breathRotation;
+    [SerializeField] protected float breathRadius = 1.4f;
+    [SerializeField] protected float timeBetweenAttacks = 2f;
+    [SerializeField] protected float breathDamage = 2f;
 
-    Vector2 directionVector;
-    EnemyHealth health;
-    Transform player;
-    Animator _animator;
-    EnemyMovement movement;
-    bool isAttacking;
-    float breathOffsetX;
+
+    protected Vector2 directionVector;
+    protected EnemyHealth health;
+    protected Transform player;
+    protected Animator _animator;
+    protected EnemyMovement movement;
+    protected bool isAttacking;
+    protected float breathOffsetX;
 
     // Start is called before the first frame update
     void Start()
@@ -34,31 +33,60 @@ public class GhostCombat : MonoBehaviour
         breathOffsetX = Mathf.Abs(BreathTransform.position.x - transform.position.x);
     }
 
-    // Update is called once per frame
     void Update()
+    {
+        FindPlayer();
+        if(player != null) InitiateAttack();
+    }
+
+    protected void InitiateAttack()
     {
         if (!health.IsDead())
         {
-            Collider2D[] enemiesFound = Physics2D.OverlapCircleAll(transform.position, attackRange, LayerMask.GetMask("Player"));
-            if (enemiesFound.Length > 0 && !isAttacking)
+            if (!isAttacking)
             {
                 isAttacking = true;
                 movement.homingIn = true;
-                player = enemiesFound[0].transform;
                 CheckDirection();
                 StartCoroutine(ChasePlayer());
             }
         }
     }
 
+    private void FindPlayer()
+    {
+        Collider2D[] enemiesFound = Physics2D.OverlapCircleAll(transform.position, attackRange, LayerMask.GetMask("Player"));
+        foreach (Collider2D enemy in enemiesFound)
+        {
+            if (enemy.transform.tag == "Player")
+            {
+                player = enemy.transform;
+            }
+        }
+    }
+
     private void AttackPlayer(Collider2D[] enemies)
     {
-        var breath = Instantiate(breathPrefab, BreathTransform.position, breathRotation);
-        Destroy(breath, 0.5f);
+        //stop movement
+        StartCoroutine(movement.Damaged());
+        OnAttack();
+        //DealDamage(enemies);
+    }
+
+    private void DealDamage(Collider2D[] enemies)
+    {
         foreach (Collider2D enemy in enemies)
         {
-            enemy.GetComponent<PlayerHealth>().DamageHealth(breathDamage);
+            if (enemy.GetComponent<PlayerHealth>())
+                enemy.GetComponent<PlayerHealth>().DamageHealth(breathDamage);
         }
+    }
+
+    protected virtual void OnAttack()
+    {
+        var breath = Instantiate(breathPrefab, BreathTransform.position, breathRotation);
+        breath.GetComponent<Breath>().SetDamage(breathDamage);
+        breath.GetComponent<Animator>().SetTrigger("Blue");
     }
 
     private IEnumerator ChasePlayer()
@@ -68,13 +96,19 @@ public class GhostCombat : MonoBehaviour
         {
             directionVector = player.position - BreathTransform.position;
             directionVector = directionVector.normalized;
-            movement.SetMovementVector(directionVector*moveToPlayerSpeed);
+            movement.SetMovementVector(directionVector * moveToPlayerSpeed);
             enemiesHit = Physics2D.OverlapCircleAll(BreathTransform.position, breathRadius, LayerMask.GetMask("Player"));
             CheckDirection();
             yield return new WaitForSeconds(Time.deltaTime);
         } while (enemiesHit.Length == 0);
         AttackPlayer(enemiesHit);
         yield return new WaitForSeconds(timeBetweenAttacks);
+        movement.homingIn = false;
+        OnAttackCompleted();
+    }
+
+    protected virtual void OnAttackCompleted()
+    {
         isAttacking = false;
     }
 
@@ -88,7 +122,6 @@ public class GhostCombat : MonoBehaviour
             vec.x = transform.position.x + breathOffsetX;
             BreathTransform.position = vec;
             breathRotation = Quaternion.Euler(0, 180, 0);
-
         }
         else if (player.transform.position.x < transform.position.x)
         {
@@ -104,9 +137,5 @@ public class GhostCombat : MonoBehaviour
     {
         Gizmos.DrawWireSphere(transform.position, attackRange);
         Gizmos.DrawWireSphere(BreathTransform.position, breathRadius);
-        var gizmoColor = Color.red;
-        gizmoColor.a = 0.2f;
-        Gizmos.color = gizmoColor;
-        Gizmos.DrawSphere(transform.position, distanceFromPlayer);
     }
 }

@@ -71,10 +71,9 @@ public class EnemyMovement : MonoBehaviour, ISaveable
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (!homingIn)
-        {
+        
             ReverseDirection(collision);
-        }
+        
     }
 
     public void SetMovementVector(Vector2 movVec)
@@ -85,16 +84,20 @@ public class EnemyMovement : MonoBehaviour, ISaveable
 
     public virtual void ReverseDirection(Collider2D collision)
     {
-        if (collision.tag == "EnemyLedgeLeft")
+        if (!homingIn)
         {
-            movementVec = MoveSpeed * Vector2.right;
-            render.flipX = true;
+            if (collision.tag == "EnemyLedgeLeft")
+            {
+                movementVec = MoveSpeed * Vector2.right;
+                render.flipX = true;
+            }
+            else if (collision.tag == "EnemyLedgeRight")
+            {
+                movementVec = MoveSpeed * Vector2.left;
+                render.flipX = false;
+            }
         }
-        else if (collision.tag == "EnemyLedgeRight")
-        {
-            movementVec = MoveSpeed * Vector2.left;
-            render.flipX = false;
-        }
+
     }
 
     public object CaptureState()

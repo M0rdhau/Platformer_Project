@@ -11,4 +11,9 @@ public interface Health
     void Die();
 
     void KnockBackHit(float dmg, bool knockedRight);
+
+    float GetHealth();
+
+    float GetMaxHealth();
+
 }

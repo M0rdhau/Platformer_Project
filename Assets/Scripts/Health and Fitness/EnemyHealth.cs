@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class EnemyHealth : MonoBehaviour, Health
 {
+    [SerializeField] float maxHealth = 20f;
     [SerializeField] float totalHealth = 20f;
     Animator anim;
     bool isDead = false;
@@ -11,6 +12,7 @@ public class EnemyHealth : MonoBehaviour, Health
 
     private void Start()
     {
+        totalHealth = maxHealth;
         anim = GetComponent<Animator>();
     }
 
@@ -57,5 +59,15 @@ public class EnemyHealth : MonoBehaviour, Health
     public bool IsDead()
     {
         return isDead;
+    }
+
+    public float GetHealth()
+    {
+        return totalHealth;
+    }
+
+    public float GetMaxHealth()
+    {
+        return maxHealth;
     }
 }

@@ -17,11 +17,11 @@ public class GhostCombat : MonoBehaviour
 
 
     protected Vector2 directionVector;
-    protected EnemyHealth health;
+    protected Health health;
     protected Transform player;
     protected Animator _animator;
     protected EnemyMovement movement;
-    protected bool isAttacking;
+    public bool isAttacking { get; set; }
     protected float breathOffsetX;
 
     // Start is called before the first frame update

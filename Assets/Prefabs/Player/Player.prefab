@@ -5095,7 +5095,7 @@ CapsuleCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: -0.04275894, y: -0.2421645}
-  m_Size: {x: 0.18360138, y: 1.484329}
+  m_Size: {x: 0.43, y: 1.484329}
   m_Direction: 0
 --- !u!251 &351303954226347792
 PlatformEffector2D:
@@ -5148,6 +5148,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   healthText: {fileID: 0}
   chargeText: {fileID: 0}
+  healthSlider: {fileID: 0}
+  chargeSlider: {fileID: 0}
 --- !u!114 &2413236916474545019
 MonoBehaviour:
   m_ObjectHideFlags: 0

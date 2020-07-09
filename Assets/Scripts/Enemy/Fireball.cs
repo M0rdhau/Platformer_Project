@@ -7,7 +7,19 @@ public class Fireball : MonoBehaviour
     [SerializeField] float explosionRadius = 3f;
     [SerializeField] float damage = 3f;
     [SerializeField] string[] layerMask;
+    public float rotationSpeed { get; set; }
 
+
+    public bool isBossFireball { set; get; }
+
+
+    private void Update()
+    {
+        if (isBossFireball)
+        {
+            transform.RotateAround(transform.parent.position, Vector3.forward, rotationSpeed * Time.deltaTime);
+        }
+    }
 
     private void Start()
     {
@@ -19,7 +31,6 @@ public class Fireball : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log(collision.gameObject);
         Hit(collision.gameObject);
     }
 
@@ -52,8 +63,12 @@ public class Fireball : MonoBehaviour
         {
             foreach (Collider2D enemy in enemiesHit)
             {
-                bool knockedRight = IsEnemyRight(enemy.transform);
-                enemy.GetComponent<Health>().KnockBackHit(damage, knockedRight);
+                var enemyHealth = enemy.GetComponent<Health>();
+                if(enemyHealth != null)
+                {
+                    bool knockedRight = IsEnemyRight(enemy.transform);
+                    enemy.GetComponent<Health>().KnockBackHit(damage, knockedRight);
+                }
             }   
         }
     }

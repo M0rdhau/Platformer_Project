@@ -191,27 +191,35 @@ public class PlayerCombat : MonoBehaviour
 
     private void CheckAttackPoint()
     {
-        var diff = transform.position.x - actualAttackTransform.position.x;
-        var fistDiff = transform.position.x - punchTransform.position.x;
-        if ((_renderer.flipX && diff < 0) || (!_renderer.flipX && diff > 0))
-        {
-            FlipAttackPoint(diff);
-            FlipPunchPoint(fistDiff);
-        }
+        var diff = Mathf.Abs(transform.position.x - actualAttackTransform.position.x);
+        var fistDiff = Mathf.Abs(transform.position.x - punchTransform.position.x);
+        FlipAttackPoint(diff, fistDiff, _renderer.flipX);
+        //FlipPunchPoint(fistDiff, _renderer.flipX);
     }
 
-    private void FlipPunchPoint(float fistDiff)
+    private void FlipPunchPoint(float fistDiff, bool isFlipped)
     {
         Vector2 pos = punchTransform.position;
         pos.x += 2 * fistDiff;
         punchTransform.position = pos;
     }
 
-    void FlipAttackPoint(float diff)
+    void FlipAttackPoint(float diff, float chargeDiff, bool isFlipped)
     {
-        Vector2 pos = actualAttackTransform.position;
-        pos.x += 2 * diff;
-        actualAttackTransform.position = pos;
+        Vector2 attackPos = actualAttackTransform.position;
+        Vector2 chargePos = punchTransform.position;
+        if (!isFlipped)
+        {
+            attackPos.x = transform.position.x + diff;
+            chargePos.x = transform.position.x - chargeDiff;
+        }
+        else
+        {
+            attackPos.x = transform.position.x - diff;
+            chargePos.x = transform.position.x + chargeDiff;
+        }
+        actualAttackTransform.position = attackPos;
+        punchTransform.position = chargePos;
     }
 
     private void HitAndDamage()
@@ -228,15 +236,15 @@ public class PlayerCombat : MonoBehaviour
         {
             actualAttackTransform = kickTransform;
             actualAttackParams = kickAttackBoxParams;
+        } else if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Crouch"))
+        {
+            actualAttackTransform = crouchKickTransform;
+            actualAttackParams = crouchKickAttackBoxParams;
         }
         else if (attName == "kick")
         {
             actualAttackTransform = kickTransform;
             actualAttackParams = kickAttackBoxParams;
-        } else if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Crouch"))
-        {
-            actualAttackTransform = crouchKickTransform;
-            actualAttackParams = crouchKickAttackBoxParams;
         }
         else
         {

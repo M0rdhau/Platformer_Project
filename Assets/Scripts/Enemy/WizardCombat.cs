@@ -27,7 +27,6 @@ public class WizardCombat : MonoBehaviour
     }
 
 
-    // Update is called once per frame
     void Update()
     {
         Collider2D[] enemiesHit = Physics2D.OverlapCircleAll(transform.position, attackRange, LayerMask.GetMask("Player"));
@@ -46,6 +45,7 @@ public class WizardCombat : MonoBehaviour
         directionVector = player.position - fireballTransform.position;
         directionVector = directionVector.normalized;
         var fireball = Instantiate(fireballPrefab, fireballTransform.position, transform.rotation);
+        fireball.GetComponent<Fireball>().isBossFireball = false;
         fireball.GetComponent<Fireball>().SetMoveVector(directionVector * projSpeed);
         StartCoroutine(TrackProjectile(fireball));
     }

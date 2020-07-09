@@ -22,9 +22,12 @@ public class Breath : MonoBehaviour
     private void DamageEnemies()
     {
         var enemies = Physics2D.OverlapBoxAll(transform.position, dimensions, 0f, LayerMask.GetMask("Player"));
-        if (enemies.Length > 0)
+        foreach (Collider2D enemy in enemies)
         {
-            enemies[0].GetComponent<Health>().DamageHealth(damage);
+            if (enemy.tag == "Player")
+            {
+                enemy.GetComponent<Health>().DamageHealth(damage);
+            }
         }
     }
 

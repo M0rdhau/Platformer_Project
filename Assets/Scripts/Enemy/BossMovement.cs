@@ -23,11 +23,8 @@ public class BossMovement : EnemyMovement
 
         if (collision.tag == "BossReflectorHorizontal")
         {
-            Debug.Log("Collision, movement vector: " + movementVec);
             movementVec.y = -movementVec.y;
             SetMovementVector(movementVec);
-            Debug.Log("Movement vector after collision: " + movementVec);
-            Debug.Log("rbody movement: " + body.velocity);
             GetComponent<BossCombat>().Bounce();
         }
         else if (collision.tag == "BossReflectorVertical")

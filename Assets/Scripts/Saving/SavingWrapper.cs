@@ -11,9 +11,11 @@ public class SavingWrapper : MonoBehaviour
     private IEnumerator Start()
     {
         Fader fader = FindObjectOfType<Fader>();
+        fader.GetComponent<Canvas>().sortingOrder = 10;
         fader.FadeOutImmediately();
         yield return GetComponent<SavingSystem>().LoadLastScene(defaultSaveFile);
         yield return fader.FadeIn(fadeInTime);
+        fader.GetComponent<Canvas>().sortingOrder = 0;
     }
 
     private void Update()

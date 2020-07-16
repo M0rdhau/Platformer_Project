@@ -38744,7 +38744,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2125910097}
-  m_LocalRotation: {x: -0.000000011920929, y: -2.1165556e-16, z: -0.000000017754953,
+  m_LocalRotation: {x: -0.000000011920929, y: -2.2401944e-16, z: -0.00000001879211,
     w: 1}
   m_LocalPosition: {x: -5.72755, y: -4.0639534, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -39153,7 +39153,9 @@ MonoBehaviour:
   totalHealth: 20
   maxHealth: 20
   invulnerableTime: 1
+  deathWaitTime: 1
   invulLight: {fileID: 3390864339082735310}
+  deathCanvas: {fileID: 0}
 --- !u!251 &3053243110361051720
 PlatformEffector2D:
   m_ObjectHideFlags: 0
@@ -39269,6 +39271,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 639044630, guid: 439eef341393c8548b301fc3c7eac0b8, type: 3}
+      propertyPath: maxHealth
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 639044630, guid: 439eef341393c8548b301fc3c7eac0b8, type: 3}
+      propertyPath: totalHealth
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 4063300391244593348, guid: 439eef341393c8548b301fc3c7eac0b8,
         type: 3}
       propertyPath: m_Name
@@ -39497,7 +39507,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4284187633084127348}
-  m_LocalRotation: {x: -0.000000011920929, y: -2.1165556e-16, z: -0.000000017754953,
+  m_LocalRotation: {x: -0.000000011920929, y: -2.2401944e-16, z: -0.00000001879211,
     w: 1}
   m_LocalPosition: {x: -5.72755, y: -4.0639534, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}

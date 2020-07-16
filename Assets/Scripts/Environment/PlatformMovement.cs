@@ -31,7 +31,6 @@ public class PlatformMovement : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("Trigger event");
         if (collision.tag == "platformReversePoint")
         {
             ReverseMovement();

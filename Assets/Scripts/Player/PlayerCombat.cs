@@ -63,13 +63,6 @@ public class PlayerCombat : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.W))
             {
-                Attack("kick");
-                nextAttackTime = Time.time + 1f / attackRate;
-            }
-
-
-            if (Input.GetKeyDown(KeyCode.E))
-            {
                 if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Idle") && upgrades.HasUpgrade(Upgrade.UpgradeType.FireFist))
                 {
                     nextAttackTime = Time.time + 1f / attackRate;
@@ -79,17 +72,26 @@ public class PlayerCombat : MonoBehaviour
                 }
                 else
                 {
-                    Attack("punch");
+                    int a = UnityEngine.Random.Range(0, 2);
+                    if (a == 0)
+                    {
+                        Attack("punch");
+                    }
+                    else
+                    {
+                        Attack("kick");
+                    }
+                    nextAttackTime = Time.time + 1f / attackRate;
                 }
 
             }
         }
-        if (Input.GetKeyUp(KeyCode.E) && chargingFist)
+        if (Input.GetKeyUp(KeyCode.W) && chargingFist)
         {
             DisruptFirePunch();
         }
 
-        if (Input.anyKeyDown && !Input.GetKeyDown(KeyCode.E) && chargingFist)
+        if (Input.anyKeyDown && !Input.GetKeyDown(KeyCode.W) && chargingFist)
         {
             //just stops the charging if any other key is pressed without dealing damage
             DisruptFirePunch(false);

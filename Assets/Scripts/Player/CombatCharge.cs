@@ -28,7 +28,7 @@ public class CombatCharge : MonoBehaviour, ISaveable
     private void Start()
     {
         _renderer = GetComponentInChildren<SpriteRenderer>();
-        handler = GetComponent<PlayerUIHandler>();
+        handler = FindObjectOfType<PlayerUIHandler>();
         color = _renderer.material.GetColor("GlowColor");
         UpdateCharge();
     }

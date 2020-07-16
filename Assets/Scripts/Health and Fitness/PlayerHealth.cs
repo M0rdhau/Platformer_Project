@@ -9,7 +9,9 @@ public class PlayerHealth : MonoBehaviour, ISaveable, Health
     [SerializeField] float totalHealth = 20f;
     [SerializeField] float maxHealth = 20f;
     [SerializeField] float invulnerableTime = 1f;
+    [SerializeField] float deathWaitTime = 1f;
     [SerializeField] GameObject invulLight;
+    [SerializeField] GameObject deathCanvas;
     PlayerUIHandler handler;
     PlayerController controller;
     Animator anim;
@@ -19,7 +21,7 @@ public class PlayerHealth : MonoBehaviour, ISaveable, Health
 
     private void Start()
     {
-        handler = GetComponent<PlayerUIHandler>();
+        handler = FindObjectOfType<PlayerUIHandler>();
         anim = GetComponent<Animator>();
         controller = GetComponent<PlayerController>();
         handler.UpdateHealth(totalHealth);
@@ -64,16 +66,29 @@ public class PlayerHealth : MonoBehaviour, ISaveable, Health
 
     private void HandleDeath()
     {
-        anim.SetBool("isDead", true);
+        //this boolean doesn't matter much.
+        controller.KnockBack(true);
         isDead = true;
-        this.enabled = false;
+        //this.enabled = false;
     }
 
     public void Die()
     {
-        GetComponentInChildren<SpriteRenderer>().gameObject.SetActive(false);
-        GetComponent<Rigidbody2D>().gravityScale = 0;
-        GetComponent<Collider2D>().enabled = false;
+        if (isDead)
+        {
+            anim.SetBool("isDead", true);
+            StartCoroutine(DeathCoroutine());
+        }
+    }
+
+    private IEnumerator DeathCoroutine()
+    {
+
+        Time.timeScale = 0;
+        deathCanvas.SetActive(true);
+        yield return new WaitForSecondsRealtime(deathWaitTime);
+        deathCanvas.transform.GetChild(0).GetChild(0).gameObject.SetActive(true);
+        
     }
 
     public void Heal(float healing)

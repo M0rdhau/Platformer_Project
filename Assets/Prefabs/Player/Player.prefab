@@ -4878,10 +4878,10 @@ GameObject:
   - component: {fileID: 4552266347215113621}
   - component: {fileID: 351303954226347792}
   - component: {fileID: 7162793307030808183}
-  - component: {fileID: 7583350486911378221}
   - component: {fileID: 2413236916474545019}
   - component: {fileID: 7409335502995543387}
-  - component: {fileID: 45305057485585647}
+  - component: {fileID: 6822462749355304404}
+  - component: {fileID: 2583298133406246664}
   m_Layer: 12
   m_Name: Player
   m_TagString: Player
@@ -4896,7 +4896,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4552266347215113707}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -25.54, y: -4.45, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -5042,7 +5042,9 @@ MonoBehaviour:
   totalHealth: 20
   maxHealth: 20
   invulnerableTime: 1
+  deathWaitTime: 1
   invulLight: {fileID: 122050591495267222}
+  deathCanvas: {fileID: 0}
 --- !u!114 &4552266348372725858
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5134,22 +5136,6 @@ MonoBehaviour:
   maxDamage: 60
   maxChargeTime: 5
   currentCharge: 0
---- !u!114 &7583350486911378221
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4552266347215113707}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b19d4cb5b616ee34887efb4f549442f1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  healthText: {fileID: 0}
-  chargeText: {fileID: 0}
-  healthSlider: {fileID: 0}
-  chargeSlider: {fileID: 0}
 --- !u!114 &2413236916474545019
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5177,7 +5163,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   meditationTickTime: 3
   meditationRestore: 1
---- !u!60 &45305057485585647
+--- !u!60 &6822462749355304404
 PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5202,11 +5188,28 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: -0.44429398, y: 0.1041286}
-      - {x: -0.6961336, y: -0.18626165}
-      - {x: -0.653337, y: -0.95468724}
-      - {x: 0.4566822, y: -0.96925414}
-      - {x: 0.120737076, y: -0.20082843}
+    - - {x: 0.1944027, y: -0.12323356}
+      - {x: -0.21883392, y: -0.13625503}
+      - {x: -0.5470562, y: -0.4905696}
+      - {x: -0.6130352, y: -0.96893454}
+      - {x: 0.4615364, y: -0.9521003}
+      - {x: 0.47130585, y: -0.51581955}
+--- !u!114 &2583298133406246664
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4552266347215113707}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b19d4cb5b616ee34887efb4f549442f1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthText: {fileID: 0}
+  chargeText: {fileID: 0}
+  healthSlider: {fileID: 0}
+  chargeSlider: {fileID: 0}
 --- !u!1 &4552266347663036807
 GameObject:
   m_ObjectHideFlags: 0

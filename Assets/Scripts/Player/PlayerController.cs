@@ -15,7 +15,6 @@ public class PlayerController : MonoBehaviour, ISaveable
     [SerializeField] float acceleration = 0.2f;
     [SerializeField] float jumpVelocity = 8f;
     [SerializeField] float climbSpeed = 3f;
-    //vertical velocity necessary to roll
     [SerializeField] float rollTime = 0.8f;
     [SerializeField] float climbDelayTime = 0.2f;
 
@@ -49,6 +48,7 @@ public class PlayerController : MonoBehaviour, ISaveable
     Animator _animator;
     Collider2D feetCollider;
     Collider2D handsCollider;
+    Collider2D noWallJumpCollider;
     Collider2D crouchCollider;
     Rigidbody2D _rigidBody;
     Transform spriteTransform;
@@ -62,6 +62,7 @@ public class PlayerController : MonoBehaviour, ISaveable
         _animator = GetComponent<Animator>();
         feetCollider = GetComponent<CapsuleCollider2D>();
         handsCollider = GetComponent<BoxCollider2D>();
+        noWallJumpCollider = transform.Find("Body").gameObject.GetComponent<CapsuleCollider2D>();
         crouchCollider = GetComponent<PolygonCollider2D>();
         _renderer = GetComponentInChildren<SpriteRenderer>();
         _rigidBody = GetComponent<Rigidbody2D>();
@@ -273,12 +274,14 @@ public class PlayerController : MonoBehaviour, ISaveable
             crouchCollider.enabled = true;
             handsCollider.enabled = false;
             feetCollider.enabled = false;
+            noWallJumpCollider.enabled = false;
         }
         else
         {
-            crouchCollider.enabled = false;
             handsCollider.enabled = true;
             feetCollider.enabled = true;
+            noWallJumpCollider.enabled = true;
+            crouchCollider.enabled = false;
         }
     }
 
@@ -345,6 +348,7 @@ public class PlayerController : MonoBehaviour, ISaveable
         {
             isJumping = false;
             isFalling = true;
+            isRolling = false;
             _animator.SetBool("isFalling", true);
             fallTime = Time.time;
         }
@@ -463,7 +467,13 @@ public class PlayerController : MonoBehaviour, ISaveable
 
     private bool isTouchingGround()
     {
-        return (feetCollider.IsTouchingLayers(LayerMask.GetMask("Ground", "Ledges")) || crouchCollider.IsTouchingLayers(LayerMask.GetMask("Ground", "Ledges")));
+        //return 
+        if (feetCollider.IsTouchingLayers(LayerMask.GetMask("Ground", "Ledges")) || crouchCollider.IsTouchingLayers(LayerMask.GetMask("Ground", "Ledges")))
+        {
+            Debug.Log("touching the ground");
+            return true;
+        }
+        return false;
     }
 
     public bool GetRolling() { return isRolling; }

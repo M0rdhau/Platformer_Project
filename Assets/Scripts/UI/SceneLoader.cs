@@ -15,14 +15,15 @@ public class SceneLoader : MonoBehaviour
 
     private void Awake()
     {
-        fader = FindObjectOfType<Fader>();
-        wrapper = FindObjectOfType<SavingWrapper>();
+        
     }
 
     // Start is called before the first frame update
     void Start()
     {
         Scene currentScene = SceneManager.GetActiveScene();
+        fader = FindObjectOfType<Fader>();
+        wrapper = FindObjectOfType<SavingWrapper>();
         //if (currentScene.buildIndex == 0)
         //{
         //    StartCoroutine(MainMenuCoroutine(currentScene.buildIndex));

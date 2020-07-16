@@ -25,11 +25,15 @@ public class CombatCharge : MonoBehaviour, ISaveable
     [SerializeField] float currentCharge = 0f;
     Color color;
 
-    private void Start()
+    private void Awake()
     {
         _renderer = GetComponentInChildren<SpriteRenderer>();
         handler = FindObjectOfType<PlayerUIHandler>();
         color = _renderer.material.GetColor("GlowColor");
+    }
+
+    private void Start()
+    {
         UpdateCharge();
     }
 
@@ -84,6 +88,6 @@ public class CombatCharge : MonoBehaviour, ISaveable
     public void RestoreState(object state)
     {
         currentCharge = (float)state;
-        UpdateCharge();
+        //UpdateCharge();
     }
 }

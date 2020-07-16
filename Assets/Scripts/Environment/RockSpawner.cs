@@ -3,62 +3,38 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RockSpawner : MonoBehaviour
+public class RockSpawner : PlayerEnterExit
 {
     [SerializeField] GameObject RockPrefab;
     [SerializeField] float rockSpawnInterval = 4f;
-    Collider2D coll;
 
-    bool isPlayerEntered = false;
+    IEnumerator rockSpawn;
 
-    [SerializeField]  float playerWaitInterval = 1f;
-    float timeSincePlayerLeft = 0f;
-
-    private void Awake()
+    private void Start()
     {
-        coll = GetComponent<BoxCollider2D>();
+        rockSpawn = null;
     }
 
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    protected override void OnPlayerEnter()
     {
-        if (collision.gameObject.tag == "Player" && !isPlayerEntered)
+        if (rockSpawn == null)
         {
-            isPlayerEntered = true;
-            StartCoroutine(SpawnRocks());
+            rockSpawn = SpawnRocks();
+            StartCoroutine(rockSpawn);
         }
     }
 
 
-
-    private void OnTriggerExit2D(Collider2D collision)
+    protected override void OnPlayerExit()
     {
-        if (!coll.IsTouchingLayers(LayerMask.GetMask("Player")))
-        {
-            Debug.Log("Not touching - " + collision.gameObject.name);
-        }
-        if (isPlayerEntered)
-        {
-            timeSincePlayerLeft = Time.time;
-            StartCoroutine(CheckPlayerLeft());
-        }
+        StopCoroutine(rockSpawn);
+        rockSpawn = null;
     }
-
-    private IEnumerator CheckPlayerLeft()
-    {
-        yield return new WaitForSeconds(playerWaitInterval);
-        if (!coll.IsTouchingLayers(LayerMask.GetMask("Player")))
-        {
-            isPlayerEntered = false;
-        }
-    }
-
-
-
 
     private IEnumerator SpawnRocks()
     {
-        while (isPlayerEntered)
+        while (true)
         {
             Instantiate(RockPrefab, transform.position, transform.rotation);
             yield return new WaitForSeconds(rockSpawnInterval);

@@ -13,10 +13,13 @@ public class PlayerWorldInteraction : MonoBehaviour
     {
         if (Input.GetAxis("Vertical") > 0)
         {
-            if (isTouchingDoors() && !hasGoneThrough)
+            if (door != null && !hasGoneThrough)
             {
                 hasGoneThrough = true;
-                FindObjectOfType<SceneLoader>().DoorLoadScene(door.GetSceneName(), door.GetDoorIndex());
+                SceneLoader sceneLoader = FindObjectOfType<SceneLoader>();
+                var doorName = door.GetSceneName();
+                var doorIndex = door.GetDoorIndex();
+                sceneLoader.DoorLoadScene(doorName, doorIndex);
             }
         }
 
@@ -34,8 +37,17 @@ public class PlayerWorldInteraction : MonoBehaviour
         }
     }
 
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.GetComponent<Door>())
+        {
+            door = null;
+        }
+    }
+
     bool isTouchingDoors()
     {
+        Debug.Log(GetComponent<Collider2D>().IsTouchingLayers(LayerMask.GetMask("Doors")));
         return GetComponent<Collider2D>().IsTouchingLayers(LayerMask.GetMask("Doors"));
     }
 }

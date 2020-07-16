@@ -467,13 +467,7 @@ public class PlayerController : MonoBehaviour, ISaveable
 
     private bool isTouchingGround()
     {
-        //return 
-        if (feetCollider.IsTouchingLayers(LayerMask.GetMask("Ground", "Ledges")) || crouchCollider.IsTouchingLayers(LayerMask.GetMask("Ground", "Ledges")))
-        {
-            Debug.Log("touching the ground");
-            return true;
-        }
-        return false;
+        return (feetCollider.IsTouchingLayers(LayerMask.GetMask("Ground", "Ledges")) || crouchCollider.IsTouchingLayers(LayerMask.GetMask("Ground", "Ledges")));
     }
 
     public bool GetRolling() { return isRolling; }

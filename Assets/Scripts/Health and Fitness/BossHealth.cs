@@ -20,7 +20,7 @@ public class BossHealth : MonoBehaviour, Health
     {
         if (!isDead)
         {
-            StartCoroutine(GetComponent<EnemyMovement>().Damaged());
+            //StartCoroutine(GetComponent<EnemyMovement>().Damaged());
             DecreaseHealth(dmg);
         }
     }

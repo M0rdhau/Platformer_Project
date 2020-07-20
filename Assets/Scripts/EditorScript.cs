@@ -5,6 +5,7 @@ public class EditorScript : EditorWindow
 {
     int damage = 1;
     float charge = 0.1f;
+    float gameTimeScale = 0f;
 
     [MenuItem("Window/Player damager, etc.")]
     public static void ShowWindow()
@@ -29,5 +30,14 @@ public class EditorScript : EditorWindow
         {
             FindObjectOfType<CombatCharge>().AddCharge(charge);
         }
+
+
+        GUILayout.Label("Change time scale");
+        gameTimeScale = EditorGUILayout.Slider(gameTimeScale, 1, 20);
+    }
+
+    private void OnInspectorUpdate()
+    {
+        Time.timeScale = gameTimeScale;
     }
 }

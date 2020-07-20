@@ -38,7 +38,10 @@ public class BossCombat : GhostCombat
     {
         if (!health.IsDead())
         {
-            if (player != null) InitiateAttack();
+            if (player != null)
+            {
+                InitiateAttack();
+            }
 
             if (health.GetHealth() <= health.GetMaxHealth() * 2 / 3)
             {
@@ -143,6 +146,7 @@ public class BossCombat : GhostCombat
         float randomY = (float)Math.Sqrt(1 - randomX * randomX);
         float randomSpeed = UnityEngine.Random.Range(minSpeed, maxSpeed);
         var randomVec = new Vector2(randomX, randomY);
+        Debug.Log(randomVec * randomVec);
         movement.SetMovementVector(randomSpeed * randomVec);
     }
 

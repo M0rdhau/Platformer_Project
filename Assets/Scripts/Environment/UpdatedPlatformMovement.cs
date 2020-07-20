@@ -2,30 +2,35 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UpadtedPlatformMovement : MonoBehaviour
+public class UpdatedPlatformMovement : MonoBehaviour
 {
-    [SerializeField] Transform[] waypoints;
-    [SerializeField] float movementSpeed = 3f;
+    [SerializeField] private Transform[] waypoints;
+    [SerializeField] private float movementSpeed = 3f;
 
-    Vector2 movementVec;
+    Vector3 movementVec;
     Transform otherBody;
 
-    int waypointIndex = 0;
+    [SerializeField] private int startIndex = 0;
+
+    private int waypointIndex = 0;
 
 
     void Start()
     {
+        waypointIndex = startIndex;
         UpdateMovementVector();
     }
 
     private void FixedUpdate()
     {
-        transform.position += (new Vector3(movementVec.x, movementVec.y, 0)) * Time.deltaTime;
+        transform.position += movementVec * Time.deltaTime;
+        
     }
 
 
-    void UpdateMovementVector()
+    private void UpdateMovementVector()
     {
+
         movementVec = (waypoints[waypointIndex].position - transform.position).normalized * movementSpeed;
         if (waypointIndex == waypoints.Length - 1)
         {
@@ -35,11 +40,12 @@ public class UpadtedPlatformMovement : MonoBehaviour
         {
             waypointIndex++;
         }
+        Debug.Log(waypointIndex);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.tag == "platformReversePoint")
+        if (collision.tag == "platformReversePoint" && collision.transform.IsChildOf(transform.parent))
         {
             UpdateMovementVector();
         }

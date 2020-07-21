@@ -36,6 +36,11 @@ public class Fireball : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (collision.tag == "BossReflectorHorizontal" || collision.tag == "BossReflectorVertical")
+        {
+            Explode();
+        }
+
         if (GetComponent<Collider2D>().IsTouchingLayers(LayerMask.GetMask(layerMask)))
         {
             Hit(collision.gameObject);

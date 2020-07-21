@@ -24,6 +24,9 @@ public class GhostCombat : MonoBehaviour
     public bool isAttacking { get; set; }
     protected float breathOffsetX;
 
+    protected bool breathStarted;
+    protected bool movementStop;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -65,11 +68,13 @@ public class GhostCombat : MonoBehaviour
         }
     }
 
-    private void AttackPlayer(Collider2D[] enemies)
+    private IEnumerator AttackPlayer(Collider2D[] enemies)
     {
         //stop movement
-        StartCoroutine(movement.Damaged());
+        //StartCoroutine(movement.Damaged());
         OnAttack();
+        movementStop = true;
+        yield return null;
         //DealDamage(enemies);
     }
 
@@ -92,6 +97,8 @@ public class GhostCombat : MonoBehaviour
     private IEnumerator ChasePlayer()
     {
         Collider2D[] enemiesHit;
+        movementStop = false;
+        breathStarted = false;
         do
         {
             directionVector = player.position - BreathTransform.position;
@@ -99,9 +106,13 @@ public class GhostCombat : MonoBehaviour
             movement.SetMovementVector(directionVector * moveToPlayerSpeed);
             enemiesHit = Physics2D.OverlapCircleAll(BreathTransform.position, breathRadius, LayerMask.GetMask("Player"));
             CheckDirection();
+            if (!breathStarted && enemiesHit.Length != 0)
+            {
+                breathStarted = true;
+                StartCoroutine(AttackPlayer(enemiesHit));
+            }
             yield return new WaitForSeconds(Time.deltaTime);
-        } while (enemiesHit.Length == 0);
-        AttackPlayer(enemiesHit);
+        } while (!movementStop);
         yield return new WaitForSeconds(timeBetweenAttacks);
         movement.homingIn = false;
         OnAttackCompleted();

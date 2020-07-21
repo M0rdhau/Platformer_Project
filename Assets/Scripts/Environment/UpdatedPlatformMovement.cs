@@ -7,8 +7,8 @@ public class UpdatedPlatformMovement : MonoBehaviour
     [SerializeField] private Transform[] waypoints;
     [SerializeField] private float movementSpeed = 3f;
 
-    Vector3 movementVec;
-    Transform otherBody;
+    private Vector3 movementVec;
+    private Transform otherBody;
 
     [SerializeField] private int startIndex = 0;
 
@@ -40,7 +40,6 @@ public class UpdatedPlatformMovement : MonoBehaviour
         {
             waypointIndex++;
         }
-        Debug.Log(waypointIndex);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -67,6 +66,8 @@ public class UpdatedPlatformMovement : MonoBehaviour
     {
         if (collision.transform == otherBody)
         {
+            var otherMovementVector = collision.gameObject.GetComponent<Rigidbody2D>().velocity + new Vector2(movementVec.x, movementVec.y);
+            collision.gameObject.GetComponent<Rigidbody2D>().velocity = otherMovementVector;
             otherBody.parent = null;
             otherBody = null;
         }

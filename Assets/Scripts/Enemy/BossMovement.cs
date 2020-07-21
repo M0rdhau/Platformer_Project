@@ -26,12 +26,14 @@ public class BossMovement : EnemyMovement
             movementVec = body.velocity;
             movementVec.y = -body.velocity.y;
             SetMovementVector(movementVec);
+            GetComponent<BossCombat>().Bounce();
         }
         else if (collision.tag == "BossReflectorVertical")
         {
             movementVec = body.velocity;
             movementVec.x = -body.velocity.x;
             SetMovementVector(movementVec);
+            GetComponent<BossCombat>().Bounce();
         }
 
         if (body.velocity.x > 0)
@@ -54,6 +56,6 @@ public class BossMovement : EnemyMovement
             colliderVector.x = nonFlipXHitbox;
             collider.offset = colliderVector;
         }
-        GetComponent<BossCombat>().Bounce();
+        
     }
 }

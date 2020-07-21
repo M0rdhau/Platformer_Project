@@ -40,6 +40,8 @@ public class BossHealth : MonoBehaviour, Health
     {
         isDead = true;
         GetComponentInChildren<SpriteRenderer>().enabled = false;
+        GetComponent<BossMovement>().enabled = false;
+        GetComponent<BossCombat>().enabled = false;
         deathSystem.Play();
         this.enabled = false;
     }

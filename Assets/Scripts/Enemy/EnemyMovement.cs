@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class EnemyMovement : MonoBehaviour, ISaveable
 {
-    [SerializeField] protected float MoveSpeed = 2f;
+    //[SerializeField] protected float MoveSpeed = 2f;
     [SerializeField] protected Vector2 movementVec;
     [SerializeField] float damagedTimeFrame = 1f;
     [SerializeField] float knockbackX = 3f;
@@ -16,7 +16,7 @@ public class EnemyMovement : MonoBehaviour, ISaveable
     protected SpriteRenderer render;
     protected Health health;
 
-    private void Start()
+    private void Awake()
     {
         homingIn = false;
         health = GetComponent<Health>();
@@ -88,12 +88,12 @@ public class EnemyMovement : MonoBehaviour, ISaveable
         {
             if (collision.tag == "EnemyLedgeLeft")
             {
-                movementVec = MoveSpeed * Vector2.right;
+                movementVec = Mathf.Abs(movementVec.x) * Vector2.right;
                 render.flipX = true;
             }
             else if (collision.tag == "EnemyLedgeRight")
             {
-                movementVec = MoveSpeed * Vector2.left;
+                movementVec = Mathf.Abs(movementVec.x) * Vector2.left;
                 render.flipX = false;
             }
         }

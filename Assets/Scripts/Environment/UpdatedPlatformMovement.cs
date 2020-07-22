@@ -55,7 +55,7 @@ public class UpdatedPlatformMovement : MonoBehaviour
         if (collision.gameObject.tag == "Player")
         {
             otherBody = collision.transform;
-            if (otherBody)
+            if (otherBody != null)
             {
                 otherBody.parent = this.transform;
             }
@@ -64,7 +64,7 @@ public class UpdatedPlatformMovement : MonoBehaviour
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.transform == otherBody)
+        if (collision.transform == otherBody && otherBody != null)
         {
             var otherMovementVector = collision.gameObject.GetComponent<Rigidbody2D>().velocity + new Vector2(movementVec.x, movementVec.y);
             collision.gameObject.GetComponent<Rigidbody2D>().velocity = otherMovementVector;

@@ -186,7 +186,7 @@ public class PlayerController : MonoBehaviour, ISaveable
         {
             CrouchTransition(true);
         }
-        if ((Input.anyKey && !Input.GetKey(KeyCode.DownArrow) && isCrouching) || (Input.GetKeyUp(KeyCode.DownArrow) && !isRolling ))
+        if ((Input.anyKey && !Input.GetKey(KeyCode.DownArrow) && isCrouching) || (Input.GetKeyUp(KeyCode.DownArrow) && !isRolling))
         {
 
             CrouchTransition(false);
@@ -202,7 +202,7 @@ public class PlayerController : MonoBehaviour, ISaveable
 
         HandleClimb();
 
-        
+
 
         if (!hasStopped && !isCrouching)
         {
@@ -216,7 +216,7 @@ public class PlayerController : MonoBehaviour, ISaveable
             }
         }
 
-        
+
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -326,7 +326,7 @@ public class PlayerController : MonoBehaviour, ISaveable
                 _rigidBody.velocity = climbVec;
             }
         }
-        else if(climbingNeedsReset)
+        else if (climbingNeedsReset)
         {
             _rigidBody.gravityScale = 1;
             _animator.speed = 1;
@@ -357,7 +357,7 @@ public class PlayerController : MonoBehaviour, ISaveable
     private void Jump()
     {
         //player can jump only twice
-        if (isTouchingGround() || isTouchingLadders() || timesJumped <2)
+        if (isTouchingGround() || isTouchingLadders() || timesJumped < 2)
         {
             var jumpVec = _rigidBody.velocity;
             jumpVec.y = jumpVelocity;
@@ -400,7 +400,7 @@ public class PlayerController : MonoBehaviour, ISaveable
         }
         SetCorrectAnimation();
 
-        
+
     }
 
     private void SetCorrectAnimation()
@@ -471,5 +471,8 @@ public class PlayerController : MonoBehaviour, ISaveable
     }
 
     public bool GetRolling() { return isRolling; }
+
+    public bool GetIsJumping(){return isJumping;}
+    public bool GetIsFalling() { return isFalling; }
     #endregion
 }

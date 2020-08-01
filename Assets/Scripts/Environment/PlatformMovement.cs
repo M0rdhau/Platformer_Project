@@ -51,8 +51,11 @@ public class PlatformMovement : MonoBehaviour
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.transform == otherBody)
+        if (collision.transform == otherBody 
+            && (otherBody.GetComponent<PlayerController>().GetIsFalling() || otherBody.GetComponent<PlayerController>().GetIsJumping()))
         {
+            var otherMovementVector = collision.gameObject.GetComponent<Rigidbody2D>().velocity + new Vector2(movementVec.x, movementVec.y);
+            collision.gameObject.GetComponent<Rigidbody2D>().velocity = otherMovementVector;
             otherBody.parent = null;
             otherBody = null;
         }

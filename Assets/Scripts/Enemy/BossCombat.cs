@@ -60,7 +60,7 @@ public class BossCombat : GhostCombat
         CheckFireballPositions();
         foreach (Transform point in fireballPoints)
         {
-            
+
             if (point.childCount < 1)
             {
                 StartCoroutine(LaunchFireball(point));
@@ -151,7 +151,6 @@ public class BossCombat : GhostCombat
 
     public void Bounce()
     {
-        Debug.Log("Bounced, total bounces - " + timesBounced);
         timesBounced++;
         if (timesBounced >= maxBounces)
         {

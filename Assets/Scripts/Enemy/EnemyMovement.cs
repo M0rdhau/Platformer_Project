@@ -10,7 +10,7 @@ public class EnemyMovement : MonoBehaviour, ISaveable
     [SerializeField] float damagedTimeFrame = 1f;
     [SerializeField] float knockbackX = 3f;
     [SerializeField] float knockbackY = 1f;
-    public bool homingIn { get; set; }
+    private bool homingIn { get; set; }
     float timeLastDamaged = 0;
     protected Rigidbody2D body;
     protected SpriteRenderer render;
@@ -56,7 +56,7 @@ public class EnemyMovement : MonoBehaviour, ISaveable
         movementVec = rememberVec;
     }
 
-    
+
     private void UnDamaged(Vector2 remVec)
     {
         if (render.flipX)
@@ -71,9 +71,12 @@ public class EnemyMovement : MonoBehaviour, ISaveable
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        
-            ReverseDirection(collision);
-        
+        ReverseDirection(collision);
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        ReverseDirection(collision);
     }
 
     public void SetMovementVector(Vector2 movVec)
@@ -98,6 +101,11 @@ public class EnemyMovement : MonoBehaviour, ISaveable
             }
         }
 
+    }
+
+    public void SetHomingIn(bool homingSet)
+    {
+        homingIn = homingSet;
     }
 
     public object CaptureState()

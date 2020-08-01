@@ -8,7 +8,9 @@ public class EnemySpawner : MonoBehaviour
     [SerializeField] private GameObject enemyPrefab;
     [SerializeField] private float secondsBetweenSpawns = 2f;
     [SerializeField] private int maxEnemies = 10;
-    [SerializeField] private Vector2 movementVec = new Vector2 (2f, 0f);
+    [SerializeField] private Vector2 movementVec = new Vector2(2f, 0f);
+
+    [SerializeField] private bool randomizeY = false;
 
     bool isSpawning = true;
     // Start is called before the first frame update
@@ -24,6 +26,10 @@ public class EnemySpawner : MonoBehaviour
         {
             Vector3 location = transform.position;
             location.x = Random.Range(-0.5f * spawnerDimensions.x + location.x, 0.5f * spawnerDimensions.x + location.x);
+            if (randomizeY)
+            {
+                location.y = Random.Range(-0.5f * spawnerDimensions.y + location.y, 0.5f * spawnerDimensions.y + location.y);
+            }
             var enem = Instantiate(enemyPrefab, location, transform.rotation, this.transform);
             enem.GetComponent<EnemyMovement>().SetMovementVector(movementVec);
             yield return new WaitForSeconds(secondsBetweenSpawns);
@@ -34,7 +40,7 @@ public class EnemySpawner : MonoBehaviour
 
     private void Update()
     {
-        if(!isSpawning && transform.childCount <= maxEnemies) StartCoroutine(spawnMonsters());
+        if (!isSpawning && transform.childCount <= maxEnemies) StartCoroutine(spawnMonsters());
     }
 
     private void OnDrawGizmosSelected()

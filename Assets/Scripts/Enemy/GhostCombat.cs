@@ -49,7 +49,7 @@ public class GhostCombat : MonoBehaviour
             if (!isAttacking)
             {
                 isAttacking = true;
-                movement.homingIn = true;
+                movement.SetHomingIn(true);
                 CheckDirection();
                 StartCoroutine(ChasePlayer());
             }
@@ -114,7 +114,7 @@ public class GhostCombat : MonoBehaviour
             yield return new WaitForSeconds(Time.deltaTime);
         } while (!movementStop);
         yield return new WaitForSeconds(timeBetweenAttacks);
-        movement.homingIn = false;
+        movement.SetHomingIn(false);
         OnAttackCompleted();
     }
 

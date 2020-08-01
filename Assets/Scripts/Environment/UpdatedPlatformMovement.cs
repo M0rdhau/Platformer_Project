@@ -24,7 +24,7 @@ public class UpdatedPlatformMovement : MonoBehaviour
     private void FixedUpdate()
     {
         transform.position += movementVec * Time.deltaTime;
-        
+
     }
 
 

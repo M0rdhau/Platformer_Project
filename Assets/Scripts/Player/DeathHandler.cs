@@ -12,4 +12,6 @@ public class DeathHandler : MonoBehaviour
         deathCanvas.SetActive(true);
     }
 
+
+
 }

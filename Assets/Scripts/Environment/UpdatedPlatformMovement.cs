@@ -8,6 +8,7 @@ public class UpdatedPlatformMovement : MonoBehaviour
     [SerializeField] private float movementSpeed = 3f;
 
     private Vector3 movementVec;
+    private Collider2D coll;
     private Transform otherBody;
 
     [SerializeField] private int startIndex = 0;
@@ -17,6 +18,7 @@ public class UpdatedPlatformMovement : MonoBehaviour
 
     void Start()
     {
+        coll = GetComponent<Collider2D>();
         waypointIndex = startIndex;
         UpdateMovementVector();
     }
@@ -24,7 +26,14 @@ public class UpdatedPlatformMovement : MonoBehaviour
     private void FixedUpdate()
     {
         transform.position += movementVec * Time.deltaTime;
-
+        if (otherBody != null && !coll.IsTouchingLayers(LayerMask.GetMask("Player")))
+        {
+            if (otherBody.GetComponent<PlayerController>().GetIsFalling() || otherBody.GetComponent<PlayerController>().GetIsJumping())
+            {
+                otherBody.parent = null;
+                otherBody = null;
+            }
+        }
     }
 
 

@@ -15,18 +15,28 @@ public class PlatformMovement : MonoBehaviour
 
     [SerializeField] Vector2 movementVec = new Vector2(3, 0);
     [SerializeField] ReversePositions direction = ReversePositions.X;
+    private Collider2D coll;
     Rigidbody2D rBody;
     Transform otherBody;
 
     // Start is called before the first frame update
     void Start()
     {
+        coll = GetComponent<Collider2D>();
         rBody = GetComponent<Rigidbody2D>();
     }
 
     private void FixedUpdate()
     {
         transform.position += (new Vector3(movementVec.x, movementVec.y, 0)) * Time.deltaTime;
+        if (otherBody != null && !coll.IsTouchingLayers(LayerMask.GetMask("Player")))
+        {
+            if (otherBody.GetComponent<PlayerController>().GetIsFalling() || otherBody.GetComponent<PlayerController>().GetIsJumping())
+            {
+                otherBody.parent = null;
+                otherBody = null;
+            }
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

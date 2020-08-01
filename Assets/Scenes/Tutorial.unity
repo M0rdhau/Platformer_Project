@@ -238,7 +238,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 29804868}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 95.45, y: -1.5621091, z: 0}
+  m_LocalPosition: {x: 96.35, y: -1.5621091, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1481,6 +1481,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: 811789c876119544fbf654963b793586,
         type: 3}
+    - target: {fileID: 8762427134767880903, guid: 62c69599c22716f449f1e48e59282fb4,
+        type: 3}
+      propertyPath: playerWaitInterval
+      value: 0.2
+      objectReference: {fileID: 0}
     - target: {fileID: 8762427135393257294, guid: 62c69599c22716f449f1e48e59282fb4,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -10424,7 +10429,7 @@ SpriteRenderer:
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 2
-  m_Size: {x: 72, y: 8.68}
+  m_Size: {x: 72, y: 19.7}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -10471,7 +10476,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4284187633582721317}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -3, z: 0}
+  m_LocalPosition: {x: 0, y: -8.1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4284187632490098017}

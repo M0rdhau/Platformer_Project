@@ -11,10 +11,11 @@ public class PlayerWorldInteraction : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetAxis("Vertical") > 0)
+        if (Input.GetKeyDown(KeyCode.UpArrow))
         {
             if (door != null && !hasGoneThrough)
             {
+                Debug.Log("level go-through key pressed");
                 hasGoneThrough = true;
                 SceneLoader sceneLoader = FindObjectOfType<SceneLoader>();
                 var doorName = door.GetSceneName();
@@ -23,10 +24,10 @@ public class PlayerWorldInteraction : MonoBehaviour
             }
         }
 
-        if (Input.GetAxis("Vertical") == 0)
-        {
-            hasGoneThrough = false;
-        }
+        //if (Input.GetAxis("Vertical") == 0)
+        //{
+        //    hasGoneThrough = false;
+        //}
     }
 
     private void OnTriggerEnter2D(Collider2D other)

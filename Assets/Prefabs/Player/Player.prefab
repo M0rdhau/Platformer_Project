@@ -4873,7 +4873,6 @@ GameObject:
   - component: {fileID: 6988227869284085758}
   - component: {fileID: 783761625489985050}
   - component: {fileID: 734118747101026935}
-  - component: {fileID: 4552266348372725858}
   - component: {fileID: 4552266347215113706}
   - component: {fileID: 4552266347215113621}
   - component: {fileID: 351303954226347792}
@@ -5045,18 +5044,6 @@ MonoBehaviour:
   deathWaitTime: 1
   invulLight: {fileID: 122050591495267222}
   deathCanvas: {fileID: 0}
---- !u!114 &4552266348372725858
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4552266347215113707}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 60fee3726c8b9644c9f9bb79923f18d0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!61 &4552266347215113706
 BoxCollider2D:
   m_ObjectHideFlags: 0

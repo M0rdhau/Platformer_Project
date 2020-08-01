@@ -25,6 +25,15 @@ public class SavingSystem : MonoBehaviour
         Restore(state);
     }
 
+    public void DeleteSave(string saveFile)
+    {
+        var path = GetPathFromSaveFile(saveFile);
+        if (File.Exists(path))
+        {
+            File.Delete(path);
+        }
+    }
+
     public void Save(string saveFile)
     {
         Dictionary<string, object> state = LoadFile(saveFile);

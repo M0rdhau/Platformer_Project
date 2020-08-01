@@ -5,18 +5,49 @@ using UnityEngine;
 public class MainMenuUIWrapper : MonoBehaviour
 {
     SceneLoader loader;
+    SavingWrapper wrapper;
 
-    Canvas StartCanvas;
-    Canvas GameSelectCanvas;
-    Canvas CreateNewSaveCanvas;
+    GameObject StartCanvas;
+    GameObject GameSelectCanvas;
+    GameObject CreateNewSaveCanvas;
 
 
     private void Awake()
     {
-        
         loader = FindObjectOfType<SceneLoader>();
-        StartCanvas = transform.Find("StartCanvas").GetComponent<Canvas>();
-        GameSelectCanvas = transform.Find("GameSelectCanvas").GetComponent<Canvas>();
-        CreateNewSaveCanvas = transform.Find("CreateNewSaveCanvas").GetComponent<Canvas>();
+        StartCanvas = transform.Find("StartCanvas").gameObject;
+        GameSelectCanvas = transform.Find("GameSelectCanvas").gameObject;
+        CreateNewSaveCanvas = transform.Find("CreateNewSaveCanvas").gameObject;
+    }
+
+    private void Start()
+    {
+        wrapper = FindObjectOfType<SavingWrapper>();
+    }
+
+    public void ContinueGame()
+    {
+        loader.LoadNext();
+    }
+
+    public void NewAlert()
+    {
+        StartCanvas.SetActive(false);
+        GameSelectCanvas.SetActive(true);
+    }
+
+    public void backToMenu()
+    {
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            transform.GetChild(i).gameObject.SetActive(false);
+        }
+        StartCanvas.SetActive(true);
+    }
+
+    public void NewGame()
+    {
+        wrapper.DeleteSave();
+        loader.LoadNext();
     }
 }

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerUpgrades : MonoBehaviour, ISaveable
+public class PlayerUpgrades : MonoBehaviour, ISaveable, IObserver
 {
     [SerializeField]List<Upgrade.UpgradeType> upgrades = new List<Upgrade.UpgradeType>();
 
@@ -17,16 +17,27 @@ public class PlayerUpgrades : MonoBehaviour, ISaveable
         upgrades = (List<Upgrade.UpgradeType>)state;
     }
 
-    public void SetUpgrade(Upgrade.UpgradeType type)
-    {
-        if (!upgrades.Contains(type))
-        {
-            upgrades.Add(type);
-        }
-    }
+    //public void SetUpgrade(Upgrade.UpgradeType type)
+    //{
+    //    if (!upgrades.Contains(type))
+    //    {
+    //        upgrades.Add(type);
+    //    }
+    //}
 
     public bool HasUpgrade(Upgrade.UpgradeType type)
     {
         return upgrades.Contains(type);
+    }
+
+    public void ReceiveUpdate(ISubject subject)
+    {
+        Upgrade up = (subject as Upgrade);
+
+        if (!upgrades.Contains(up.GetUpgradeType()))
+        {
+            upgrades.Add(up.GetUpgradeType());
+        }
+        
     }
 }

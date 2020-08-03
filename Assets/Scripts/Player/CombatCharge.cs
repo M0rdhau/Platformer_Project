@@ -12,8 +12,8 @@ public class CombatCharge : MonoBehaviour, ISaveable
     [SerializeField] float maxGlow = 3.5f;
     //how much damage should the player do before fully charged
     [SerializeField] float maxDamage = 60f;
-    //how much time should the charge be kept at 100%
-    [SerializeField] float maxChargeTime = 5f;
+    
+    [SerializeField] float chargeGracePeriod = 2f;
 
     PlayerUIHandler handler;
     SpriteRenderer _renderer;
@@ -24,6 +24,8 @@ public class CombatCharge : MonoBehaviour, ISaveable
     float maxCharge = 1f;
     [SerializeField] float currentCharge = 0f;
     Color color;
+
+    IEnumerator Charging;
 
     private void Awake()
     {
@@ -41,20 +43,24 @@ public class CombatCharge : MonoBehaviour, ISaveable
     {
         currentCharge = Mathf.Clamp(currentCharge + dmg / maxDamage, 0, maxCharge);
         UpdateCharge();
-        if (!isDecreasing && !isChargingFist) StartCoroutine(DecreaseCharge());
+        if (
+            //!isDecreasing &&
+            !isChargingFist)
+        {
+            if (Charging != null) { StopCoroutine(Charging); }
+            Charging = DecreaseCharge();
+            StartCoroutine(Charging);
+        }
     }
 
 
     private IEnumerator DecreaseCharge()
     {
         isDecreasing = true;
+        yield return new WaitForSeconds(chargeGracePeriod);
+
         while (currentCharge > 0)
         {
-            if (currentCharge == maxCharge)
-            {
-                yield return new WaitForSeconds(maxChargeTime);
-                currentCharge = Mathf.Clamp(currentCharge - Mathf.Epsilon, 0, 1f);
-            }
             currentCharge = Mathf.Clamp(currentCharge - chargeDecreaseRate, 0, 1f);
             UpdateCharge();
             if (currentCharge == 0) isDecreasing = false;

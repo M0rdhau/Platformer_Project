@@ -463,6 +463,49 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 211073628}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &926311390
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 926311391}
+  - component: {fileID: 926311392}
+  m_Layer: 0
+  m_Name: AlertSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &926311391
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 926311390}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2552332405343015570}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &926311392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 926311390}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7decf42528f44f84496082f44d2fb062, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &972046019 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3824395369313333205, guid: 066391116d8b5124fb0309544d361c44,
@@ -1109,7 +1152,7 @@ PrefabInstance:
     - target: {fileID: 1945181659517737512, guid: d76363088dc08394d92d850e7a5fd16c,
         type: 3}
       propertyPath: m_RootOrder
-      value: 8
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 1945181659517737512, guid: d76363088dc08394d92d850e7a5fd16c,
         type: 3}
@@ -1144,6 +1187,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d76363088dc08394d92d850e7a5fd16c, type: 3}
+--- !u!4 &2552332405343015570 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1945181659056228947, guid: d76363088dc08394d92d850e7a5fd16c,
+    type: 3}
+  m_PrefabInstance: {fileID: 2552332405343015569}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3197058936795303186
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1151,18 +1200,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4149249729746385193}
     m_Modifications:
-    - target: {fileID: 2583298133406246664, guid: 372367092de18b544ab89db121ea5df9,
-        type: 3}
-      propertyPath: healthText
-      value: 
-      objectReference: {fileID: 9121810902325192502, guid: 03e68fbd4520c1641a913e4a2b580845,
-        type: 3}
-    - target: {fileID: 2583298133406246664, guid: 372367092de18b544ab89db121ea5df9,
-        type: 3}
-      propertyPath: chargeText
-      value: 
-      objectReference: {fileID: 9121810901834648057, guid: 03e68fbd4520c1641a913e4a2b580845,
-        type: 3}
     - target: {fileID: 2583298133406246664, guid: 372367092de18b544ab89db121ea5df9,
         type: 3}
       propertyPath: healthSlider

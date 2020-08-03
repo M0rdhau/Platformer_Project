@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Upgrade : MonoBehaviour
+public class Upgrade : MonoBehaviour, ISubject
 {
     public enum UpgradeType
     {
@@ -18,9 +18,13 @@ public class Upgrade : MonoBehaviour
     private bool isPickedUp = false;
     Animator anim;
 
+    private List<IObserver> upgradeObservers = new List<IObserver>();
+
     private void Start()
     {
         anim = GetComponent<Animator>();
+        Attach(FindObjectOfType<Alert>());
+        Attach(FindObjectOfType<PlayerUpgrades>());
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -39,13 +43,40 @@ public class Upgrade : MonoBehaviour
             isPickedUp = true;
             GetComponent<ParticleSystem>().Play();
             //GetComponentInChildren<ParticleSystem>().Stop();
-            Debug.Log("You have picked up " + message + "!");
-            player.GetComponent<PlayerUpgrades>().SetUpgrade(type);
+            Notify();
         }
+    }
+
+    public string GetMessage()
+    {
+        return message;
     }
 
     public bool GetIsPicked()
     {
         return isPickedUp;
+    }
+
+    public UpgradeType GetUpgradeType()
+    {
+        return type;
+    }
+
+    public void Attach(IObserver observer)
+    {
+        this.upgradeObservers.Add(observer);
+    }
+
+    public void Detach(IObserver observer)
+    {
+        this.upgradeObservers.Remove(observer);
+    }
+
+    public void Notify()
+    {
+        foreach (var observer in upgradeObservers)
+        {
+            observer.ReceiveUpdate(this);
+        }
     }
 }

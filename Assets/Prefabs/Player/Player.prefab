@@ -5193,8 +5193,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b19d4cb5b616ee34887efb4f549442f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthText: {fileID: 0}
-  chargeText: {fileID: 0}
+  healthText: {fileID: 9121810902325192502, guid: 03e68fbd4520c1641a913e4a2b580845,
+    type: 3}
+  chargeText: {fileID: 9121810901834648057, guid: 03e68fbd4520c1641a913e4a2b580845,
+    type: 3}
   healthSlider: {fileID: 0}
   chargeSlider: {fileID: 0}
 --- !u!1 &4552266347663036807

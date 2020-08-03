@@ -15,7 +15,7 @@ public class Upgrade : MonoBehaviour
 
     [SerializeField] UpgradeType type;
     [SerializeField] string message;
-    bool isPickedUp = false;
+    private bool isPickedUp = false;
     Animator anim;
 
     private void Start()
@@ -25,6 +25,7 @@ public class Upgrade : MonoBehaviour
 
     private void OnTriggerStay2D(Collider2D collision)
     {
+
         if (!isPickedUp)
         {
             ProcessUpgrade(collision.gameObject);
@@ -37,8 +38,14 @@ public class Upgrade : MonoBehaviour
         {
             isPickedUp = true;
             GetComponent<ParticleSystem>().Play();
+            //GetComponentInChildren<ParticleSystem>().Stop();
             Debug.Log("You have picked up " + message + "!");
             player.GetComponent<PlayerUpgrades>().SetUpgrade(type);
         }
+    }
+
+    public bool GetIsPicked()
+    {
+        return isPickedUp;
     }
 }

@@ -7,8 +7,6 @@ public class Fader : MonoBehaviour
 {
     CanvasGroup canv;
     
-
-
     private void Awake()
     {
         canv = GetComponent<CanvasGroup>();

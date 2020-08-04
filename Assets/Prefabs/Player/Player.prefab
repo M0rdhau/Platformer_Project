@@ -5117,11 +5117,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93648857df7fc1d42ab0f98d3a0341e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chargeDecreaseRate: 0.05
+  chargeDecreaseRate: 0.02
   chargeDecreaseTime: 1
   maxGlow: 3.5
   maxDamage: 60
-  maxChargeTime: 5
+  chargeGracePeriod: 2
   currentCharge: 0
 --- !u!114 &2413236916474545019
 MonoBehaviour:

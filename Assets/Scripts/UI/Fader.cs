@@ -23,7 +23,7 @@ public class Fader : MonoBehaviour
         GetComponent<Canvas>().sortingOrder = 10;
         while (canv.alpha < 1)
         {
-            canv.alpha += Time.deltaTime / time;
+            canv.alpha += Time.fixedDeltaTime / time;
             yield return null;
         }
     }
@@ -32,7 +32,7 @@ public class Fader : MonoBehaviour
     {
         while (canv.alpha > 0)
         {
-            canv.alpha -= Time.deltaTime / time;
+            canv.alpha -= Time.fixedDeltaTime / time;
             yield return null;
         }
         GetComponent<Canvas>().sortingOrder = 0;

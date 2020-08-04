@@ -15,9 +15,7 @@ public class Alert : MonoBehaviour, IObserver
     private void Awake()
     {
         alertSign = transform.GetChild(0).gameObject;
-        Debug.Log(alertSign.name);
         alertText = alertSign.transform.GetChild(0).GetComponent<TextMeshPro>();
-        Debug.Log(alertText);
         alertSign.SetActive(false);
     }
 

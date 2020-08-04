@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SavingWrapper : MonoBehaviour
 {
@@ -13,7 +14,7 @@ public class SavingWrapper : MonoBehaviour
         Fader fader = FindObjectOfType<Fader>();
         fader.GetComponent<Canvas>().sortingOrder = 10;
         fader.FadeOutImmediately();
-        yield return GetComponent<SavingSystem>().LoadLastScene(defaultSaveFile);
+        if (SceneManager.GetActiveScene().name != "Main Menu") { yield return GetComponent<SavingSystem>().LoadLastScene(defaultSaveFile);}
         yield return fader.FadeIn(fadeInTime);
         fader.GetComponent<Canvas>().sortingOrder = 0;
     }

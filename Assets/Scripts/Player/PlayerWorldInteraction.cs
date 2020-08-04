@@ -15,7 +15,6 @@ public class PlayerWorldInteraction : MonoBehaviour
         {
             if (door != null && !hasGoneThrough)
             {
-                Debug.Log("level go-through key pressed");
                 hasGoneThrough = true;
                 SceneLoader sceneLoader = FindObjectOfType<SceneLoader>();
                 var doorName = door.GetSceneName();

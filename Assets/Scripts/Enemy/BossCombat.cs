@@ -21,7 +21,13 @@ public class BossCombat : GhostCombat
     bool ringActivated = false;
     bool fireBallThrow = false;
 
+    bool stickingToPlayer = false;
+
+    private GameObject[] fireballs;
+    
     IEnumerator stayWithPlayer;
+
+    IEnumerator fireballLauncher;
 
     // Start is called before the first frame update
     void Start()
@@ -55,6 +61,11 @@ public class BossCombat : GhostCombat
                 HandleRingOfFireUpgrade();
             }
         }
+        else
+        {
+            if(fireballLauncher != null) { StopCoroutine(fireballLauncher); }
+            ringFire.SetActive(false);
+        }
     }
 
     private void HandleFireball()
@@ -65,7 +76,8 @@ public class BossCombat : GhostCombat
 
             if (point.childCount < 1)
             {
-                StartCoroutine(LaunchFireball(point));
+                fireballLauncher = LaunchFireball(point);
+                StartCoroutine(fireballLauncher);
             }
         }
     }
@@ -97,6 +109,7 @@ public class BossCombat : GhostCombat
         var fireball = Instantiate(fireballPrefab, instantPoint, point.rotation, point);
         fireball.GetComponent<Fireball>().isBossFireball = true;
         fireball.GetComponent<Fireball>().rotationSpeed = fireballRotationSpeed;
+        fireballs[fireballs.Length] = fireball;
         return fireball;
     }
 
@@ -136,7 +149,8 @@ public class BossCombat : GhostCombat
     private IEnumerator StayWithPlayer()
     {
         Vector3 offsetFromPlayer = player.position - transform.position;
-        while (true)
+        stickingToPlayer = true;
+        while (stickingToPlayer)
         {
             movement.SetMovementVector(Vector2.zero);
             transform.position = player.position - offsetFromPlayer;
@@ -146,7 +160,6 @@ public class BossCombat : GhostCombat
 
     private void BreatheOut()
     {
-        if (stayWithPlayer != null) { StopCoroutine(stayWithPlayer); }
         var breath = Instantiate(breathPrefab, BreathTransform.position, breathRotation);
         breath.GetComponent<Breath>().SetDamage(breathDamage);
         breath.GetComponent<Animator>().SetTrigger("Red");
@@ -160,6 +173,11 @@ public class BossCombat : GhostCombat
     //called after the breath animation is finished
     private void StartMovement()
     {
+        stickingToPlayer = false;
+        if (stayWithPlayer != null)
+        {
+            StopCoroutine(stayWithPlayer);
+        }
         float randomX = UnityEngine.Random.Range(0f, 1f);
         float randomY = (float)Math.Sqrt(1 - randomX * randomX);
         float randomSpeed = UnityEngine.Random.Range(minSpeed, maxSpeed);
@@ -182,5 +200,10 @@ public class BossCombat : GhostCombat
     {
         Gizmos.DrawWireSphere(transform.position, attackRange);
         Gizmos.DrawWireSphere(BreathTransform.position, breathRadius);
+    }
+
+    public GameObject[] GetFireBalls()
+    {
+        return fireballs;
     }
 }

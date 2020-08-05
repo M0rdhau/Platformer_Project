@@ -23,9 +23,15 @@ public class GhostCombat : MonoBehaviour
     protected EnemyMovement movement;
     public bool isAttacking { get; set; }
     protected float breathOffsetX;
+    protected SpriteRenderer _renderer;
 
     protected bool breathStarted;
     protected bool movementStop;
+
+    private void Awake()
+    {
+        _renderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -125,8 +131,7 @@ public class GhostCombat : MonoBehaviour
 
     private void CheckDirection()
     {
-        var _renderer = GetComponentInChildren<SpriteRenderer>();
-        if (player.transform.position.x > transform.position.x)
+        if ((player.transform.position.x > transform.position.x) && !_renderer.flipX)
         {
             _renderer.flipX = true;
             var vec = BreathTransform.position;
@@ -134,7 +139,7 @@ public class GhostCombat : MonoBehaviour
             BreathTransform.position = vec;
             breathRotation = Quaternion.Euler(0, 180, 0);
         }
-        else if (player.transform.position.x < transform.position.x)
+        else if ((player.transform.position.x < transform.position.x) && _renderer.flipX)
         {
             _renderer.flipX = false;
             var vec = BreathTransform.position;

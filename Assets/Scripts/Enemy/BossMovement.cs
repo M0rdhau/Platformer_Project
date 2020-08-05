@@ -4,9 +4,17 @@ using UnityEngine;
 
 public class BossMovement : EnemyMovement
 {
-    float flipXHitbox = 0.3f;
-    float nonFlipXHitbox = -1.2f;
+    private float flipXHitbox = 0.3f;
+    private float nonFlipXHitbox = -1.2f;
 
+    private BossCombat combat;
+    private BoxCollider2D boxCollider;
+
+    protected override void OnAwake()
+    {
+        combat = GetComponent<BossCombat>();
+        boxCollider = GetComponent<BoxCollider2D>();
+    }
 
     protected override void Update()
     {
@@ -19,43 +27,45 @@ public class BossMovement : EnemyMovement
 
     public override void ReverseDirection(Collider2D collision)
     {
-        var collider = GetComponent<BoxCollider2D>();
+        if (!homingIn)
+        {
+            if (collision.tag == "BossReflectorHorizontal")
+            {
+                movementVec = body.velocity;
+                movementVec.y = -body.velocity.y;
+                SetMovementVector(movementVec);
+                combat.Bounce();
+            }
+            else if (collision.tag == "BossReflectorVertical")
+            {
+                movementVec = body.velocity;
+                movementVec.x = -body.velocity.x;
+                SetMovementVector(movementVec);
+                combat.Bounce();
+            }
 
-        if (collision.tag == "BossReflectorHorizontal")
-        {
-            movementVec = body.velocity;
-            movementVec.y = -body.velocity.y;
-            SetMovementVector(movementVec);
-            GetComponent<BossCombat>().Bounce();
+            if (body.velocity.x > 0)
+            {
+                render.flipX = true;
+            }
+            else
+            {
+                render.flipX = false;
+            }
+            if (render.flipX)
+            {
+                var colliderVector = boxCollider.offset;
+                colliderVector.x = flipXHitbox;
+                boxCollider.offset = colliderVector;
+            }
+            else
+            {
+                var colliderVector = boxCollider.offset;
+                colliderVector.x = nonFlipXHitbox;
+                boxCollider.offset = colliderVector;
+            }
         }
-        else if (collision.tag == "BossReflectorVertical")
-        {
-            movementVec = body.velocity;
-            movementVec.x = -body.velocity.x;
-            SetMovementVector(movementVec);
-            GetComponent<BossCombat>().Bounce();
-        }
-
-        if (body.velocity.x > 0)
-        {
-            render.flipX = true;
-        }
-        else
-        {
-            render.flipX = false;
-        }
-        if (render.flipX)
-        {
-            var colliderVector = collider.offset;
-            colliderVector.x = flipXHitbox;
-            collider.offset = colliderVector;
-        }
-        else
-        {
-            var colliderVector = collider.offset;
-            colliderVector.x = nonFlipXHitbox;
-            collider.offset = colliderVector;
-        }
+        
         
     }
 }

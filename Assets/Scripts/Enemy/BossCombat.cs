@@ -21,6 +21,8 @@ public class BossCombat : GhostCombat
     bool ringActivated = false;
     bool fireBallThrow = false;
 
+    IEnumerator stayWithPlayer;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -124,11 +126,27 @@ public class BossCombat : GhostCombat
 
     protected override void OnAttack()
     {
+        if (stayWithPlayer != null) { stayWithPlayer = null; }
+        movement.SetMovementVector(Vector2.zero);
         _animator.SetTrigger("Attack");
+        stayWithPlayer = StayWithPlayer();
+        StartCoroutine(stayWithPlayer);
+    }
+
+    private IEnumerator StayWithPlayer()
+    {
+        Vector3 offsetFromPlayer = player.position - transform.position;
+        while (true)
+        {
+            movement.SetMovementVector(Vector2.zero);
+            transform.position = player.position - offsetFromPlayer;
+            yield return null;
+        }
     }
 
     private void BreatheOut()
     {
+        if (stayWithPlayer != null) { StopCoroutine(stayWithPlayer); }
         var breath = Instantiate(breathPrefab, BreathTransform.position, breathRotation);
         breath.GetComponent<Breath>().SetDamage(breathDamage);
         breath.GetComponent<Animator>().SetTrigger("Red");

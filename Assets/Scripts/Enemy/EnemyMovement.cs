@@ -10,7 +10,7 @@ public class EnemyMovement : MonoBehaviour, ISaveable
     [SerializeField] float damagedTimeFrame = 1f;
     [SerializeField] float knockbackX = 3f;
     [SerializeField] float knockbackY = 1f;
-    private bool homingIn { get; set; }
+    protected bool homingIn { get; set; }
     float timeLastDamaged = 0;
     protected Rigidbody2D body;
     protected SpriteRenderer render;
@@ -22,6 +22,12 @@ public class EnemyMovement : MonoBehaviour, ISaveable
         health = GetComponent<Health>();
         body = GetComponent<Rigidbody2D>();
         render = GetComponentInChildren<SpriteRenderer>();
+        OnAwake();
+    }
+
+    protected virtual void OnAwake()
+    {
+        return;
     }
 
     protected virtual void Update()

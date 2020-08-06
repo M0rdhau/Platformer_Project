@@ -4,29 +4,33 @@ using UnityEngine;
 
 public class MainMenuUIWrapper : MonoBehaviour
 {
-    SceneLoader loader;
     SavingWrapper wrapper;
 
     GameObject StartCanvas;
     GameObject GameSelectCanvas;
     GameObject CreateNewSaveCanvas;
 
+    //it would have been better if this could have been in the awake method, but 
+    //that will need me to make a loader wrapper which I won't do
+    //because it's largely the same
 
-    private void Awake()
+    private void Start()
     {
-        loader = FindObjectOfType<SceneLoader>();
+        wrapper = FindObjectOfType<SavingWrapper>();
+        
         StartCanvas = transform.Find("StartCanvas").gameObject;
         GameSelectCanvas = transform.Find("GameSelectCanvas").gameObject;
         CreateNewSaveCanvas = transform.Find("CreateNewSaveCanvas").gameObject;
     }
 
-    private void Start()
+    public void QuitGame()
     {
-        wrapper = FindObjectOfType<SavingWrapper>();
+        Application.Quit();
     }
 
     public void ContinueGame()
     {
+        SceneLoader loader = FindObjectOfType<SceneLoader>();
         loader.LoadNext();
     }
 
@@ -47,6 +51,7 @@ public class MainMenuUIWrapper : MonoBehaviour
 
     public void NewGame()
     {
+        SceneLoader loader = FindObjectOfType<SceneLoader>();
         wrapper.DeleteSave();
         loader.LoadNext();
     }

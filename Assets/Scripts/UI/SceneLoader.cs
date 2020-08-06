@@ -13,10 +13,6 @@ public class SceneLoader : MonoBehaviour
     Fader fader;
     SavingWrapper wrapper;
 
-    private void Awake()
-    {
-        
-    }
 
     // Start is called before the first frame update
     void Start()
@@ -49,30 +45,30 @@ public class SceneLoader : MonoBehaviour
 
     private IEnumerator LoadWithFader(int sceneNumber)
     {
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
         wrapper.Save();
         yield return fader.FadeOut(fadeOutTime);
         yield return SceneManager.LoadSceneAsync(sceneNumber);
         wrapper.Load();
         yield return new WaitForSeconds(waitTime);
         yield return fader.FadeIn(fadeInTime);
-        Destroy(gameObject);
+        //Destroy(gameObject);
     }
 
 
     private IEnumerator DoorLoadCoroutine(string sceneName, int doorIndex)
     {
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
         wrapper.Save();
         yield return fader.FadeOut(fadeOutTime);
         yield return SceneManager.LoadSceneAsync(sceneName);
         Door doorToSpawnAt = FindDoor(doorIndex);
         wrapper.Load();
         if (doorToSpawnAt != null) { SetPlayerLocation(doorToSpawnAt); }
-        wrapper.Save();
+        //wrapper.Save();
         yield return new WaitForSeconds(waitTime);
         yield return fader.FadeIn(fadeInTime);
-        Destroy(gameObject);
+        //Destroy(gameObject);
     }
 
     private void SetPlayerLocation(Door doorToSpawnAt)
@@ -96,21 +92,38 @@ public class SceneLoader : MonoBehaviour
         return null;
     }
 
-    public void LoadMainMenu()
+    public void LoadLastWrap()
     {
-        StartCoroutine(MainMenuCoroutine());
+        StartCoroutine(LoadLastScene());
     }
 
-    private IEnumerator MainMenuCoroutine()
+    private IEnumerator LoadLastScene()
     {
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
+        wrapper.Save();
+        yield return fader.FadeOut(fadeOutTime);
+        wrapper.LoadLastScene();
+        yield return new WaitForSeconds(waitTime);
+        yield return fader.FadeIn(fadeInTime);
+        //Destroy(gameObject);
+    }
+
+    public void LoadMainMenu(bool shouldSave)
+    {
+        StartCoroutine(MainMenuCoroutine(shouldSave));
+    }
+
+    private IEnumerator MainMenuCoroutine(bool shouldReload)
+    {
+        //DontDestroyOnLoad(gameObject);
+        if (shouldReload) { wrapper.Save(); }
         SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene().buildIndex);
         Time.timeScale = 1;
         yield return fader.FadeOut(fadeOutTime);
         yield return SceneManager.LoadSceneAsync(mainMenuIndex);
         yield return new WaitForSeconds(waitTime);
         yield return fader.FadeIn(fadeInTime);
-        Destroy(gameObject);
+        //Destroy(gameObject);
     }
 
     public void TryAgain()
@@ -120,12 +133,12 @@ public class SceneLoader : MonoBehaviour
 
     private IEnumerator TryAgainCoroutine()
     {
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
         yield return fader.FadeOut(fadeOutTime);
         wrapper.Load();
         yield return new WaitForSeconds(waitTime);
         yield return fader.FadeIn(fadeInTime);
-        Destroy(gameObject);
+        //Destroy(gameObject);
     }
 
     #region Old Functions - not needed right now

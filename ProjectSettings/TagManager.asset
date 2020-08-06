@@ -11,6 +11,7 @@ TagManager:
   - Platform
   - BossReflectorVertical
   - BossReflectorHorizontal
+  - SceneLoader
   layers:
   - Default
   - TransparentFX

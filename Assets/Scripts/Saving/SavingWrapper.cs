@@ -19,6 +19,8 @@ public class SavingWrapper : MonoBehaviour
         fader.GetComponent<Canvas>().sortingOrder = 0;
     }
 
+
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.O))
@@ -31,6 +33,12 @@ public class SavingWrapper : MonoBehaviour
             Load();
         }
 
+    }
+
+
+    public void LoadLastScene()
+    {
+        GetComponent<SavingSystem>().LoadLastScene(defaultSaveFile);
     }
 
     public void DeleteSave()

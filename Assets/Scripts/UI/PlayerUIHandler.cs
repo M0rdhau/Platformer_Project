@@ -14,10 +14,14 @@ public class PlayerUIHandler : MonoBehaviour
     [SerializeField] Slider healthSlider;
     [SerializeField] Slider chargeSlider;
 
+    ResourceController _contr;
     PlayerHealth pHealth;
     CombatCharge pCharge;
 
-
+    private void Start()
+    {
+        _contr = FindObjectOfType<ResourceController>();
+    }
 
     private void Awake()
     {
@@ -25,17 +29,19 @@ public class PlayerUIHandler : MonoBehaviour
         pCharge = FindObjectOfType<CombatCharge>();
     }
 
+    
+
     public void UpdateHealth(float health)
     {
         this.health = health;
-        healthSlider.value = health / pHealth.GetMaxHealth();
-        healthText.text = "HP: " + this.health;
+        _contr.SetHealth(health / pHealth.GetMaxHealth());
+        //healthText.text = "HP: " + this.health;
     }
 
     public void UpdateCharge(float charge)
     {
         this.charge = charge;
-        chargeSlider.value = pCharge.GetCharge();
-        chargeText.text = "Charge: " + this.charge*100;
+        _contr.SetCharge(pCharge.GetCharge());
+        //chargeText.text = "Charge: " + this.charge*100;
     }
 }

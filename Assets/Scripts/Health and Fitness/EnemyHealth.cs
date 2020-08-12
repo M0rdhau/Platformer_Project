@@ -53,7 +53,7 @@ public class EnemyHealth : MonoBehaviour, Health
 
     public void Die()
     {
-        gameObject.SetActive(false);
+        Destroy(gameObject);
     }
 
     public bool IsDead()

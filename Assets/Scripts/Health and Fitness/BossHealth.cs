@@ -8,13 +8,16 @@ public class BossHealth : MonoBehaviour, Health
     [SerializeField] float totalHealth = 20f;
     [SerializeField] ParticleSystem deathSystem;
     [SerializeField] float waitforWinScreen = 5f;
+    [SerializeField] float secondsDamaged = 1f;
     Animator anim;
+    SpriteRenderer _renderer;
     bool isDead = false;
 
     private void Start()
     {
         totalHealth = maxHealth;
         anim = GetComponent<Animator>();
+        _renderer = GetComponentInChildren<SpriteRenderer>();
     }
 
     public void DamageHealth(float dmg)
@@ -29,18 +32,24 @@ public class BossHealth : MonoBehaviour, Health
     private void DecreaseHealth(float dmg)
     {
         totalHealth -= dmg;
-        //GetComponent<BossCombat>().isAttacking = false;
-        //anim.SetTrigger("takeDamage");
+        StartCoroutine(Damaged());
         if (totalHealth <= 0)
         {
             HandleDeath();
         }
     }
 
+    IEnumerator Damaged()
+    {
+        _renderer.color = Color.red;
+        yield return new WaitForSeconds(secondsDamaged);
+        _renderer.color = Color.white;
+    }
+
     private void HandleDeath()
     {
         isDead = true;
-        GetComponentInChildren<SpriteRenderer>().enabled = false;
+        _renderer.enabled = false;
         GetComponent<BossMovement>().enabled = false;
         var fireballs = GetComponent<BossCombat>().GetFireBalls();
         foreach (GameObject fireball in fireballs)

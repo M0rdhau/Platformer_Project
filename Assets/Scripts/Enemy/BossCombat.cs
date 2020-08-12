@@ -23,7 +23,7 @@ public class BossCombat : GhostCombat
 
     bool stickingToPlayer = false;
 
-    private GameObject[] fireballs;
+    private List<GameObject> fireballs;
     
     IEnumerator stayWithPlayer;
 
@@ -109,7 +109,7 @@ public class BossCombat : GhostCombat
         var fireball = Instantiate(fireballPrefab, instantPoint, point.rotation, point);
         fireball.GetComponent<Fireball>().isBossFireball = true;
         fireball.GetComponent<Fireball>().rotationSpeed = fireballRotationSpeed;
-        fireballs[fireballs.Length] = fireball;
+        fireballs.Add(fireball);
         return fireball;
     }
 
@@ -205,7 +205,7 @@ public class BossCombat : GhostCombat
         Gizmos.DrawWireSphere(BreathTransform.position, breathRadius);
     }
 
-    public GameObject[] GetFireBalls()
+    public List<GameObject> GetFireBalls()
     {
         return fireballs;
     }

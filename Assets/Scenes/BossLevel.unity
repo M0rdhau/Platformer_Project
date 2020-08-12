@@ -168,7 +168,7 @@ MonoBehaviour:
   enemyPrefab: {fileID: 6021172773164287720, guid: 09528f6714e82924392d115c4f4b33ea,
     type: 3}
   secondsBetweenSpawns: 2
-  maxEnemies: 8
+  maxEnemies: 5
   movementVec: {x: -5, y: 0}
   randomizeY: 0
 --- !u!1 &117166066
@@ -948,7 +948,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1015637871
 Transform:
   m_ObjectHideFlags: 0
@@ -1216,7 +1216,7 @@ MonoBehaviour:
   enemyPrefab: {fileID: 3391231918198237186, guid: fb19fd13e9b22e44baa72fe87b2792f6,
     type: 3}
   secondsBetweenSpawns: 2
-  maxEnemies: 10
+  maxEnemies: 8
   movementVec: {x: -2, y: 0}
   randomizeY: 1
 --- !u!1 &1429470264
@@ -8817,6 +8817,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: EnemySpawner
+      objectReference: {fileID: 0}
+    - target: {fileID: 4585399545903734833, guid: 562489e9679fb544598d37aa5fad78f5,
+        type: 3}
+      propertyPath: maxEnemies
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 562489e9679fb544598d37aa5fad78f5, type: 3}

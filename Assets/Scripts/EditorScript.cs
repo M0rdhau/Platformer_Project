@@ -2,8 +2,11 @@
 using UnityEditor;
 using UnityEngine;
 
+#if UNITY_EDITOR
 public class EditorScript : EditorWindow
 {
+
+
     int damage = 1;
     float charge = 0.1f;
     float gameTimeScale = 0f;
@@ -46,4 +49,6 @@ public class EditorScript : EditorWindow
     {
         Time.timeScale = gameTimeScale;
     }
+
 }
+#endif

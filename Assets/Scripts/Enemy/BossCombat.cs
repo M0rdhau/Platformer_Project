@@ -152,8 +152,11 @@ public class BossCombat : GhostCombat
         stickingToPlayer = true;
         while (stickingToPlayer)
         {
-            movement.SetMovementVector(Vector2.zero);
-            transform.position = player.position - offsetFromPlayer;
+            if ((player.position - transform.position).magnitude >= offsetFromPlayer.magnitude)
+            {
+                movement.SetMovementVector(Vector2.zero);
+                transform.position = player.position - offsetFromPlayer;
+            }
             yield return null;
         }
     }

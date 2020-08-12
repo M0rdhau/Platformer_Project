@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿using System.IO;
+using UnityEditor;
 using UnityEngine;
 
 public class EditorScript : EditorWindow
@@ -34,6 +35,11 @@ public class EditorScript : EditorWindow
 
         GUILayout.Label("Change time scale");
         gameTimeScale = EditorGUILayout.Slider(gameTimeScale, 1, 20);
+
+        if (GUILayout.Button("Reset save"))
+        {
+            File.Delete(Path.Combine(Application.persistentDataPath, "save" + ".sav"));
+        }
     }
 
     private void OnInspectorUpdate()

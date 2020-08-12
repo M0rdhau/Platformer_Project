@@ -29,8 +29,8 @@ public class BossHealth : MonoBehaviour, Health
     private void DecreaseHealth(float dmg)
     {
         totalHealth -= dmg;
-        GetComponent<BossCombat>().isAttacking = false;
-        anim.SetTrigger("takeDamage");
+        //GetComponent<BossCombat>().isAttacking = false;
+        //anim.SetTrigger("takeDamage");
         if (totalHealth <= 0)
         {
             HandleDeath();

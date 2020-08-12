@@ -9,10 +9,6 @@ public class PlayerUIHandler : MonoBehaviour
 {
     float health;
     float charge;
-    [SerializeField] TextMeshProUGUI healthText;
-    [SerializeField] TextMeshProUGUI chargeText;
-    [SerializeField] Slider healthSlider;
-    [SerializeField] Slider chargeSlider;
 
     ResourceController _contr;
     PlayerHealth pHealth;

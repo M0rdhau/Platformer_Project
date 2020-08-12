@@ -12,10 +12,14 @@ public class ResourceController : MonoBehaviour
 
     private void Start()
     {
-        healthSlider = transform.Find("HealthSlider").GetComponent<Slider>();
-        chargeSlider = transform.Find("ChargeSlider").GetComponent<Slider>();
-        Debug.Log(healthSlider);
-        Debug.Log(chargeSlider);
+        if (healthSlider == null)
+        {
+            healthSlider = transform.Find("HealthSlider").GetComponent<Slider>();
+        }
+        if (chargeSlider == null)
+        {
+            chargeSlider = transform.Find("ChargeSlider").GetComponent<Slider>();
+        }
     }
 
     public void SetHealth(float val)

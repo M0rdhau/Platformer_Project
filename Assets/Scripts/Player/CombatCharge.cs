@@ -34,7 +34,7 @@ public class CombatCharge : MonoBehaviour, ISaveable
         color = _renderer.material.GetColor("GlowColor");
     }
 
-    private void Start()
+    private void LateStart()
     {
         UpdateCharge();
     }

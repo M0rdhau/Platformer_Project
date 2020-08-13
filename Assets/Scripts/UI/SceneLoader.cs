@@ -141,21 +141,8 @@ public class SceneLoader : MonoBehaviour
         //Destroy(gameObject);
     }
 
-    #region Old Functions - not needed right now
-
-
-
-    public void Lose()
+    public string GetSceneName()
     {
-        SceneManager.LoadScene("Lose Screen");
+        return SceneManager.GetActiveScene().name;
     }
-
-    public void ReLoad()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    }
-
-    
-
-    #endregion
 }

@@ -10,7 +10,7 @@ public class ResourceController : MonoBehaviour
     Slider chargeSlider;
 
 
-    private void Start()
+    private void Awake()
     {
         if (healthSlider == null)
         {

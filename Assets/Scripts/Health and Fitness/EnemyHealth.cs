@@ -6,6 +6,8 @@ public class EnemyHealth : MonoBehaviour, Health
 {
     [SerializeField] float maxHealth = 20f;
     [SerializeField] float totalHealth = 20f;
+    [SerializeField] AudioClip damagedClip;
+    [SerializeField] AudioClip deathClip;
     Animator anim;
     bool isDead = false;
 
@@ -36,6 +38,10 @@ public class EnemyHealth : MonoBehaviour, Health
 
     private void DecreaseHealth(float dmg)
     {
+        if (damagedClip != null)
+        {
+            AudioSource.PlayClipAtPoint(damagedClip, transform.position, 1f);
+        }
         totalHealth -= dmg;
         anim.SetTrigger("takeDamage");
         if (totalHealth <= 0)
@@ -46,6 +52,10 @@ public class EnemyHealth : MonoBehaviour, Health
 
     private void HandleDeath()
     {
+        if (deathClip != null)
+        {
+            AudioSource.PlayClipAtPoint(deathClip, transform.position, 1f);
+        }
         anim.SetBool("isDead", true);
         isDead = true;
         this.enabled = false;

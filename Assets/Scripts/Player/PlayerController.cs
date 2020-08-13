@@ -442,12 +442,12 @@ public class PlayerController : MonoBehaviour, ISaveable
 
         if (!isRunning)
         {
-            vel += accelerationVector;
+            vel += accelerationVector*Time.deltaTime;
             vel.x = Mathf.Clamp(vel.x, -walkSpeedMax, walkSpeedMax);
         }
         else
         {
-            vel += accelerationVector * 2;
+            vel += accelerationVector* Time.deltaTime * 2;
             vel.x = Mathf.Clamp(vel.x, -runSpeedMax, runSpeedMax);
         }
 

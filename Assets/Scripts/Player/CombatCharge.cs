@@ -27,15 +27,11 @@ public class CombatCharge : MonoBehaviour, ISaveable
 
     IEnumerator Charging;
 
-    private void Awake()
+    private void Start()
     {
         _renderer = GetComponentInChildren<SpriteRenderer>();
-        handler = FindObjectOfType<PlayerUIHandler>();
+        handler = GetComponent<PlayerUIHandler>();
         color = _renderer.material.GetColor("GlowColor");
-    }
-
-    private void LateStart()
-    {
         UpdateCharge();
     }
 

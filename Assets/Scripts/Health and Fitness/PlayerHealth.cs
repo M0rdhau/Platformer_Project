@@ -19,7 +19,7 @@ public class PlayerHealth : MonoBehaviour, ISaveable, Health
     bool isInvulnerable = false;
 
 
-    private void LateStart()
+    private void Start()
     {
         handler = FindObjectOfType<PlayerUIHandler>();
         anim = GetComponent<Animator>();

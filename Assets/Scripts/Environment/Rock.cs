@@ -6,6 +6,7 @@ public class Rock : MonoBehaviour
 {
     [SerializeField] float damageVelocity = 6f;
     [SerializeField] GameObject destructionPrefab;
+    [SerializeField] AudioClip damagedClip;
 
     Rigidbody2D rBody;
 
@@ -33,6 +34,7 @@ public class Rock : MonoBehaviour
 
     private void DestroyBoulder()
     {
+        AudioSource.PlayClipAtPoint(damagedClip, transform.position, 1f);
         GameObject destParticles = Instantiate(destructionPrefab, transform.position, transform.rotation);
         gameObject.SetActive(false);
         Destroy(destParticles, 3);

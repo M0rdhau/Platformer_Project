@@ -20,6 +20,11 @@ public class PersistentObjectSpawner : MonoBehaviour
         hasSpawned = true;
     }
 
+    private void Start()
+    {
+        FindObjectOfType<AudioPlayer>().CheckMusic();
+    }
+
     private void SpawnPersistentObjects()
     {
         GameObject persistentObjects = Instantiate(persistentObjPrefab);

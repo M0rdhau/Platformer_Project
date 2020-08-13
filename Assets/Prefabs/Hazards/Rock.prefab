@@ -136,3 +136,4 @@ MonoBehaviour:
   damageVelocity: 3
   destructionPrefab: {fileID: 7333097350491827968, guid: a4468ae8b75fb1d418890aad1fd02b27,
     type: 3}
+  damagedClip: {fileID: 8300000, guid: 2b60710639e9e7e47beed30ff74f9482, type: 3}

@@ -75,6 +75,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxHealth: 500
   totalHealth: 500
+  damagedClip: {fileID: 8300000, guid: d4fa0970a664494479db5a68b370b8f0, type: 3}
 --- !u!114 &7177061341789858263
 MonoBehaviour:
   m_ObjectHideFlags: 0

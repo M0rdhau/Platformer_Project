@@ -30,6 +30,10 @@ public class PlayerUIHandler : MonoBehaviour
     public void UpdateHealth(float health)
     {
         this.health = health;
+        if (_contr == null)
+        {
+            _contr = FindObjectOfType<ResourceController>();
+        }
         _contr.SetHealth(health / pHealth.GetMaxHealth());
         //healthText.text = "HP: " + this.health;
     }
@@ -37,6 +41,10 @@ public class PlayerUIHandler : MonoBehaviour
     public void UpdateCharge(float charge)
     {
         this.charge = charge;
+        if (_contr == null)
+        {
+            _contr = FindObjectOfType<ResourceController>();
+        }
         _contr.SetCharge(pCharge.GetCharge());
         //chargeText.text = "Charge: " + this.charge*100;
     }

@@ -118,6 +118,7 @@ public class PlayerCombat : MonoBehaviour
 
     public void DisruptFirePunch(bool shouldHit = true)
     {
+        GetComponent<AudioSource>().Stop();
         if (chargingFist)
         {
             StopCoroutine(punchCoroutine);
@@ -129,11 +130,13 @@ public class PlayerCombat : MonoBehaviour
 
     IEnumerator WaitForPunchTime()
     {
+        GetComponent<AudioSource>().Play();
         while (charge.GetCharge() < 1)
         {
             charge.AddCharge(charge.GetMaxDamage() / chargeRate, true);
             yield return new WaitForSeconds((1 - charge.GetCharge()) * (punchWaitTime / chargeRate));
         }
+        GetComponent<AudioSource>().Stop();
         FinalizePunch(true);
         ShootPojectile();
     }

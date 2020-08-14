@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour, ISaveable
 
     [SerializeField] float walkSpeedMax = 3f;
     [SerializeField] float runSpeedMax = 6f;
-    [SerializeField] float acceleration = 0.2f;
+    [SerializeField] float acceleration = 10f;
     [SerializeField] float jumpVelocity = 8f;
     [SerializeField] float climbSpeed = 3f;
     [SerializeField] float rollTime = 0.8f;
@@ -128,6 +128,7 @@ public class PlayerController : MonoBehaviour, ISaveable
         if (Time.time - jumpTime <= climbDelayTime) return;
         if ((isTouchingGround() || isTouchingLadders()) && (isFalling || isJumping))
         {
+            GetComponent<PlayerAudio>().PlayLand();
             canJumpOrFall = false;
             isFalling = false;
             isJumping = false;
@@ -359,6 +360,8 @@ public class PlayerController : MonoBehaviour, ISaveable
         //player can jump only twice
         if (isTouchingGround() || isTouchingLadders() || timesJumped < 2)
         {
+            GetComponent<PlayerAudio>().PlayJump();
+
             var jumpVec = _rigidBody.velocity;
             jumpVec.y = jumpVelocity;
             _rigidBody.velocity = jumpVec;

@@ -100,10 +100,11 @@ public class SceneLoader : MonoBehaviour
     private IEnumerator LoadLastScene()
     {
         //DontDestroyOnLoad(gameObject);
-        wrapper.Save();
+        //wrapper.Save();
+        yield return SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene().buildIndex);
         yield return fader.FadeOut(fadeOutTime);
-        wrapper.LoadLastScene();
         yield return new WaitForSeconds(waitTime);
+        wrapper.LoadLastScene();
         yield return fader.FadeIn(fadeInTime);
         //Destroy(gameObject);
     }
@@ -115,10 +116,14 @@ public class SceneLoader : MonoBehaviour
 
     private IEnumerator MainMenuCoroutine(bool shouldReload)
     {
-        //DontDestroyOnLoad(gameObject);
-        if (shouldReload) { wrapper.Save(); }
-        SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene().buildIndex);
         Time.timeScale = 1;
+        //DontDestroyOnLoad(gameObject);
+        if (shouldReload)
+        {
+            Debug.Log("Saving");
+            wrapper.Save();
+        }
+        SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene().buildIndex);
         yield return fader.FadeOut(fadeOutTime);
         yield return SceneManager.LoadSceneAsync(mainMenuIndex);
         yield return new WaitForSeconds(waitTime);

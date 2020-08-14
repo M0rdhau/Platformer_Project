@@ -21,24 +21,24 @@ public class SavingWrapper : MonoBehaviour
 
 
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            Save();
-        }
+    //private void Update()
+    //{
+    //    if (Input.GetKeyDown(KeyCode.O))
+    //    {
+    //        Save();
+    //    }
 
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            Load();
-        }
+    //    if (Input.GetKeyDown(KeyCode.P))
+    //    {
+    //        Load();
+    //    }
 
-    }
+    //}
 
 
     public void LoadLastScene()
     {
-        GetComponent<SavingSystem>().LoadLastScene(defaultSaveFile);
+        StartCoroutine(GetComponent<SavingSystem>().LoadLastScene(defaultSaveFile));
     }
 
     public void DeleteSave()

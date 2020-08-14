@@ -23,12 +23,18 @@ public class Breath : MonoBehaviour
 
     public void PlayBossSound()
     {
-        AudioSource.PlayClipAtPoint(bossSound, transform.position, 1f);
+        if (bossSound != null)
+        {
+            AudioSource.PlayClipAtPoint(bossSound, transform.position, 1f);
+        }
     }
 
     public void PlayGhostSound()
     {
-        AudioSource.PlayClipAtPoint(ghostSound, transform.position, 1f);
+        if (ghostSound != null)
+        {
+            AudioSource.PlayClipAtPoint(ghostSound, transform.position, 1f);
+        }
     }
 
     private void DamageEnemies()

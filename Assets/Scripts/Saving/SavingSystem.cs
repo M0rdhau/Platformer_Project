@@ -16,6 +16,7 @@ public class SavingSystem : MonoBehaviour
         if (state.ContainsKey("lastLoadedScene"))
         {
             int sceneNum = (int)state["lastLoadedScene"];
+            Debug.Log(sceneNum);
             if (sceneNum != SceneManager.GetActiveScene().buildIndex)
             {
                 yield return SceneManager.LoadSceneAsync(sceneNum);

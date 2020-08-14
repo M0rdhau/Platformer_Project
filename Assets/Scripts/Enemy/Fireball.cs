@@ -7,11 +7,17 @@ public class Fireball : MonoBehaviour
     [SerializeField] float explosionRadius = 3f;
     [SerializeField] float damage = 3f;
     [SerializeField] string[] layerMask;
+
+    [SerializeField] AudioClip instantiationClip;
+    [SerializeField] AudioClip explosionClip;
+
     public float rotationSpeed { get; set; }
 
 
     public bool isBossFireball { set; get; }
 
+
+   
 
     private void Update()
     {
@@ -23,6 +29,11 @@ public class Fireball : MonoBehaviour
 
     private void Start()
     {
+        if (instantiationClip != null)
+        {
+            AudioSource.PlayClipAtPoint(instantiationClip, transform.position);
+        }
+
         if (GetComponent<Rigidbody2D>().velocity.x < 0)
         {
             GetComponent<SpriteRenderer>().flipX = true;
@@ -100,6 +111,10 @@ public class Fireball : MonoBehaviour
 
     public void Explode()
     {
+        if (explosionClip != null)
+        {
+            AudioSource.PlayClipAtPoint(explosionClip, transform.position);
+        }
         GetComponent<Animator>().SetTrigger("explode");
         GetComponent<Rigidbody2D>().velocity = new Vector2(0, 0);
     }

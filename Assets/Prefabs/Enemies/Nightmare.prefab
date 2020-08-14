@@ -4944,7 +4944,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96e9fbef4ed5a8e48b94abb14ce74aa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MoveSpeed: 6
   movementVec: {x: 0, y: 0}
   damagedTimeFrame: 0.5
   knockbackX: 3
@@ -4961,7 +4960,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d783db97597adbe4cb1df950821b0f9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxHealth: 20
   totalHealth: 1
+  damagedClip: {fileID: 8300000, guid: e4a59986d77ed0542ac43218818769b7, type: 3}
+  deathClip: {fileID: 8300000, guid: dfcc1d1685432fe478ffc6e4a9aac4c2, type: 3}
 --- !u!114 &2827473166826541909
 MonoBehaviour:
   m_ObjectHideFlags: 0

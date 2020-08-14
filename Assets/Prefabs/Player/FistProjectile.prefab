@@ -4844,6 +4844,8 @@ MonoBehaviour:
   damage: 3
   layerMask:
   - Enemies
+  instantiationClip: {fileID: 8300000, guid: 582ba4949922185409b9664debab26b7, type: 3}
+  explosionClip: {fileID: 8300000, guid: f52e067bd4f266642a29a105ade28cb8, type: 3}
 --- !u!70 &509824125
 CapsuleCollider2D:
   m_ObjectHideFlags: 0

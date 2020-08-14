@@ -31,7 +31,7 @@ public class MainMenuUIWrapper : MonoBehaviour
     public void ContinueGame()
     {
         SceneLoader loader = FindObjectOfType<SceneLoader>();
-        loader.LoadNext();
+        loader.LoadLastWrap();
     }
 
     public void NewAlert()

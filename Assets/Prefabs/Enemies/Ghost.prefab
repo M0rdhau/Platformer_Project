@@ -69,7 +69,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d783db97597adbe4cb1df950821b0f9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxHealth: 20
   totalHealth: 10
+  damagedClip: {fileID: 8300000, guid: d255334aa0f3ebd49b4052f1f10e0a84, type: 3}
+  deathClip: {fileID: 8300000, guid: eac368e3e3b60e742ba0b3d15c220e28, type: 3}
 --- !u!114 &3391231918198237198
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -82,7 +85,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96e9fbef4ed5a8e48b94abb14ce74aa1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MoveSpeed: 2
   movementVec: {x: 0, y: 0}
   damagedTimeFrame: 1
   knockbackX: 3
@@ -138,7 +140,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attackRange: 8
   moveToPlayerSpeed: 1
-  distanceFromPlayer: 1.5
   BreathTransform: {fileID: 7216115843796657274}
   breathPrefab: {fileID: 3802006750721750226, guid: 1d5271e12d18c6c49867ba8867431160,
     type: 3}

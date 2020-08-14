@@ -18,6 +18,8 @@ public class BossCombat : GhostCombat
     [SerializeField] float fireballSpeed = 3f;
     int timesBounced = 0;
 
+    [SerializeField] AudioClip fireballThrow;
+
     bool ringActivated = false;
     bool fireBallThrow = false;
 
@@ -99,6 +101,7 @@ public class BossCombat : GhostCombat
             fireball.transform.parent = null;
             Vector3 directionVector = (player.position - point.position).normalized;
             fireball.GetComponent<Fireball>().SetMoveVector(directionVector * fireballSpeed);
+            AudioSource.PlayClipAtPoint(fireballThrow, fireball.transform.position);
         }
     }
 
@@ -109,7 +112,10 @@ public class BossCombat : GhostCombat
         var fireball = Instantiate(fireballPrefab, instantPoint, point.rotation, point);
         fireball.GetComponent<Fireball>().isBossFireball = true;
         fireball.GetComponent<Fireball>().rotationSpeed = fireballRotationSpeed;
-        fireballs.Add(fireball);
+        if (fireball != null)
+        {
+            fireballs.Add(fireball);
+        }
         return fireball;
     }
 
@@ -132,6 +138,7 @@ public class BossCombat : GhostCombat
 
     private void HandleRingOfFireUpgrade()
     {
+        GetComponent<AudioSource>().Play();
         ringFire.SetActive(true);
     }
 

@@ -34,6 +34,7 @@ public class BossCombat : GhostCombat
     // Start is called before the first frame update
     void Start()
     {
+        fireballs = new List<GameObject>();
         timesBounced = 0;
         ringFire.SetActive(false);
         player = FindObjectOfType<PlayerController>().transform;

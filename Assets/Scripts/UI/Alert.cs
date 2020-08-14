@@ -19,6 +19,13 @@ public class Alert : MonoBehaviour, IObserver
         alertSign.SetActive(false);
     }
 
+    public void ReceiveText(string msg)
+    {
+        if (showAlert != null) { StopCoroutine(showAlert); }
+        showAlert = DisplayAlert(msg);
+        StartCoroutine(showAlert);
+    }
+
     public void ReceiveUpdate(ISubject subject)
     {
         Upgrade up = subject as Upgrade;

@@ -67,6 +67,7 @@ public class BossHealth : MonoBehaviour, Health
         var fireballs = GetComponent<BossCombat>().GetFireBalls();
         foreach (GameObject fireball in fireballs)
         {
+            if (fireball != null) ;
             fireball.SetActive(false);
         }
         GetComponent<Animator>().speed = 0;
@@ -83,7 +84,9 @@ public class BossHealth : MonoBehaviour, Health
     IEnumerator Win()
     {
         yield return new WaitForSeconds(waitforWinScreen);
-        Debug.Log("You won!");
+        Alert al = FindObjectOfType<Alert>();
+        al.ReceiveText("You won! But there's still no escape. Have fun!");
+
     }
 
     public float GetHealth()

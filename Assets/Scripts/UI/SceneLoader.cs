@@ -56,6 +56,7 @@ public class SceneLoader : MonoBehaviour
     }
 
 
+
     private IEnumerator DoorLoadCoroutine(string sceneName, int doorIndex)
     {
         //DontDestroyOnLoad(gameObject);
@@ -101,10 +102,12 @@ public class SceneLoader : MonoBehaviour
     {
         //DontDestroyOnLoad(gameObject);
         //wrapper.Save();
+        yield return SceneManager.LoadSceneAsync(0);
         yield return SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene().buildIndex);
         yield return fader.FadeOut(fadeOutTime);
         yield return new WaitForSeconds(waitTime);
         wrapper.LoadLastScene();
+        yield return SceneManager.UnloadSceneAsync(0);
         yield return fader.FadeIn(fadeInTime);
         //Destroy(gameObject);
     }
@@ -120,7 +123,6 @@ public class SceneLoader : MonoBehaviour
         //DontDestroyOnLoad(gameObject);
         if (shouldReload)
         {
-            Debug.Log("Saving");
             wrapper.Save();
         }
         SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene().buildIndex);

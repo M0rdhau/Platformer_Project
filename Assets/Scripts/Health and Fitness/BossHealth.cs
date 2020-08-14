@@ -9,6 +9,10 @@ public class BossHealth : MonoBehaviour, Health
     [SerializeField] ParticleSystem deathSystem;
     [SerializeField] float waitforWinScreen = 5f;
     [SerializeField] float secondsDamaged = 1f;
+
+    [SerializeField] AudioClip damagedClip;
+    [SerializeField] AudioClip deathClip;
+
     Animator anim;
     SpriteRenderer _renderer;
     bool isDead = false;
@@ -31,6 +35,10 @@ public class BossHealth : MonoBehaviour, Health
 
     private void DecreaseHealth(float dmg)
     {
+        if (damagedClip != null)
+        {
+            AudioSource.PlayClipAtPoint(damagedClip, transform.position, 1f);
+        }
         totalHealth -= dmg;
         StartCoroutine(Damaged());
         if (totalHealth <= 0)
@@ -48,6 +56,11 @@ public class BossHealth : MonoBehaviour, Health
 
     private void HandleDeath()
     {
+        if (deathClip != null)
+        {
+            AudioSource.PlayClipAtPoint(deathClip, transform.position, 1f);
+        }
+
         isDead = true;
         _renderer.enabled = false;
         GetComponent<BossMovement>().enabled = false;

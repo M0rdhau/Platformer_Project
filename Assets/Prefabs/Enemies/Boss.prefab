@@ -9719,7 +9719,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26d97050fa59d824ca1076049787a8e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MoveSpeed: -2
   movementVec: {x: -2, y: -2}
   damagedTimeFrame: 1.5
   knockbackX: 3
@@ -9786,6 +9785,10 @@ MonoBehaviour:
   maxHealth: 1
   totalHealth: 1
   deathSystem: {fileID: 7845429228030810041}
+  waitforWinScreen: 5
+  secondsDamaged: 1
+  damagedClip: {fileID: 8300000, guid: d255334aa0f3ebd49b4052f1f10e0a84, type: 3}
+  deathClip: {fileID: 0}
 --- !u!1 &4063300391374099756
 GameObject:
   m_ObjectHideFlags: 0

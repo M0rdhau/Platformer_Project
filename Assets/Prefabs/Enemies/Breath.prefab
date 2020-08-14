@@ -115,3 +115,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dimensions: {x: 4, y: 2.5}
+  bossSound: {fileID: 8300000, guid: 3ee0ee6b0c765d74886691d12fded8cc, type: 3}
+  ghostSound: {fileID: 8300000, guid: e6c23ca2a6da92e43a60e79000dcc323, type: 3}

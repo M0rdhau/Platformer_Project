@@ -6,6 +6,8 @@ public class Breath : MonoBehaviour
 {
     private float damage = 0f;
     [SerializeField] Vector2 dimensions = new Vector2(5f, 2.5f);
+    [SerializeField] AudioClip bossSound;
+    [SerializeField] AudioClip ghostSound;
 
 
     //set damage, color of fire
@@ -17,6 +19,16 @@ public class Breath : MonoBehaviour
     private void Die()
     {
         Destroy(gameObject);
+    }
+
+    public void PlayBossSound()
+    {
+        AudioSource.PlayClipAtPoint(bossSound, transform.position, 1f);
+    }
+
+    public void PlayGhostSound()
+    {
+        AudioSource.PlayClipAtPoint(ghostSound, transform.position, 1f);
     }
 
     private void DamageEnemies()
